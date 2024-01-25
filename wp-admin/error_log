@@ -1,0 +1,6 @@
+[15-Oct-2022 11:46:11 UTC] PHP Warning:  Use of undefined constant WP_POST_REVISIONS - assumed 'WP_POST_REVISIONS' (this will throw an Error in a future version of PHP) in /home/p4g7w59invwj/public_html/wp-includes/revision.php on line 579
+[21-Oct-2022 08:15:56 UTC] PHP Warning:  Use of undefined constant FILTER_VALIDATE_BOOL - assumed 'FILTER_VALIDATE_BOOL' (this will throw an Error in a future version of PHP) in /home/p4g7w59invwj/public_html/wp-content/plugins/blockart-blocks/includes/Ajax.php on line 82
+[21-Oct-2022 08:15:56 UTC] PHP Warning:  filter_var() expects parameter 2 to be int, string given in /home/p4g7w59invwj/public_html/wp-content/plugins/blockart-blocks/includes/Ajax.php on line 82
+[28-Oct-2022 06:01:42 UTC] PHP Warning:  simplexml_load_file(): http://www.inverlochbikes.com/wp-content/uploads/2022/10/svg-web-logo.svg:1: parser error : Start tag expected, '&lt;' not found in /home/p4g7w59invwj/public_html/wp-content/plugins/elementor/core/files/file-types/svg.php on line 234
+[28-Oct-2022 06:01:42 UTC] PHP Warning:  simplexml_load_file(): ÿþ&lt; in /home/p4g7w59invwj/public_html/wp-content/plugins/elementor/core/files/file-types/svg.php on line 234
+[28-Oct-2022 06:01:42 UTC] PHP Warning:  simplexml_load_file(): ^ in /home/p4g7w59invwj/public_html/wp-content/plugins/elementor/core/files/file-types/svg.php on line 234

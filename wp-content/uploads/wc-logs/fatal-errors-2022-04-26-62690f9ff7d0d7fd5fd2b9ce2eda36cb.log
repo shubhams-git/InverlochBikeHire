@@ -1,0 +1,4 @@
+2022-04-26T15:01:34+00:00 CRITICAL Out of memory (allocated 52428800) (tried to allocate 20480 bytes) in D:\xampp\htdocs\wordpress\wp-content\plugins\woocommerce\vendor\jetpack-autoloader\class-php-autoloader.php on line 87
+
+ler.php on line 1
+

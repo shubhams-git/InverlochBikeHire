@@ -1,0 +1,8 @@
+[01-Dec-2022 14:59:09 UTC] PHP Fatal error:  Uncaught Error: Class 'WP_REST_Controller' not found in /home/p4g7w59invwj/public_html/wp-includes/rest-api/endpoints/class-wp-rest-settings-controller.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/p4g7w59invwj/public_html/wp-includes/rest-api/endpoints/class-wp-rest-settings-controller.php on line 17
+[01-Dec-2022 15:07:36 UTC] PHP Fatal error:  Uncaught Error: Class 'WP_REST_Controller' not found in /home/p4g7w59invwj/public_html/wp-includes/rest-api/endpoints/class-wp-rest-revisions-controller.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/p4g7w59invwj/public_html/wp-includes/rest-api/endpoints/class-wp-rest-revisions-controller.php on line 17
