@@ -20,7 +20,8 @@ function ibh_create_db_tables() {
 
     // Item Table
     $sql_item = "CREATE TABLE {$wpdb->prefix}ibk_item (
-        item_id VARCHAR(255) NOT NULL,
+        item_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        id_number VARCHAR(255) NOT NULL,
         category_id MEDIUMINT(9) NOT NULL,
         size VARCHAR(10) NOT NULL,
         name VARCHAR(255) NOT NULL,
