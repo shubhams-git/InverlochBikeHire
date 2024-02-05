@@ -30,6 +30,8 @@ if (!class_exists('Inverloch_Bike_Hire'))
 
         public function initalize() 
         {
+            // include customers page
+            include_once(MY_PLUGIN_PATH .'admin/pages/customers-page.php');
         }
     }
 
