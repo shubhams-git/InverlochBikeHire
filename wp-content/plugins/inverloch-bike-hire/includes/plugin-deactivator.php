@@ -3,26 +3,10 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+// Include the database operations file to use its functions
+include_once plugin_dir_path(__FILE__) . 'db-operations.php';
 
 function ibh_deactivate_plugin() {
-    global $wpdb;
-    $ibk_table_prefix = 'wp_ibk_';
-
-    // List of table names
-    $tables = [
-        'item_booking',
-        'reservation',
-        'price_point',
-        'item',
-        'category',
-        'customer',
-        'invoice',
-        'blocked_date',
-        'email',
-    ];
-
-    foreach ($tables as $table) {
-        $table_name = $ibk_table_prefix . $table;
-        $wpdb->query("DROP TABLE IF EXISTS {$table_name}");
-    }
+    // Call the function from db-operations.php to drop the tables
+    ibh_drop_db_tables();
 }

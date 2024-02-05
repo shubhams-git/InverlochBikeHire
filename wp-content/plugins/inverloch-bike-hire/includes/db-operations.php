@@ -111,3 +111,27 @@ function ibh_create_db_tables() {
     dbDelta($sql_item_booking);
     dbDelta($sql_email);
 }
+
+function ibh_drop_db_tables() {
+    global $wpdb;
+    $ibk_table_prefix = 'wp_ibk_';
+
+    $tables = [
+        'item_booking',
+        'reservation',
+        'price_point',
+        'item',
+        'category',
+        'customer',
+        'invoice',
+        'blocked_date',
+        'email',
+    ];
+
+    foreach ($tables as $table) {
+        $table_name = $ibk_table_prefix . $table;
+        $wpdb->query("DROP TABLE IF EXISTS {$table_name}");
+    }
+}
+
+?>

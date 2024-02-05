@@ -4,7 +4,7 @@
  * Plugin URI: http://example.com/inverloch-bike-hire
  * Description: This is a bike hire management system.
  * Version: 1.0
- * Author: Your Name
+ * Author: Joe and Shubham
  * Author URI: http://example.com
  * Text Domain: inverloch-bike-hire
  * License: GPL-2.0+
@@ -47,7 +47,7 @@ register_deactivation_hook(__FILE__, 'deactivate_inverloch_bike_hire');
  * Core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require INVERLOCH_BIKE_HIRE_DIR . 'admin/admin-init.php';
+require_once INVERLOCH_BIKE_HIRE_DIR . 'admin/admin-init.php';
 require INVERLOCH_BIKE_HIRE_DIR . 'public/public-init.php';
 
 /**
