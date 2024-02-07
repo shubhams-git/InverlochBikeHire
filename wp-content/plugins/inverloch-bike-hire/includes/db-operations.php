@@ -87,12 +87,12 @@ function ibh_create_db_tables() {
     // Item Booking Table
     $sql_item_booking = "CREATE TABLE {$wpdb->prefix}ibk_item_booking (
         reservation_id MEDIUMINT(9) NOT NULL,
-        item_id VARCHAR(255) NOT NULL,
+        item_id MEDIUMINT(9) NOT NULL,
         PRIMARY KEY (reservation_id, item_id),
         FOREIGN KEY (reservation_id) REFERENCES {$wpdb->prefix}ibk_reservation(reservation_id) ON DELETE CASCADE,
         FOREIGN KEY (item_id) REFERENCES {$wpdb->prefix}ibk_item(item_id) ON DELETE CASCADE
     ) $charset_collate;";
-
+    
     // Email Table
     $sql_email = "CREATE TABLE {$wpdb->prefix}ibk_email (
         email_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,

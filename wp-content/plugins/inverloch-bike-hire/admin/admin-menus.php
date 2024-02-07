@@ -11,7 +11,7 @@ function ibh_register_admin_menus() {
     // Main plugin menu
     add_menu_page(
         'Bike Hire Management',           // Page title
-        'Rental Dashboard',                      // Menu title
+        'Rental Dashboard',               // Menu title
         'manage_options',                 // Capability required to see this menu
         'ibh_management',                 // Menu slug, used to uniquely identify the page
         'ibh_admin_dashboard',            // Function to output the content of the page
