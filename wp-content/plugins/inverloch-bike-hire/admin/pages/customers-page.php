@@ -113,4 +113,3 @@ $customers_data = $customer_model->get_all_customers();
         </tbody>
     </table>
 </div>
-<?php
