@@ -4,37 +4,49 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Load necessary models
 include_once plugin_dir_path(__DIR__) . '../includes/models/CategoryModel.php';
 include_once plugin_dir_path(__DIR__) . '../includes/models/ItemModel.php';
 
 $categoryModel = new CategoryModel();
 $itemModel = new ItemModel();
-
 $message = '';
 
-// Handle form submission for adding a new item
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_item') {
     check_admin_referer('add-item-nonce', '_wpnonce_add_item');
 
-    $data = [
-        'id_number' => $_POST['id_number'],
-        'category_id' => $_POST['category_id'],
-        'name' => $_POST['name'],
-        'description' => $_POST['description'],
-        'size' => $_POST['size'],
-        'status' => $_POST['status'],
-    ];
+    if (!function_exists('media_handle_upload')) {
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+    }
 
-    $insertResult = $itemModel->insert($data);
-    if (is_wp_error($insertResult)) {
-        $message = '<div class="notice notice-error"><p>Error: ' . $insertResult->get_error_message() . '</p></div>';
+    if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] == 0) {
+        $attachment_id = media_handle_upload('item_image', 0);
+
+        if (is_wp_error($attachment_id)) {
+            $message = '<div class="notice notice-error"><p>Error uploading image: ' . $attachment_id->get_error_message() . '</p></div>';
+        } else {
+            $image_url = wp_get_attachment_url($attachment_id);
+            $data = [
+                'id_number' => sanitize_text_field($_POST['id_number']),
+                'category_id' => intval($_POST['category_id']),
+                'name' => sanitize_text_field($_POST['name']),
+                'description' => sanitize_textarea_field($_POST['description']),
+                'size' => sanitize_text_field($_POST['size']),
+                'status' => sanitize_text_field($_POST['status']),
+                'image_url' => $image_url,
+            ];
+
+            $insertResult = $itemModel->insert($data);
+            $message = is_wp_error($insertResult) ? 
+                '<div class="notice notice-error"><p>Error: ' . $insertResult->get_error_message() . '</p></div>' : 
+                '<div class="notice notice-success is-dismissible"><p>Item added successfully!</p></div>';
+        }
     } else {
-        $message = '<div class="notice notice-success is-dismissible"><p>Item added successfully!</p></div>';
+        $message = '<div class="notice notice-error"><p>Error: No image selected.</p></div>';
     }
 }
 
-// Fetch all categories and items for listing
 $categories = $categoryModel->get_all_categories();
 $items = $itemModel->get_all_items();
 ?>
@@ -42,7 +54,7 @@ $items = $itemModel->get_all_items();
 <div class="wrap">
     <h1>Add New Item</h1>
     <?php echo $message; ?>
-    <form method="post" action="">
+    <form method="post" action="" enctype="multipart/form-data">
         <?php wp_nonce_field('add-item-nonce', '_wpnonce_add_item'); ?>
         <input type="hidden" name="action" value="add_item">
         <table class="form-table">
@@ -73,6 +85,10 @@ $items = $itemModel->get_all_items();
                 <td><input type="text" id="size" name="size" class="regular-text"></td>
             </tr>
             <tr>
+                <th scope="row"><label for="item_image">Item Image</label></th>
+                <td><input type="file" id="item_image" name="item_image" accept="image/*"></td>
+            </tr>
+            <tr>
                 <th scope="row"><label for="status">Status</label></th>
                 <td>
                     <select id="status" name="status" required>
@@ -96,21 +112,20 @@ $items = $itemModel->get_all_items();
                 <th>Description</th>
                 <th>Size</th>
                 <th>Status</th>
+                <th>Image</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($items as $item): ?>
-                <tr>
-                    <td><?php echo esc_html($item->name); ?></td>
-                    <td><?php echo esc_html($item->id_number); ?></td>
-                    <td><?php echo esc_html($item->description); ?></td>
-                    <td><?php echo esc_html($item->size); ?></td>
-                    <td><?php echo esc_html($item->status); ?></td>
-                </tr>
+            <tr>
+                <td><?php echo esc_html($item->name); ?></td>
+                <td><?php echo esc_html($item->id_number); ?></td>
+                <td><?php echo ucfirst(esc_html($item->description)); ?></td> 
+                <td><?php echo esc_html($item->size); ?></td>
+                <td><?php echo ucfirst(esc_html($item->status)); ?></td> 
+                <td><img src="<?php echo esc_url($item->image_url); ?>" alt="" style="width: 100px; height: auto;"></td>
+            </tr>
             <?php endforeach; ?>
-            <?php if (empty($items)): ?>
-                <tr><td colspan="4">No items found.</td></tr>
-            <?php endif; ?>
         </tbody>
     </table>
 </div>

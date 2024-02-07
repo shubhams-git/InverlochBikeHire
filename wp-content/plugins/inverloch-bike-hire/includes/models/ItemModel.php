@@ -16,21 +16,14 @@ class ItemModel {
 
     // Create a new item
     public function insert($data) {
-        // Ensure id_number is unique
-        if (!$this->is_id_number_unique($data['id_number'])) {
+        if (isset($data['id_number']) && !$this->is_id_number_unique($data['id_number'])) {
             return new WP_Error('duplicate_id_number', 'The ID number must be unique.');
         }
 
-        // Data sanitization
         $data = $this->sanitize_data($data);
-
         $format = $this->get_format($data);
 
-        $result = $this->wpdb->insert(
-            $this->table_name,
-            $data,
-            $format
-        );
+        $result = $this->wpdb->insert($this->table_name, $data, $format);
 
         if ($result) {
             return $this->wpdb->insert_id;
@@ -47,11 +40,7 @@ class ItemModel {
     // Retrieve a single item by ID
     public function get_item_by_id($item_id) {
         $item_id = intval($item_id);
-
-        return $this->wpdb->get_row($this->wpdb->prepare(
-            "SELECT * FROM {$this->table_name} WHERE item_id = %d",
-            $item_id
-        ), OBJECT);
+        return $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE item_id = %d", $item_id), OBJECT);
     }
 
     // Update an existing item
@@ -65,13 +54,7 @@ class ItemModel {
         $data = $this->sanitize_data($data);
         $format = $this->get_format($data);
 
-        $result = $this->wpdb->update(
-            $this->table_name,
-            $data,
-            ['item_id' => $item_id],
-            $format,
-            ['%d']
-        );
+        $result = $this->wpdb->update($this->table_name, $data, ['item_id' => $item_id], $format, ['%d']);
 
         if ($result !== false) {
             return true;
@@ -83,12 +66,7 @@ class ItemModel {
     // Delete an item
     public function delete($item_id) {
         $item_id = intval($item_id);
-
-        $result = $this->wpdb->delete(
-            $this->table_name,
-            ['item_id' => $item_id],
-            ['%d']
-        );
+        $result = $this->wpdb->delete($this->table_name, ['item_id' => $item_id], ['%d']);
 
         if ($result) {
             return true;
@@ -97,28 +75,46 @@ class ItemModel {
         }
     }
 
-    // Helper Methods
+    // Helper methods
     private function is_id_number_unique($id_number, $exclude_id = 0) {
-        $query = $this->wpdb->prepare(
-            "SELECT COUNT(*) FROM {$this->table_name} WHERE id_number = %s AND item_id != %d",
-            $id_number, $exclude_id
-        );
+        $exclude_id = intval($exclude_id);
+        $query = $this->wpdb->prepare("SELECT COUNT(*) FROM {$this->table_name} WHERE id_number = %s AND item_id != %d", $id_number, $exclude_id);
         return ($this->wpdb->get_var($query) == 0);
     }
 
     private function sanitize_data($data) {
-        foreach ($data as $key => &$value) {
-            if ('item_id' !== $key) { // Do not sanitize the primary key
-                $value = ('category_id' === $key) ? intval($value) : sanitize_text_field($value);
+        $sanitized = [];
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'category_id':
+                case 'item_id':
+                    $sanitized[$key] = intval($value);
+                    break;
+                case 'image_url':
+                    $sanitized[$key] = esc_url_raw($value);
+                    break;
+                default:
+                    $sanitized[$key] = sanitize_text_field($value);
             }
         }
-        return $data;
+        return $sanitized;
     }
 
     private function get_format($data) {
-        return array_map(function($key, $value) {
-            return ('category_id' === $key) ? '%d' : '%s';
-        }, array_keys($data), $data);
+        $format = [];
+        foreach ($data as $key => $value) {
+            switch ($key) {
+                case 'category_id':
+                case 'item_id':
+                    $format[] = '%d';
+                    break;
+                case 'image_url':
+                    $format[] = '%s';
+                    break;
+                default:
+                    $format[] = '%s';
+            }
+        }
+        return $format;
     }
-    
 }
