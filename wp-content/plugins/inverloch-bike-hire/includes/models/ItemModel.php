@@ -36,6 +36,16 @@ class ItemModel {
     public function get_all_items() {
         return $this->wpdb->get_results("SELECT * FROM {$this->table_name}", OBJECT);
     }
+    
+    // Retrieve all items with category name
+    public function get_all_items_with_category_name() {
+        $sql = "SELECT items.*, categories.category_name
+                FROM {$this->table_name} as items
+                INNER JOIN {$this->wpdb->prefix}ibk_category as categories
+                ON items.category_id = categories.category_id";
+        return $this->wpdb->get_results($sql, OBJECT);
+    }
+    
 
     // Retrieve a single item by ID
     public function get_item_by_id($item_id) {
