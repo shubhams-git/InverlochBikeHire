@@ -10,7 +10,7 @@ include_once plugin_dir_path(__DIR__) . '../includes/models/CustomerModel.php';
 $customer_model = new CustomerModel();
 
 // Check if the form is submitted and process the data
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_item') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_customer') {
 
     check_admin_referer('add_new_customer', 'add_new_customer_nonce');
 
@@ -58,7 +58,7 @@ $customers_data = $customer_model->get_all_customers();
 
     <form method="post" action="">
         <?php wp_nonce_field('add_new_customer', 'add_new_customer_nonce'); ?>
-        <input type="hidden" name="action" value="add_item">
+        <input type="hidden" name="action" value="add_customer">
 
         <table class="form-table">
             <tr>
