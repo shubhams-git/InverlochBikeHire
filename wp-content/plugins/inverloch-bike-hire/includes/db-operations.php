@@ -57,16 +57,19 @@ function ibh_create_db_tables() {
     // Invoice Table
     $sql_invoice = "CREATE TABLE {$wpdb->prefix}ibk_invoice (
         invoice_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        reservation_id MEDIUMINT(9) NOT NULL,
         method ENUM('cash', 'card') NOT NULL,
         amount FLOAT NOT NULL,
-        PRIMARY KEY  (invoice_id)
+        PRIMARY KEY  (invoice_id),
+        FOREIGN KEY (reservation_id) REFERENCES {$wpdb->prefix}ibk_reservation(reservation_id) ON DELETE CASCADE
     ) $charset_collate;";
+    
 
     // Reservation Table
     $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
         reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
         customer_id MEDIUMINT(9) NOT NULL,
-        invoice_id MEDIUMINT(9) NOT NULL,
+        invoice_id MEDIUMINT(9),
         from_date DATETIME NOT NULL,
         to_date DATETIME NOT NULL,
         reservation_stage ENUM('provisional', 'confirmed', 'checked-out', 'checked-in') NOT NULL,
@@ -74,9 +77,9 @@ function ibh_create_db_tables() {
         delivery_notes TEXT,
         PRIMARY KEY  (reservation_id),
         FOREIGN KEY (customer_id) REFERENCES {$wpdb->prefix}ibk_customer(customer_id) ON DELETE CASCADE,
-        FOREIGN KEY (invoice_id) REFERENCES {$wpdb->prefix}ibk_invoice(invoice_id) ON DELETE CASCADE
+        FOREIGN KEY (invoice_id) REFERENCES {$wpdb->prefix}ibk_invoice(invoice_id) ON DELETE SET NULL // Changed CASCADE to SET NULL to allow nullifying this field
     ) $charset_collate;";
-
+    
     // Blocked Date Table
     $sql_blocked_date = "CREATE TABLE {$wpdb->prefix}ibk_blocked_date (
         date DATE NOT NULL,
