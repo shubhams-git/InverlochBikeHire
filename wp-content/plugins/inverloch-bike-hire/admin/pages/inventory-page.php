@@ -126,6 +126,9 @@ $items = $itemModel->get_all_items();
                 <td><img src="<?php echo esc_url($item->image_url); ?>" alt="" style="width: 100px; height: auto;"></td>
             </tr>
             <?php endforeach; ?>
+            <?php if (empty($items)): ?>
+                <tr><td colspan="4">No items found.</td></tr>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>
