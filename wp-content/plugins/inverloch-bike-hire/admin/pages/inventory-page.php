@@ -4,113 +4,114 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Load necessary models
 include_once plugin_dir_path(__DIR__) . '../includes/models/CategoryModel.php';
 include_once plugin_dir_path(__DIR__) . '../includes/models/ItemModel.php';
 
 $categoryModel = new CategoryModel();
 $itemModel = new ItemModel();
-
 $message = '';
 
-// Handle form submission for adding a new item
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_item') {
-    check_admin_referer('add-item-nonce', '_wpnonce_add_item');
-
-    $data = [
-        'id_number' => $_POST['id_number'],
-        'category_id' => $_POST['category_id'],
-        'name' => $_POST['name'],
-        'description' => $_POST['description'],
-        'size' => $_POST['size'],
-        'status' => $_POST['status'],
-    ];
-
-    $insertResult = $itemModel->insert($data);
-    if (is_wp_error($insertResult)) {
-        $message = '<div class="notice notice-error"><p>Error: ' . $insertResult->get_error_message() . '</p></div>';
-    } else {
-        $message = '<div class="notice notice-success is-dismissible"><p>Item added successfully!</p></div>';
-    }
-}
-
-// Fetch all categories and items for listing
+// Fetching items for display
 $categories = $categoryModel->get_all_categories();
-$items = $itemModel->get_all_items();
+$items = $itemModel->get_all_items_with_category_name();
+
+// Determine if we're editing an item
+$edit_item_id = isset($_GET['edit']) ? intval($_GET['edit']) : null;
+$item_to_edit = $edit_item_id ? $itemModel->get_item_by_id($edit_item_id) : null;
+
 ?>
 
 <div class="wrap">
-    <h1>Add New Item</h1>
-    <?php echo $message; ?>
-    <form method="post" action="">
-        <?php wp_nonce_field('add-item-nonce', '_wpnonce_add_item'); ?>
-        <input type="hidden" name="action" value="add_item">
+    <h1><?php echo $edit_item_id ? 'Edit Item' : 'Add New Item'; ?></h1>
+        <form method="post" id="item" enctype="multipart/form-data">
+        <input type="hidden" name="entity" value="item">
+        <input type="hidden" name="action_type" value="<?php echo $edit_item_id ? 'edit' : 'add'; ?>">
+        <?php if ($edit_item_id): ?>
+            <input type="hidden" name="item_id" value="<?php echo esc_attr($edit_item_id); ?>">
+        <?php endif; ?>
+        <div id="messageContainer"></div>
         <table class="form-table">
             <tr>
                 <th scope="row"><label for="id_number">Identification Number</label></th>
-                <td><input type="text" id="id_number" name="id_number" required class="large-text"></td>
+                <td><input type="text" id="id_number" name="id_number" value="<?php echo esc_attr($edit_item_id ? $item_to_edit->id_number : ''); ?>" required class="large-text"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="category_id">Category</label></th>
                 <td>
                     <select name="category_id" id="category_id" required>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo esc_attr($category->category_id); ?>"><?php echo esc_html($category->category_name); ?></option>
+                            <option value="<?php echo esc_attr($category->category_id); ?>" <?php echo $edit_item_id && $item_to_edit->category_id == $category->category_id ? 'selected' : ''; ?>><?php echo esc_html($category->category_name); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
             <tr>
                 <th scope="row"><label for="name">Name</label></th>
-                <td><input type="text" id="name" name="name" required class="regular-text"></td>
+                <td><input type="text" id="name" name="name" value="<?php echo esc_attr($edit_item_id ? $item_to_edit->name : ''); ?>" required class="regular-text"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="description">Description</label></th>
-                <td><textarea id="description" name="description" rows="5" class="large-text"></textarea></td>
+                <td><textarea id="description" name="description" rows="5" class="large-text"><?php echo esc_textarea($edit_item_id ? $item_to_edit->description : ''); ?></textarea></td>
             </tr>
             <tr>
                 <th scope="row"><label for="size">Size</label></th>
-                <td><input type="text" id="size" name="size" class="regular-text"></td>
+                <td><input type="text" id="size" name="size" value="<?php echo esc_attr($edit_item_id ? $item_to_edit->size : ''); ?>" class="regular-text"></td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="item_image">Item Image</label></th>
+                <td><input type="file" id="item_image" name="item_image" accept="image/*"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="status">Status</label></th>
                 <td>
                     <select id="status" name="status" required>
-                        <option value="available">Available</option>
-                        <option value="unavailable">Unavailable</option>
+                        <option value="Available" <?php echo $edit_item_id && $item_to_edit->status == 'Available' ? 'selected' : ''; ?>>Available</option>
+                        <option value="Unavailable" <?php echo $edit_item_id && $item_to_edit->status == 'Unavailable' ? 'selected' : ''; ?>>Unavailable</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td><?php submit_button('Add Item', 'primary', 'submit_item', false); ?></td>
+                <td><?php submit_button($edit_item_id ? 'Update Item' : 'Add Item', 'primary', 'submit_item', false); ?></td>
             </tr>
         </table>
     </form>
 
+    <?php if (!$edit_item_id): ?>
     <h2>Inventory List</h2>
     <table class="wp-list-table widefat fixed striped">
         <thead>
             <tr>
-                <th>Name</th>
                 <th>Identification Number</th>
+                <th>Name</th>
+                <th>Category</th>
                 <th>Description</th>
                 <th>Size</th>
                 <th>Status</th>
+                <th>Image</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($items as $item): ?>
-                <tr>
-                    <td><?php echo esc_html($item->name); ?></td>
-                    <td><?php echo esc_html($item->id_number); ?></td>
-                    <td><?php echo esc_html($item->description); ?></td>
-                    <td><?php echo esc_html($item->size); ?></td>
-                    <td><?php echo esc_html($item->status); ?></td>
-                </tr>
+            <tr>
+                <td><?php echo esc_html($item->id_number); ?></td>
+                <td><?php echo esc_html($item->name); ?></td>
+                <td><?php echo esc_html($item->category_name); ?></td>
+                <td><?php echo ucfirst(esc_html($item->description)); ?></td> 
+                <td><?php echo esc_html($item->size); ?></td>
+                <td><?php echo ucfirst(esc_html($item->status)); ?></td> 
+                <td><img src="<?php echo esc_url($item->image_url); ?>" alt="" style="width: 100px; height: auto;"></td>
+                <td>
+                    <a href="?page=ibh_inventory&edit=<?php echo $item->item_id; ?>" class="button button-primary">Edit</a>
+                    <a href="?page=ibh_inventory" class="button button-secondary delete-item" data-item-id="<?php echo $item->item_id; ?>">Delete</a>
+                </td>
+
+            </tr>
             <?php endforeach; ?>
             <?php if (empty($items)): ?>
                 <tr><td colspan="4">No items found.</td></tr>
             <?php endif; ?>
         </tbody>
     </table>
+    <?php endif; ?>
 </div>
