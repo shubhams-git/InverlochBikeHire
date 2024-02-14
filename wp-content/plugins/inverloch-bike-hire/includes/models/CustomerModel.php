@@ -18,6 +18,12 @@ class CustomerModel {
         // Data sanitization
         $data = array_map('sanitize_text_field', $data);
 
+        // Check if a customer with the same first name, last name, and phone number exists
+        $existing_customer = $this->get_customer_by_fname_lname_phone($data['fname'], $data['lname'], $data['mobile_phone']);
+        if ($existing_customer) {
+            return new WP_Error('duplicate_customer', 'Customer with the same first name, last name, and phone number already exists.');
+        }
+
         $result = $this->wpdb->insert(
             $this->table_name,
             $data,
@@ -29,6 +35,15 @@ class CustomerModel {
         } else {
             return new WP_Error('db_insert_error', 'Failed to insert customer into the database.');
         }
+    }
+
+    private function get_customer_by_fname_lname_phone($fname, $lname, $phone) {
+        return $this->wpdb->get_row($this->wpdb->prepare(
+            "SELECT * FROM {$this->table_name} WHERE fname = %s AND lname = %s AND mobile_phone = %s",
+            $fname,
+            $lname,
+            $phone
+        ));
     }
 
     public function get_all_customers() {
