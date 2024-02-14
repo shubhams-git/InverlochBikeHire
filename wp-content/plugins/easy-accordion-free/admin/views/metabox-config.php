@@ -45,6 +45,39 @@ SP_EAP::createSection(
 );
 
 //
+// Metabox of the footer section / shortcode section.
+// Set a unique slug-like ID.
+//
+$eap_display_shortcode = 'sp_eap_display_shortcode_sidebar';
+
+//
+// Create a metabox.
+//
+SP_EAP::createMetabox(
+	$eap_display_shortcode,
+	array(
+		'title'     => 'How To Use',
+		'post_type' => 'sp_easy_accordion',
+		'context'   => 'side',
+	)
+);
+
+//
+// Create a section.
+//
+SP_EAP::createSection(
+	$eap_display_shortcode,
+	array(
+		'fields' => array(
+			array(
+				'type'  => 'shortcode',
+				'class' => 'eap-admin-sidebar',
+			),
+		),
+	)
+);
+
+//
 // Create a metabox.
 //
 SP_EAP::createMetabox(
@@ -73,13 +106,14 @@ SP_EAP::createSection(
 			array(
 				'id'      => 'eap_accordion_type',
 				'type'    => 'button_set',
+				'class'   => 'eap_accordion_type',
 				'title'   => __( 'Accordion Type', 'easy-accordion-free' ),
 				'options' => array(
 					'content-accordion' => array(
-						'text' => __( 'Content', 'easy-accordion-free' ),
+						'text' => '<img src="' . plugin_dir_url( __DIR__ ) . 'img/ea-content.svg"/>' . __( 'Content', 'easy-accordion-free' ),
 					),
 					'post-accordion'    => array(
-						'text'     => __( 'Post', 'easy-accordion-free' ),
+						'text'     => '<img src="' . plugin_dir_url( __DIR__ ) . 'img/ea-post.svg"/>' . __( 'Post', 'easy-accordion-free' ),
 						'pro_only' => true,
 					),
 				),
@@ -152,49 +186,67 @@ SP_EAP::createSection(
 		'icon'   => 'fa fa-list-ul',
 		'fields' => array(
 			array(
-				'id'       => 'eap_accordion_layout',
-				'class'    => 'eap_accordion_layout',
-				'type'     => 'image_select',
-				'title'    => __( 'Accordion Layout', 'easy-accordion-free' ),
-				'subtitle' => __( 'Choose an accordion layout.', 'easy-accordion-free' ),
-				'options'  => array(
-					'vertical'   => array(
-						'image'       => SP_EA_URL . 'admin/img/vertical.svg',
+				'id'         => 'eap_accordion_layout',
+				'class'      => 'eap_accordion_layout',
+				'type'       => 'image_select',
+				'title'      => __( 'Accordion Layout', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Choose an accordion layout.', 'easy-accordion-free' ),
+				'options'    => array(
+					'vertical'     => array(
+						'image'       => SP_EA_URL . 'admin/img/ea-vertical.svg',
 						'option_name' => __( 'Vertical', 'easy-accordion-free' ),
 					),
-					'horizontal' => array(
+					'multi-column' => array(
 						'pro_only'    => true,
-						'image'       => SP_EA_URL . 'admin/img/horizontal.svg',
+						'image'       => SP_EA_URL . 'admin/img/ea-multicolumn.svg',
+						'option_name' => __( 'Multicolumn', 'easy-accordion-free' ),
+					),
+					'horizontal'   => array(
+						'pro_only'    => true,
+						'image'       => SP_EA_URL . 'admin/img/ea-horizontal.svg',
 						'option_name' => __( 'Horizontal', 'easy-accordion-free' ),
 					),
 				),
-				'default'  => 'vertical',
+				'title_info' => __( '<div class="ea-info-label">Accordion Layout</div> <div class="ea-short-content">Accordion Layout determines how accordion information is displayed, with choices like vertical, horizontal, or multi column layouts.</div>', 'easy-accordion-free' ),
+				'desc'       => __( 'Want to create fantastic Accordion FAQ layouts? <a href="https://easyaccordion.io/pricing/" target="_blank"><strong>Upgrade to Pro!</strong></a>', 'easy-accordion-free' ),
+				'default'    => 'vertical',
 			),
 			array(
 				'id'         => 'eap_accordion_theme',
-				'type'       => 'theme_select',
-				'title'      => __( 'Choose a Theme', 'easy-accordion-free' ),
+				'type'       => 'select',
+				'title'      => __( 'Accordion Theme', 'easy-accordion-free' ),
+				'preview'    => true,
 				'class'      => 'sp_eap_accordion_theme',
-				'subtitle'   => __( 'Select an accordion theme style.To unlock 16+ Premium Accordion Themes,  <a href="https://shapedplugin.com/easy-accordion/pricing/?ref=1" target="_blank"> <b>Upgrade To Pro!</b> </a>', 'easy-accordion-free' ),
-				'desc'       => __( 'Check out <a href="https://shapedplugin.com/easy-accordion/all-accordion-themes/"  target="_blank"><b>16+ Premium Pre-designed</b></a> Accordion Themes!', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Select an accordion theme style. To unlock 16+ Premium Ready Accordion Themes, <a href="https://easyaccordion.io/pricing/?ref=1" target="_blank"> <b>Upgrade To Pro!</b> </a>', 'easy-accordion-free' ),
 				'options'    => array(
-					'sp-ea-one' => array(
-						'text' => __( 'Theme One', 'easy-accordion-free' ),
-					),
-					'sp-ea-two' => array(
-						'text'     => __( '16+ Themes (Pro)', 'easy-accordion-free' ),
-						'pro_only' => true,
-					),
+					'sp-ea-one'                       => __( 'Default Theme', 'easy-accordion-free' ),
+					'sp-ea-two'                       => __( 'Theme Two', 'easy-accordion-free' ),
+					'sp-ea-three ea-icon-style-three' => __( 'Theme Three', 'easy-accordion-free' ),
+					'sp-ea-four ea-icon-style-three'  => __( 'Theme Four', 'easy-accordion-free' ),
+					'sp-ea-five ea-icon-style-three'  => __( 'Theme Five', 'easy-accordion-free' ),
+					'sp-ea-six ea-icon-style-three'   => __( 'Theme Six', 'easy-accordion-free' ),
+					'sp-ea-seven'                     => __( 'Theme Seven', 'easy-accordion-free' ),
+					'sp-ea-eight ea-icon-style-three' => __( 'Theme Eight', 'easy-accordion-free' ),
+					'sp-ea-nine ea-icon-style-three'  => __( 'Theme Nine', 'easy-accordion-free' ),
+					'sp-ea-ten'                       => __( 'Theme Ten', 'easy-accordion-free' ),
+					'sp-ea-eleven'                    => __( 'Theme Eleven', 'easy-accordion-free' ),
+					'sp-ea-twelve'                    => __( 'Theme Twelve', 'easy-accordion-free' ),
+					'sp-ea-thirteen'                  => __( 'Theme Thirteen', 'easy-accordion-free' ),
+					'sp-ea-fourteen sp-ea-thirteen'   => __( 'Theme Fourteen', 'easy-accordion-free' ),
+					'sp-ea-fifteen'                   => __( 'Theme Fifteen', 'easy-accordion-free' ),
+					'sp-ea-sixteen'                   => __( 'Theme Sixteen', 'easy-accordion-free' ),
+					'sp-ea-seventeen'                 => __( 'Theme Seventeen', 'easy-accordion-free' ),
 				),
 				'default'    => 'sp-ea-one',
+				'only_pro'   => true,
 				'dependency' => array( 'eap_accordion_layout', '==', 'vertical' ),
 			),
 			array(
-				'id'       => 'eap_accordion_event',
-				'type'     => 'button_set',
-				'title'    => __( 'Activator Event', 'easy-accordion-free' ),
-				'subtitle' => __( 'Select event click or mouse over to expand accordion.', 'easy-accordion-free' ),
-				'options'  => array(
+				'id'         => 'eap_accordion_event',
+				'type'       => 'button_set',
+				'title'      => __( 'Activator Event', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Select event click or mouse over to expand accordion.', 'easy-accordion-free' ),
+				'options'    => array(
 					'ea-click' => array(
 						'text' => __( 'Click', 'easy-accordion-free' ),
 					),
@@ -206,21 +258,23 @@ SP_EAP::createSection(
 						'pro_only' => true,
 					),
 				),
-				'default'  => 'ea-click',
+				'title_info' => __( '<div class="ea-info-label">Activator Event</div> <div class="ea-short-content">The <strong>Activator Event</strong> option allows you to define the user interaction that triggers accordion transitions, such as clicking, hovering, or autoplaying.</div><div class="info-button"><a class="ea-open-live-demo" href="https://easyaccordion.io/activator-events/" target="_blank">Live Demo</a></div>', 'easy-accordion-free' ),
+				'default'    => 'ea-click',
 			),
 			array(
-				'id'       => 'eap_accordion_mode',
-				'class'    => 'eap_accordion_open_mode',
-				'type'     => 'radio',
-				'title'    => __( 'Accordion Mode on Load', 'easy-accordion-free' ),
-				'subtitle' => __( 'Keep expanded or collapsed accordion item(s) on page load.', 'easy-accordion-free' ),
-				'options'  => array(
+				'id'         => 'eap_accordion_mode',
+				'class'      => 'eap_accordion_open_mode',
+				'type'       => 'radio',
+				'title'      => __( 'Accordion Mode', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Expand or collapse accordion option on page load.', 'easy-accordion-free' ),
+				'options'    => array(
 					'ea-first-open' => __( 'First Open', 'easy-accordion-free' ),
 					'ea-multi-open' => __( 'All Open', 'easy-accordion-free' ),
 					'ea-all-close'  => __( 'All Folded', 'easy-accordion-free' ),
 					'custom'        => __( 'Custom Open (Pro)', 'easy-accordion-free' ),
 				),
-				'default'  => 'ea-first-open',
+				'title_info' => __( '<div class="ea-info-label">Accordion Mode</div> <div class="ea-short-content">The <strong>Accordion Mode</strong> option lets you choose whether the accordion items should be initially expanded or collapsed when the page loads.</div><div class="info-button"><a class="ea-open-live-demo" href="https://easyaccordion.io/accordion-modes/" target="_blank">Live Demo</a></div>', 'easy-accordion-free' ),
+				'default'    => 'ea-first-open',
 			),
 			array(
 				'id'         => 'eap_mutliple_collapse',
@@ -231,19 +285,15 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Disabled', 'easy-accordion-free' ),
 				'text_width' => 94,
 				'default'    => false,
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-multiple-opening-together.svg" alt="Multiple Active Together"></div><div class="ea-info-label img">' . __( 'Multiple Active or Opening Together', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
-				'id'       => 'eap_accordion_fillspace',
-				'type'     => 'checkbox',
-				'title'    => __( 'Fixed Content Height', 'easy-accordion-free' ),
-				'subtitle' => __( 'Check to display collapsible accordion content in a limited amount of space.', 'easy-accordion-free' ),
-				'default'  => false,
-			),
-			array(
-				'id'      => 'eap_nofollow_link',
-				'type'    => 'checkbox',
-				'title'   => __( 'Add rel="nofollow" to Link', 'easy-accordion-free' ),
-				'default' => false,
+				'id'         => 'eap_accordion_fillspace',
+				'type'       => 'checkbox',
+				'title'      => __( 'Fixed Content Height', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Check to display collapsible accordion content in a limited amount of space.', 'easy-accordion-free' ),
+				'default'    => false,
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-fixed-content-height.svg" alt="Fixed Content Height"></div><div class="ea-info-label img">' . __( 'Fixed Content Height', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
 				'id'              => 'eap_accordion_fillspace_height',
@@ -266,6 +316,23 @@ SP_EAP::createSection(
 				'dependency'      => array( 'eap_accordion_fillspace', '==', 'true' ),
 			),
 			array(
+				'id'      => 'eap_nofollow_link',
+				'type'    => 'checkbox',
+				'title'   => __( 'Add rel="nofollow" to Link', 'easy-accordion-free' ),
+				'default' => false,
+			),
+			array(
+				'id'         => 'eap_scroll_to_active_item',
+				'type'       => 'switcher',
+				'title'      => __( 'Scroll to Active Item', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Enable/Disable this option to scroll to  active accordion item.', 'easy-accordion-free' ),
+				'text_on'    => __( 'Enabled', 'easy-accordion-free' ),
+				'text_off'   => __( 'Disabled', 'easy-accordion-free' ),
+				'text_width' => 94,
+				'default'    => false,
+				'title_info' => __( '<div class="ea-info-label">Scroll to Active Item</div> <div class="ea-short-content">This option allows automatic scrolling to the active accordion item. This provides a smoother and more user-friendly experience when navigating through accordion faqs section.</div><div class="info-button"><a class="ea-open-docs" href="https://docs.shapedplugin.com/docs/easy-accordion-pro/configurations/how-to-enable-accordion-scrolling-to-active-item/" target="_blank">Open Docs</a></div>', 'easy-accordion-free' ),
+			),
+			array(
 				'id'         => 'eap_schema_markup',
 				'type'       => 'switcher',
 				'title'      => __( 'Schema Markup', 'easy-accordion-free' ),
@@ -274,6 +341,7 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Disabled', 'easy-accordion-free' ),
 				'text_width' => 94,
 				'default'    => false,
+				'title_info' => __( '<div class="ea-info-label">Schema Markup</div> <div class="ea-short-content"><strong>Schema Markup</strong> adds structured data to your Accordion FAQs, enhancing search engine visibility and improving the display of your Accordion FAQs in search results.</div><div class="info-button"><a class="ea-open-docs" href="https://docs.shapedplugin.com/docs/easy-accordion-pro/configurations/how-to-enable-schema-markup/" target="_blank">Open Docs</a></div>', 'easy-accordion-free' ),
 			),
 			array(
 				'id'         => 'eap_preloader',
@@ -309,25 +377,23 @@ SP_EAP::createSection(
 				'default'    => false,
 			),
 			array(
-				'id'              => 'section_title_margin_bottom',
+				'id'              => 'accordion_margin_bottom',
 				'type'            => 'spacing',
-				'title'           => __( 'Margin Bottom from Section Title', 'easy-accordion-free' ),
-				'subtitle'        => __( 'Set a margin bottom for the accordion section title. Default value is 30px.', 'easy-accordion-free' ),
+				'title'           => __( 'Space Between', 'easy-accordion-free' ),
+				'subtitle'        => __( 'Set a margin to make space between accordion items. Default value is 10px.', 'easy-accordion-free' ),
 				'all'             => true,
-				'all_icon'        => '<i class="fa fa-long-arrow-down"></i>',
-				'class'           => 'section-title-margin',
+				'all_icon'        => '<i class="fa fa-arrows-v"></i>',
 				'all_placeholder' => 'margin',
 				'default'         => array(
-					'all' => '30',
+					'all' => '10',
 				),
 				'units'           => array(
 					'px',
 				),
-				'dependency'      => array(
-					'section_title',
-					'==',
-					'true',
+				'attributes'      => array(
+					'min' => 0,
 				),
+				'title_info'      => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-accordion-margin.svg" alt="Accordion Margin"></div><div class="ea-info-label img">' . __( 'Space Between Accordion FAQs', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
 				'id'         => 'eap_faq_collapse_button',
@@ -339,6 +405,7 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Hide', 'easy-accordion-free' ),
 				'text_width' => 80,
 				'default'    => false,
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-expand-collapse-all-button.svg" alt="Expand/Collapse All Button"></div><div class="ea-info-label img">' . __( 'Expand/Collapse All Button', 'easy-accordion-free' ) . '</div><div class="info-button img"><a class="ea-open-live-demo" href="https://easyaccordion.io/expand-collapse-all/" target="_blank">Live Demo</a></div>',
 			),
 			array(
 				'id'         => 'eap_faq_search',
@@ -350,6 +417,12 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Hide', 'easy-accordion-free' ),
 				'text_width' => 80,
 				'default'    => false,
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-accordion-faq-search.svg" alt="Accordion FAQ Search"></div><div class="ea-info-label img">' . __( 'Accordion FAQ Search', 'easy-accordion-free' ) . '</div><div class="info-button img"><a class="ea-open-live-demo " href="https://easyaccordion.io/faqs-search-option/" target="_blank">Live Demo</a></div>',
+			),
+			array(
+				'type'    => 'notice',
+				'class'   => 'only_pro_notice',
+				'content' => __( 'Want to make your FAQ content searchable and add an Expand/Collapse All button? <a href="https://easyaccordion.io/pricing/?ref=1" target="_blank"><b>Upgrade To Pro!</b></a>', 'easy-accordion-free' ),
 			),
 			array(
 				'type'    => 'subheading',
@@ -367,67 +440,88 @@ SP_EAP::createSection(
 			),
 			array(
 				'id'         => 'eap_expand_collapse_icon',
+				'class'      => 'eap_expand_collapse_icon',
 				'type'       => 'image_select',
 				'title'      => __( 'Expand & Collapse Icon Style', 'easy-accordion-free' ),
 				'subtitle'   => __( 'Choose a expand and collapse icon style.', 'easy-accordion-free' ),
 				'options'    => array(
 					'1'  => array(
-						'image' => SP_EA_URL . 'admin/img/1-plus.png',
+						'image' => SP_EA_URL . 'admin/img/collapse-expand-icon/plus-minus.svg',
 					),
-					'2'  => array(
-						'image'    => SP_EA_URL . 'admin/img/2-angle.png',
-						'pro_only' => true,
-					),
-					'3'  => array(
-						'image'    => SP_EA_URL . 'admin/img/3-angle-double.png',
-						'pro_only' => true,
-					),
-					'4'  => array(
-						'image'    => SP_EA_URL . 'admin/img/4-arrow.png',
+					'19' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/plus-times.svg',
 						'pro_only' => true,
 					),
 					'5'  => array(
-						'image'    => SP_EA_URL . 'admin/img/5-tick.png',
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/check-times.svg',
 						'pro_only' => true,
 					),
 					'6'  => array(
-						'image'    => SP_EA_URL . 'admin/img/6-chevron.png',
-						'pro_only' => true,
-					),
-					'7'  => array(
-						'image'    => SP_EA_URL . 'admin/img/7-hand.png',
-						'pro_only' => true,
-					),
-					'8'  => array(
-						'image'    => SP_EA_URL . 'admin/img/8-caret.png',
-						'pro_only' => true,
-					),
-					'9'  => array(
-						'image'    => SP_EA_URL . 'admin/img/9-angle-2.png',
-						'pro_only' => true,
-					),
-					'10' => array(
-						'image'    => SP_EA_URL . 'admin/img/10-angle-double-up.png',
-						'pro_only' => true,
-					),
-					'11' => array(
-						'image'    => SP_EA_URL . 'admin/img/11-arrow-up.png',
-						'pro_only' => true,
-					),
-					'12' => array(
-						'image'    => SP_EA_URL . 'admin/img/12-angle-bold-up.png',
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/chevron-down-right.svg',
 						'pro_only' => true,
 					),
 					'13' => array(
-						'image'    => SP_EA_URL . 'admin/img/13-angle-3.png',
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-down-up.svg',
 						'pro_only' => true,
 					),
-					'14' => array(
-						'image'    => SP_EA_URL . 'admin/img/14-caret-up.png',
+					'9'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-up-down.svg',
+						'pro_only' => true,
+					),
+					'2'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-down-right-7.svg',
+						'pro_only' => true,
+					),
+					'18' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-down-up-18.svg',
+						'pro_only' => true,
+					),
+					'9'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-up-down-9.svg',
+						'pro_only' => true,
+					),
+					'3'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-double-down-right.svg',
 						'pro_only' => true,
 					),
 					'15' => array(
-						'image'    => SP_EA_URL . 'admin/img/15-angle-double-down.png',
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-double-down-up.svg',
+						'pro_only' => true,
+					),
+					'10' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/angle-double-up-down.svg',
+						'pro_only' => true,
+					),
+					'8'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/caret-down-right.svg',
+						'pro_only' => true,
+					),
+					'17' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/caret-up-down-14.svg',
+						'pro_only' => true,
+					),
+					'14' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/caret-down-up.svg',
+						'pro_only' => true,
+					),
+					'4'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/arrow-down-right.svg',
+						'pro_only' => true,
+					),
+					'16' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/arrow-down-up.svg',
+						'pro_only' => true,
+					),
+					'11' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/arrow-up-down-18.svg',
+						'pro_only' => true,
+					),
+					'7'  => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/hand-o-down-right.svg',
+						'pro_only' => true,
+					),
+					'20' => array(
+						'image'    => SP_EA_URL . 'admin/img/collapse-expand-icon/q-a-img.svg',
 						'pro_only' => true,
 					),
 				),
@@ -488,6 +582,7 @@ SP_EAP::createSection(
 						'text' => __( 'Right', 'easy-accordion-free' ),
 					),
 				),
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-expand-&-collapse-icon-position.svg" alt="Expand & Collapse Icon Position"></div><div class="ea-info-label img">' . __( 'Expand & Collapse Icon Position', 'easy-accordion-free' ) . '</div>',
 				'default'    => 'left',
 				'dependency' => array(
 					'eap_expand_close_icon',
@@ -496,20 +591,26 @@ SP_EAP::createSection(
 				),
 			),
 			array(
+				'type'    => 'notice',
+				'class'   => 'only_pro_notice',
+				'content' => __( 'Want to make your Accordion FAQs visually attractive? <a href="https://easyaccordion.io/pricing/?ref=1" target="_blank"><b>Upgrade To Pro!</b></a>', 'easy-accordion-free' ),
+			),
+			array(
 				'type'    => 'subheading',
 				'content' => __( 'Accordion Item Title & Description', 'easy-accordion-free' ),
 			),
 			array(
-				'id'       => 'eap_border_css',
-				'type'     => 'border',
-				'title'    => __( 'Accordion Border', 'easy-accordion-free' ),
-				'subtitle' => __( 'Set accordion item border. Default value is 1px.', 'easy-accordion-free' ),
-				'all'      => true,
-				'default'  => array(
+				'id'         => 'eap_border_css',
+				'type'       => 'border',
+				'title'      => __( 'Accordion Border', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Set accordion item border. Default value is 1px.', 'easy-accordion-free' ),
+				'all'        => true,
+				'default'    => array(
 					'all'   => 1,
 					'style' => 'solid',
 					'color' => '#e2e2e2',
 				),
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-accordion-border.svg" alt="Accordion Border"></div><div class="ea-info-label img">' . __( 'Accordion Border', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
 				'id'         => 'eap_title_icon',
@@ -548,19 +649,20 @@ SP_EAP::createSection(
 				'default'  => '#eee',
 			),
 			array(
-				'id'       => 'eap_title_padding',
-				'type'     => 'spacing',
-				'class'    => 'only-for-pro',
-				'title'    => __( 'Title Padding', 'easy-accordion-free' ),
-				'subtitle' => __( 'Set accordion title custom padding.', 'easy-accordion-free' ),
-				'units'    => array( 'px' ),
-				'default'  => array(
+				'id'         => 'eap_title_padding',
+				'type'       => 'spacing',
+				'class'      => 'only-for-pro',
+				'title'      => __( 'Title Padding', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Set accordion title custom padding.', 'easy-accordion-free' ),
+				'units'      => array( 'px' ),
+				'default'    => array(
 					'left'   => '15',
 					'top'    => '15',
 					'bottom' => '15',
 					'right'  => '15',
 
 				),
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-title-padding.svg" alt="Title Padding"></div><div class="ea-info-label img">' . __( 'Title Padding', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
 				'id'         => 'eap_autop',
@@ -580,23 +682,24 @@ SP_EAP::createSection(
 				'default'  => '#fff',
 			),
 			array(
-				'id'       => 'eap_description_padding',
-				'type'     => 'spacing',
-				'class'    => 'only-for-pro',
-				'title'    => __( 'Description Padding', 'easy-accordion-free' ),
-				'subtitle' => __( 'Set accordion description custom padding.', 'easy-accordion-free' ),
-				'units'    => array( 'px' ),
-				'default'  => array(
+				'id'         => 'eap_description_padding',
+				'type'       => 'spacing',
+				'class'      => 'only-for-pro',
+				'title'      => __( 'Description Padding', 'easy-accordion-free' ),
+				'subtitle'   => __( 'Set accordion description custom padding.', 'easy-accordion-free' ),
+				'units'      => array( 'px' ),
+				'default'    => array(
 					'left'   => '15',
 					'top'    => '15',
 					'bottom' => '15',
 					'right'  => '15',
 				),
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-description-padding.svg" alt="Description Padding"></div><div class="ea-info-label img">' . __( 'Description Padding', 'easy-accordion-free' ) . '</div>',
 			),
 			array(
 				'type'    => 'notice',
 				'class'   => 'only_pro_notice',
-				'content' => __( 'To unlock the more settings for <b>Accordion Item Title & Description, Animation, Ajax Pagination</b>, https://shapedplugin.com/easy-accordion/pricing/?ref=1" target="_blank"><b>Upgrade To Pro!</b></a>', 'easy-accordion-free' ),
+				'content' => __( 'To unlock the full potential of your Accordion FAQs and keep visitors engaged, <a href="https://easyaccordion.io/pricing/?ref=1" target="_blank"><b>Upgrade To Pro!</b></a>', 'easy-accordion-free' ),
 			),
 			array(
 				'type'    => 'subheading',
@@ -612,16 +715,47 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Disabled', 'easy-accordion-free' ),
 				'text_width' => 94,
 				'default'    => false,
+				'title_info' => __(
+					'<div class="ea-info-label">Animation</div> <div class="ea-short-content">The Animation option allows you to control the accordion animation. Customize the visual experience of accordion transitions according to your preference.</div><div class="info-button"><a class="ea-open-live-demo" href="https://easyaccordion.io/accordion-animation/" target="_blank">Live Demo</a></div>',
+					'easy-accordion-free'
+				),
 			),
 			array(
 				'id'       => 'eap_animation_style',
 				'type'     => 'select',
-				'class'    => 'only-for-pro',
+				'class'    => 'only-select-for-pro',
 				'title'    => __( 'Animation Style', 'easy-accordion-free' ),
 				'subtitle' => __( 'Select an animation style for the description content.', 'easy-accordion-free' ),
 				'options'  => array(
-					'fadeIn' => __( 'fadeIn', 'easy-accordion-free' ),
+					'normal'        => __( 'Normal', 'easy-accordion-free' ),
+					'fadeIn'        => __( 'fadeIn (Pro)', 'easy-accordion-free' ),
+					'fadeInLeft'    => __( 'fadeInLeft (Pro)', 'easy-accordion-free' ),
+					'fadeInUp'      => __( 'fadeInUp (Pro)', 'easy-accordion-free' ),
+					'fadeInDownBig' => __( 'fadeInDownBig (Pro)', 'easy-accordion-free' ),
+					'shake'         => __( 'shake (Pro)', 'easy-accordion-free' ),
+					'swing'         => __( 'swing (Pro)', 'easy-accordion-free' ),
+					'rollIn'        => __( 'rollIn (Pro)', 'easy-accordion-free' ),
+					'bounce'        => __( 'bounce (Pro)', 'easy-accordion-free' ),
+					'wobble'        => __( 'wobble (Pro)', 'easy-accordion-free' ),
+					'shake'         => __( 'shake (Pro)', 'easy-accordion-free' ),
+					'slideInDown'   => __( 'slideInDown (Pro)', 'easy-accordion-free' ),
+					'slideInLeft'   => __( 'slideInLeft (Pro)', 'easy-accordion-free' ),
+					'slideInUp'     => __( 'slideInUp (Pro)', 'easy-accordion-free' ),
+					'zoomIn'        => __( 'zoomIn (Pro)', 'easy-accordion-free' ),
+					'zoomInDown'    => __( 'zoomInDown (Pro)', 'easy-accordion-free' ),
+					'zoomInUp'      => __( 'zoomInUp (Pro)', 'easy-accordion-free' ),
+					'zoomInLeft'    => __( 'zoomInLeft (Pro)', 'easy-accordion-free' ),
+					'bounceIn'      => __( 'bounceIn (Pro)', 'easy-accordion-free' ),
+					'bounceInDown'  => __( 'bounceInDown (Pro)', 'easy-accordion-free' ),
+					'bounceInUp'    => __( 'bounceInUp (Pro)', 'easy-accordion-free' ),
+					'jello'         => __( 'jello (Pro)', 'easy-accordion-free' ),
+					'swing'         => __( 'swing (Pro)', 'easy-accordion-free' ),
+					'rubberBand'    => __( 'rubberBand (Pro)', 'easy-accordion-free' ),
+					'shake'         => __( 'shake (Pro)', 'easy-accordion-free' ),
+					'swing'         => __( 'swing (Pro)', 'easy-accordion-free' ),
+					'rollIn'        => __( 'rollIn (Pro)', 'easy-accordion-free' ),
 				),
+				'default'  => 'normal',
 			),
 			array(
 				'id'       => 'eap_animation_time',
@@ -632,6 +766,13 @@ SP_EAP::createSection(
 				'min'      => 0,
 				'max'      => 99999,
 				'default'  => 300,
+			),
+			array(
+				'id'      => 'eap_accordion_uniq_id',
+				'class'   => 'eap_accordion_wrapper_uniq_attribute',
+				'type'    => 'text',
+				'title'   => '',
+				'default' => 'sp_easy_accordion-' . time() . '',
 			),
 			array(
 				'type'    => 'subheading',
@@ -647,6 +788,7 @@ SP_EAP::createSection(
 				'text_off'   => __( 'Disabled', 'easy-accordion-free' ),
 				'default'    => true,
 				'text_width' => 94,
+				'title_info' => '<div class="ea-img-tag"><img src="' . esc_url( SP_EA_URL ) . 'admin/img/ea-ajax-pagination.svg" alt="Ajax Pagination"></div><div class="ea-info-label img">' . __( 'Ajax Pagination', 'easy-accordion-free' ) . '</div><div class="info-button img"><a class="ea-open-live-demo" href="https://easyaccordion.io/ajax-paginations/" target="_blank">Live Demo</a></div>',
 			),
 			array(
 				'id'         => 'pagination_type',
@@ -721,7 +863,7 @@ SP_EAP::createSection(
 		'fields'          => array(
 			array(
 				'type'    => 'notice',
-				'content' => __( 'To unlock These Typography (940+ Google Fonts) options,<a href="https://shapedplugin.com/easy-accordion/pricing/?ref=1" target="_blank"> <b>Upgrade To Pro!</b></a> P.S. Note: The color fields work in the lite version.', 'easy-accordion-free' ),
+				'content' => __( 'Want to customize everything (colors and typography) easily? <a href="https://easyaccordion.io/pricing/?ref=1" target="_blank"> <b>Upgrade To Pro!</b></a> P.S. Note: The <b>color</b> and <b>margin</b> fields work in the lite version.', 'easy-accordion-free' ),
 			),
 			array(
 				'id'         => 'section_title_font_load',
@@ -737,11 +879,11 @@ SP_EAP::createSection(
 				),
 			),
 			array(
-				'id'           => 'eap_section_title_typography',
-				'type'         => 'typography',
-				'title'        => __( 'Accordion Section Title Font', 'easy-accordion-free' ),
-				'subtitle'     => __( 'Set Accordion section title font properties.', 'easy-accordion-free' ),
-				'default'      => array(
+				'id'            => 'eap_section_title_typography',
+				'type'          => 'typography',
+				'title'         => __( 'Accordion Section Title Font', 'easy-accordion-free' ),
+				'subtitle'      => __( 'Set Accordion section title font properties.', 'easy-accordion-free' ),
+				'default'       => array(
 					'font-family'    => 'Open Sans',
 					'font-style'     => '600',
 					'font-size'      => '28',
@@ -752,15 +894,17 @@ SP_EAP::createSection(
 					'type'           => 'google',
 					'unit'           => 'px',
 					'color'          => '#444',
+					'margin-bottom'  => '30',
 				),
-				'preview'      => 'always',
-				'dependency'   => array(
+				'preview'       => 'always',
+				'margin_bottom' => true,
+				'dependency'    => array(
 					'section_title',
 					'==',
 					'true',
 					true,
 				),
-				'preview_text' => 'Accordion Section Title',
+				'preview_text'  => 'Accordion Section Title',
 			),
 			array(
 				'id'       => 'eap_title_font_load',
@@ -820,36 +964,3 @@ SP_EAP::createSection(
 		), // End of fields array.
 	)
 ); // Style settings section end.
-
-//
-// Metabox of the footer section / shortocde section.
-// Set a unique slug-like ID.
-//
-$eap_display_shortcode = 'sp_eap_display_shortcode';
-
-//
-// Create a metabox.
-//
-SP_EAP::createMetabox(
-	$eap_display_shortcode,
-	array(
-		'title'     => 'Easy Accordion',
-		'post_type' => 'sp_easy_accordion',
-		'context'   => 'normal',
-	)
-);
-
-//
-// Create a section.
-//
-SP_EAP::createSection(
-	$eap_display_shortcode,
-	array(
-		'fields' => array(
-			array(
-				'type'  => 'shortcode',
-				'class' => 'eap-admin-footer',
-			),
-		),
-	)
-);

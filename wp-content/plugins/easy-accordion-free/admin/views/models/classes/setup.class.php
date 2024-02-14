@@ -88,6 +88,9 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 			// set constants.
 			self::constants();
 
+			// translate.
+			self::set_locale();
+
 			// include files.
 			self::includes();
 
@@ -146,6 +149,21 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 
 			do_action( 'eapro_loaded' );
 
+		}
+
+		/**
+		 * Define the locale for this plugin for internationalization.
+		 *
+		 * Uses the Easy_Accordion_Free_I18n class in order to set the domain and to register the hook
+		 * with WordPress.
+		 *
+		 * @since    2.0.0
+		 * @access   private
+		 */
+		public static function set_locale() {
+			require_once SP_EA_INCLUDES . '/class-easy-accordion-free-i18n.php';
+			$plugin_i18n = new Easy_Accordion_Free_I18n();
+			$plugin_i18n->load_plugin_textdomain();
 		}
 
 		/**
@@ -537,9 +555,9 @@ if ( ! class_exists( 'SP_EAP' ) ) {
 				}
 
 				if ( ! empty( $field['title'] ) ) {
-					$title_help = ( ! empty( $field['title_help'] ) ) ? '<div class="eapro-help eapro-title-help"><span class="eapro-help-text">' . wp_kses_post( $field['title_help'] ) . '</span><i class="fa fa-question-circle"></i></div>' : '';
+					$title_info = ( ! empty( $field['title_info'] ) ) ? '<span class="eapro-help title-info"><div class="eapro-help-text">' . wp_kses_post( $field['title_info'] ) . '</div><span class="tooltip-icon"><img src="' . self::include_plugin_url( 'assets/images/info.svg' ) . '"></span></span>' : '';
 					echo '<div class="eapro-title">';
-					echo '<h4>' . wp_kses_post( $field['title'] ) . '</h4>' . wp_kses_post( $title_help );
+					echo '<h4>' . wp_kses_post( $field['title'] . $title_info ) . '</h4>';
 					echo ( ! empty( $field['subtitle'] ) ) ? '<div class="eapro-text-subtitle">' . wp_kses_post( $field['subtitle'] ) . '</div>' : '';
 					echo '</div>';
 				}

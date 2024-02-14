@@ -48,8 +48,9 @@ function wpcf7_k_password_form_tag_handler( $tag ) {
 		'[-0-9a-zA-Z]+', true );
 
 	$atts['password_strength'] = (int)$tag->get_option( 'password_strength', 'signed_int', true);
-	$atts['password_min'] = (int)$tag->get_option( 'password_min', 'signed_int', true );
 	$atts['password_check'] = $tag->get_option( 'password_check', '', true);
+	$atts['specific_password_check'] = $tag->get_option( 'specific_password_check', '', true);
+	$atts['hideIcon'] = $tag->has_option( 'hideIcon' );	
 
 	if ( $tag->is_required() ) {
 		$atts['aria-required'] = 'true';
@@ -84,14 +85,15 @@ function wpcf7_k_password_form_tag_handler( $tag ) {
 	} else {
 		$atts['type'] = 'password';
 	}
-
 	$atts['name'] = $tag->name;
 
 	$atts = wpcf7_format_atts( $atts );
 
 	$tag_id = $tag->get_id_option();
-	if( !empty($tag_id) && $tag_id === $tag->name ){
-		$html = sprintf(
+	if( empty($tag_id) ) $tag_id = $tag->name; // for the version 5.8 of Contact form 7: Contact form 7 ignores the id attribute if the same ID is already used for another element.
+
+	if( $tag_id === $tag->name && !$tag->has_option( 'hideIcon' ) ){
+ 		$html = sprintf(
 			'<span class="wpcf7-form-control-wrap" data-name="%1$s"><input %2$s />%3$s<span style="position: relative; margin-left: -30px;"  id="buttonEye-'. $tag_id .'" class="fa fa-eye-slash" onclick="pushHideButton(\''. $tag_id .'\')"></span></span>',
 			sanitize_html_class( $tag->name ), $atts, $validation_error );
 	}else{
@@ -109,6 +111,21 @@ function wpcf7_k_password_validation_filter( $result, $tag ) {
 		? trim( wp_unslash( strtr( (string) $_POST[$name], "\n", " " ) ) )
 		: '';
 
+	$specific_password_check = $tag->get_option( 'specific_password_check', '', true);
+	if(!empty($specific_password_check)){
+		$value_pass_array = explode("_", str_replace(" ", "", $specific_password_check));
+		$flag = false;
+		foreach($value_pass_array as $each_value_pass){
+			if($value === $each_value_pass ){
+				$flag = true;
+				 break;
+			}
+		}
+		if( $flag === false){
+			$result->invalidate($tag, __("Passwords do not match defined!", 'cf7-add-password-field' ));		
+		}
+	}
+
 	$password_check = $tag->get_option( 'password_check', '', true);
 	if(!empty($password_check)){
 		if(isset( $_POST[$password_check] )){
@@ -116,20 +133,17 @@ function wpcf7_k_password_validation_filter( $result, $tag ) {
 		? trim( wp_unslash( strtr( (string) $_POST[$password_check], "\n", " " ) ) )
 		: '';
 			if($value !== $value_pass ){
-					$result->invalidate($tag, __("Don't match the password!", 'cf7-add-password-field' ));		
+					$result->invalidate($tag, __("Passwords do not match!", 'cf7-add-password-field' ));		
 			}
 		}
 	}
 
 	$password_strength = (int)$tag->get_option( 'password_strength','signed_int', true);
-	$password_min = (int) $tag->get_option( 'password_min', 'signed_int', true );
 
 	if ($password_strength < 0){
 		$password_strength = 0;
 	}
-	if ($password_min < 1){
-		$password_min = 1;
-	}
+
 	$pattern = preg_quote ($tag->get_option( 'pattern' ));
 
 	if ( $tag->is_required() and '' === $value ) {
@@ -147,8 +161,6 @@ function wpcf7_k_password_validation_filter( $result, $tag ) {
 			} elseif ( $minlength and $code_units < $minlength ) {
 				$result->invalidate( $tag, wpcf7_get_message( 'invalid_too_short' ) );
 			}
-		}elseif(strlen($value) < $password_min) {
-			$result->invalidate($tag, __("Please limit the number of characters to at least: ",'cf7-add-password-field') . $password_min);
 		}
 
 		if ($password_strength > 0) {
@@ -273,7 +285,24 @@ function wpcf7_k_password_pane_confirm( $contact_form, $args = '' ) {
 				           <?php echo esc_html( __( 'Enter the value of the “name” on the field if you wish to verify a value of a password field. In case of verifying the password value that you set [password password-100], set [password* password-101 password_check:password-100].', 'cf7-add-password-field' ) ); ?><br/>
 				</td>
 			</tr>
-
+			<tr>
+				<th scope="row"><label
+					for="<?php echo esc_attr( $args['content'] . '-specific_password_check' ); ?>"><?php echo esc_html( __( 'Specific Password Check', 'cf7-add-password-field' ) ); ?></label>
+				</th>
+				<td><input type="text" name="specific_password_check" class="classvalue oneline option"
+				           id="<?php echo esc_attr( $args['content'] . '-specific_password_check' ); ?>". placeholder="password1_password2"/><br/>
+				           <?php echo esc_html( __( ' Enter your password separated by underline(Passwords cannot contain underline and marks escaped by preg_quote are not allowed.). Check if it matches the password entered here. If you have set a password strength, the password set here should also follow that rule.', 'cf7-add-password-field' ) ); ?><br/>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php echo esc_html( __( 'Hide Icon', 'contact-form-7' ) ); ?></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text"><?php echo esc_html( __( 'Hide Icon', 'contact-form-7' ) ); ?></legend>
+						<label><input type="checkbox" name="hideIcon"  class="option" /> <?php echo esc_html( __( 'Hide the icon that shows the password', 'contact-form-7' ) ); ?></label>
+					</fieldset>
+				</td>
+			</tr>
 		</tbody>
 		</table>
 	</fieldset>

@@ -1,9 +1,10 @@
 === Contact Form 7 Add Password field ===
 Contributors: Kimiya Kitani
 Tags: contact form
-Requires at least: 5.0
-Tested up to: 6.0.1
-Stable tag: 3.2
+Requires at least: 6.2
+Requires PHP: 7.4
+Tested up to: 6.3
+Stable tag: 4.1
 
 The plugin is to add a password filed to Contact form 7 plugin.
  
@@ -37,11 +38,27 @@ https://info.cseas.kyoto-u.ac.jp/en/links-en/plugin-en/wordpress-dev-info-en/cf7
 2. View of Contact Form 7
 
 == Changelog ==
+= 4.1 =
+* Update the css and webfonts powered by fontawesome.com from 5.15.4 to version 6.4.2.
+* New "hideIcon" option has been added. By setting this, it can hide the icon for displaying passwords.
+* Tested up WordPress 6.3 with PHP 8.2.
+
+= 4.0 =
+* Fxied the issue for the version 5.8 of Contact form 7; Since the version 5.8 of Contact form 7 ignores the id attribute if the same ID is already used for another element.
+* Changed to require WordPress 6.2+ and PHP 7.4+ according to the specifications required by Contact Form 7 itself.
+
+= 3.31 =
+* Fixed some error message.
+
+= 3.3 =
+* Added "specific_password_check" option for matching with specific passwords specified in advance.
+
 = 3.2 =
-*Fixed the markup changes in form controls, such as error message, since the version 5.6 of Contact Form 7 plugin (https://contactform7.com/2022/05/20/contact-form-7-56-beta/).
+* Fixed the markup changes in form controls, such as error message, since the version 5.6 of Contact Form 7 plugin (https://contactform7.com/2022/05/20/contact-form-7-56-beta/).
+* Tested up 6.1
 
 = 3.1 =
-*Fixed misspelling of id in maxlength on input tag (it was naxlength).
+* Fixed misspelling of id in maxlength on input tag (it was naxlength).
 
 = 3.0 =
 * Fixed the password strength check.

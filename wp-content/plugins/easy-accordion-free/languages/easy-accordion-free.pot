@@ -178,13 +178,13 @@ msgstr ""
 #: admin/views/metabox-config.php:178
 msgid ""
 "Select an accordion theme style.To unlock 16+ Premium Accordion Themes,  <a "
-"href=\"https://shapedplugin.com/easy-accordion/?ref=1\" target="
+"href=\"https://easyaccordion.io/?ref=1\" target="
 "\"_blank\"> <b>Upgrade To Pro!</b> </a>"
 msgstr ""
 
 #: admin/views/metabox-config.php:179
 msgid ""
-"Check out <a href=\"https://shapedplugin.com/easy-accordion/all-accordion-themes/\"  target="
+"Check out <a href=\"https://easyaccordion.io/all-accordion-themes/\"  target="
 "\"_blank\"><b>16+ Premium Pre-designed</b></a> Accordion Themes!"
 msgstr ""
 

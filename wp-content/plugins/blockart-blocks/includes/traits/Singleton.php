@@ -37,7 +37,7 @@ trait Singleton {
 	protected function __construct() {}
 
 	/**
-	 * Disable unserializing of the class.
+	 * Disable un-serializing of the class.
 	 *
 	 * @return void
 	 */

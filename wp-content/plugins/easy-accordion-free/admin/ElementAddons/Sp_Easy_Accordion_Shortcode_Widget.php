@@ -46,7 +46,7 @@ class Sp_Easy_Accordion_Shortcode_Widget extends \Elementor\Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'icon-accordion-menu';
+		return 'ea-icon-menu';
 	}
 
 	/**
@@ -78,7 +78,7 @@ class Sp_Easy_Accordion_Shortcode_Widget extends \Elementor\Widget_Base {
 		);
 		$posts         = $sp_wcsp_posts->posts;
 		foreach ( $posts as $post ) {
-			$post_list[ $post->ID ] = $post->post_title;
+			$post_list[ $post->ID ] = ! empty( $post->post_title ) ? $post->post_title : '#' . $post->ID;
 		}
 		krsort( $post_list );
 		return $post_list;
@@ -138,6 +138,8 @@ class Sp_Easy_Accordion_Shortcode_Widget extends \Elementor\Widget_Base {
 			$upload_data        = get_post_meta( $post_id, 'sp_eap_upload_options', true );
 			$shortcode_data     = get_post_meta( $post_id, 'sp_eap_shortcode_options', true );
 			$main_section_title = get_the_title( $post_id );
+			$ea_dynamic_css     = SP_EA_Front_Scripts::load_dynamic_style( $post_id, $shortcode_data );
+			echo '<style>' . $ea_dynamic_css['dynamic_css'] . '</style>';
 
 			Easy_Accordion_Free_Shortcode::sp_eap_html_show( $post_id, $upload_data, $shortcode_data, $main_section_title );
 			?>

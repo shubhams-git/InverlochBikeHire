@@ -7,7 +7,8 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	die; } // Cannot access directly.
+	die;
+} // Cannot access directly.
 
 if ( ! function_exists( 'wpcf_array_search' ) ) {
 	/**

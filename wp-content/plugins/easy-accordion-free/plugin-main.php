@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin name: Easy Accordion
- * Plugin URI:  https://shapedplugin.com/easy-accordion/?ref=1
+ * Plugin URI:  https://easyaccordion.io/?ref=1
  * Description: The best Responsive and Touch-friendly drag & drop <strong>Accordion FAQ</strong> builder plugin for WordPress.
- * Author:      ShapedPlugin
+ * Author:      ShapedPlugin LLC
  * Author URI:  https://shapedplugin.com/
- * Version:     2.1.19
+ * Version:     2.3.3
  * Text Domain: easy-accordion-free
  * Domain Path: /languages/
  *
@@ -51,7 +51,7 @@ class SP_EASY_ACCORDION_FREE {
 	 *
 	 * @var string
 	 */
-	public $version = '2.1.19';
+	public $version = '2.3.3';
 
 	/**
 	 * The name of the plugin.
@@ -113,7 +113,6 @@ class SP_EASY_ACCORDION_FREE {
 		$this->define_constants();
 		$this->includes();
 		$this->load_dependencies();
-		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_common_hooks();
 	}
@@ -148,19 +147,14 @@ class SP_EASY_ACCORDION_FREE {
 
 		$this->loader->add_action( 'manage_sp_easy_accordion_posts_custom_column', $plugin_admin, 'display_accordion_admin_fields', 10, 2 );
 		$this->loader->add_filter( 'admin_footer_text', $plugin_admin, 'sp_eap_review_text', 10, 2 );
+		$this->loader->add_filter( 'update_footer', $plugin_admin, 'sp_eap_version_text', 11 );
 		$this->loader->add_filter( 'plugin_row_meta', $plugin_admin, 'after_easy_accodion_row_meta', 10, 4 );
 		$this->loader->add_action( 'activated_plugin', $plugin_admin, 'sp_ea_redirect_after_activation', 10, 2 );
+		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'add_plugin_action_links', 10, 2 );
 		// import export tools.
 		$import_export = new Easy_Accordion_Import_Export( SP_PLUGIN_NAME, SP_EA_VERSION );
 		$this->loader->add_action( 'wp_ajax_eap_export_accordions', $import_export, 'export_accordions' );
 		$this->loader->add_action( 'wp_ajax_eap_import_accordions', $import_export, 'import_accordions' );
-		// Help Page.
-		$help_page = new Easy_Accordion_Free_Help( SP_PLUGIN_NAME, SP_EA_VERSION );
-		$this->loader->add_action( 'admin_menu', $help_page, 'help_admin_menu', 50 );
-		$this->loader->add_filter( 'plugin_action_links', $help_page, 'add_plugin_action_links', 10, 2 );
-		// Premium page.
-		$premium_page = new Easy_Accordion_Premium( SP_PLUGIN_NAME, SP_EA_VERSION );
-		$this->loader->add_action( 'admin_menu', $premium_page, 'premium_admin_menu', 51 );
 		if ( version_compare( $GLOBALS['wp_version'], '5.3', '>=' ) ) {
 			// Gutenberg block.
 			new Easy_Accordion_Free_Gutenberg_Block();
@@ -171,22 +165,20 @@ class SP_EASY_ACCORDION_FREE {
 		if ( ( is_plugin_active( 'elementor/elementor.php' ) || is_plugin_active_for_network( 'elementor/elementor.php' ) ) ) {
 			require_once SP_EA_PATH . 'admin/class-easy-accordion-free-element-shortcode-addons.php';
 		}
+		add_filter( 'body_class', array( $this, 'sp_easy_accordion_body_class' ) );
 	}
 
 	/**
-	 * Define the locale for this plugin for internationalization.
+	 * Adds a custom body class for SP Easy Accordion to the body tag.
 	 *
-	 * Uses the Easy_Accordion_Free_I18n class in order to set the domain and to register the hook
-	 * with WordPress.
-	 *
-	 * @since    2.0.0
-	 * @access   private
+	 * @param array $classes An array of body classes.
+	 * @return array An updated array of body classes.
 	 */
-	private function set_locale() {
-		$plugin_i18n = new Easy_Accordion_Free_I18n();
+	public function sp_easy_accordion_body_class( $classes ) {
+		// Add the custom body class for SP Easy Accordion.
+		$classes[] = 'sp-easy-accordion-enabled';
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
+		return $classes;
 	}
 
 	/**
@@ -213,18 +205,16 @@ class SP_EASY_ACCORDION_FREE {
 		require_once SP_EA_INCLUDES . '/class-easy-accordion-free-updates.php';
 		require_once SP_EA_INCLUDES . '/class-easy-accordion-free-loader.php';
 		require_once SP_EA_INCLUDES . '/class-easy-accordion-free-post-types.php';
-		require_once SP_EA_INCLUDES . '/class-easy-accordion-free-i18n.php';
 		require_once SP_EA_PATH . '/public/views/scripts.php';
 		require_once SP_EA_PATH . '/admin/class-easy-accordion-free-admin.php';
-		require_once SP_EA_PATH . '/admin/views/help.php';
-		require_once SP_EA_PATH . '/admin/views/premium.php';
+		require_once SP_EA_PATH . '/admin/help-page/help-page.php';
+		// require_once SP_EA_PATH . '/admin/views/premium.php';
 		require_once SP_EA_PATH . '/admin/views/models/classes/setup.class.php';
 		require_once SP_EA_PATH . '/admin/views/metabox-config.php';
 		require_once SP_EA_PATH . '/admin/views/option-config.php';
 		require_once SP_EA_PATH . '/admin/views/tools-config.php';
 		require_once SP_EA_PATH . '/admin/views/notices/review.php';
 		require_once SP_EA_PATH . '/public/views/class-easy-accordion-free-shortcode.php';
-		require_once SP_EA_PATH . '/public/views/deprecated/shortcode-deprecated.php';
 		require_once SP_EA_PATH . '/includes/class-easy-accordion-import-export.php';
 		require_once SP_EA_PATH . '/admin/preview/class-easy-accordion-free-preview.php';
 		require_once SP_EA_PATH . '/admin/class-easy-accordion-free-gutenberg-block.php';
@@ -236,7 +226,6 @@ class SP_EASY_ACCORDION_FREE {
 	 * Include the following files that make up the plugin:
 	 *
 	 * - Easy_Accordion_Free_Loader. Orchestrates the hooks of the plugin.
-	 * - Easy_Accordion_Free_i18n. Defines internationalization functionality.
 	 * - Easy_Accordion_Free_Admin. Defines all hooks for the admin area.
 	 * - Easy_Accordion_Free_Public. Defines all hooks for the public side of the site.
 	 *
@@ -248,7 +237,6 @@ class SP_EASY_ACCORDION_FREE {
 	 */
 	private function load_dependencies() {
 		$this->loader = new Easy_Accordion_Free_Loader();
-
 	}
 
 	/**

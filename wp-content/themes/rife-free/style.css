@@ -7,11 +7,11 @@ Theme URI: https://apollo13themes.com/rife/free/
 License: GNU General Public License v3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 4.7
-Tested up to: 5.9
+Tested up to: 6.4.3
 Requires PHP: 5.3.0
 Tags: e-commerce, portfolio, photography, two-columns, three-columns, left-sidebar, right-sidebar, grid-layout, translation-ready, sticky-post, post-formats, custom-colors, custom-menu, featured-images, footer-widgets, full-width-template, theme-options, threaded-comments, rtl-language-support
 Text Domain: rife-free
-Version: 2.4.14
+Version: 2.4.19
 */
 
 /* ==========================================================================
@@ -4146,7 +4146,6 @@ div.wpcf7-response-output{
 	font-size: 13px;
 	line-height: 20px;
 	text-align: center;
-	display: none;
 	/*cursor: pointer;*//*there is no action on this div*/
 }
 .form-info.error,

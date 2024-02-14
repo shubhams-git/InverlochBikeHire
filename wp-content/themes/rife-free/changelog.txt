@@ -4,6 +4,91 @@ Not all bundled plugins may be included in every theme, however every theme will
 What plugins are included with your theme can be found in feature list of theme that you are using.
 Thanks!
 
+----------------
+= 2.4.19(01.02.2024)
+
+Tested with WordPress 6.4.3
+Tested with PHP 8.2
+Tested with WooCommerce 8.5
+
+Fixed:
+-main background color applied to BODY
+
+Added:
+-mechanism to start over with a new licence key - for those who cancelled previous licence and decided to come back
+
+
+----------------
+= 2.4.18(09.11.2023)
+
+Tested with WordPress 6.4
+Tested with PHP 8.2
+Tested with WooCommerce 8.2
+
+Fixed:
+-checking for nonce security in admin actions
+
+
+----------------
+= 2.4.17(25.09.2023)
+
+Tested with WordPress 6.3
+Tested with PHP 8.2
+Tested with WooCommerce 8.0
+
+Fixed:
+-confirmation not showing up for contact form 7
+
+Improved:
+-preventing errors on when Google fonts are not fully selected in the customizer
+
+----------------
+= 2.4.16.1(06.03.2023) - Only Rife Free =
+
+Tested with WordPress 6.1
+Tested with WooCommerce 7.4
+
+Fixed:
+-leftoever debug in code(thanks Ov3rfly)
+
+----------------
+= 2.4.16(05.03.2023) =
+
+Tested with WordPress 6.1
+Tested with WooCommerce 7.4
+
+Improved:
+-checking priviliges on various AJAX actions
+
+Fixed:
+-minor warnings that happens with PHP 8.X on
+-JavaScript error when user doesn't use gutenberg editor
+
+----------------
+= 2.4.15(25.10.2022) =
+
+Tested with WordPress 6.0
+Tested with WooCommerce 7.0
+
+
+Fixed:
+-layout issue with album media when loaded in gutenberg editor
+-jetpack issue with lazy loading albums on albums list when jetpack lazy loading images is on
+
+
+----------------
+= 2.4.14.1(22.04.2022)(Rife Pro only) =
+
+Tested with WordPress 5.9
+Tested with WooCommerce 6.4
+
+
+Fixed:
+-auto update feature throwing PHP notices in some rare cases
+-not checking correctly for available updates in some cases
+-error throwed on bulk installation of required plugins
+
+
 
 ----------------
 = 2.4.14(29.03.2022) =

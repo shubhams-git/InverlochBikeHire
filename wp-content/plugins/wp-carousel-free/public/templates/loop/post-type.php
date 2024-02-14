@@ -20,9 +20,9 @@ if ( ! defined( 'WPINC' ) ) {
 		?>
 		<div class="wpcp-all-captions">
 		<?php
+			require WPCF_Helper::wpcf_locate_template( 'loop/post-type/meta.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/post-type/title.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/post-type/content.php' );
-			require WPCF_Helper::wpcf_locate_template( 'loop/post-type/meta.php' );
 		?>
 		</div>
 	</div>

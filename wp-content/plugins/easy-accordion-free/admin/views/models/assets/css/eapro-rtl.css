@@ -110,6 +110,9 @@
 /**
  * 01. 04. Content
  */
+ #sp_eap_shortcode_options .eapro-content{
+	margin-right: 0;
+ }
 .eapro-content {
   margin-left: 0;
   margin-right: 225px;
@@ -358,4 +361,58 @@
 .eapro-field .eapro--transparent-text {
   right: auto;
   left: 10px;
+}
+.eapro-field-group .eapro-cloneable-helper {
+	left: 10px;
+	right: auto;
+	transform: rotate(180deg);
+}
+.eapro-field-group .eapro-cloneable-title{
+		padding: 15px 15px 15px 10px;
+}
+.eapro-field-group .eapro-cloneable-header-icon{
+	transform: rotate(180deg);
+}
+#sp__eap-show-preview{
+	left: 144px;
+	right: auto;
+}
+.eapro-header-inner h1 img{
+	margin-left: 8px;
+	margin-right:0 ;
+}
+.eapro-help{
+	left: auto;
+}
+.sp-easy-accordion-help .sp-eap-help.upgrade .upgrade-info ul.upgrade-list li img{
+	margin-right: 0;
+	margin-left: 15px;
+}
+.sp-easy-accordion-help .sp-eap-help.upgrade .upgrade-pro .pro-content .pro-text{
+	margin-right: 30px;
+	margin-left: 0;
+}
+.sp-easy-accordion-help .sp-eap-help.testimonial .testimonial-area .testimonial-content::after{
+	right: 45px;
+	left: auto !important;
+}
+.sp-easy-accordion-help .sp-eap-help.testimonial .testimonial-area .testimonial-info{
+	margin-left: 0;
+	margin-right: 30px;
+}
+.sp-easy-accordion-help .sp-eap-help.testimonial .testimonial-area .testimonial-info .info{
+	margin-right: 15px;
+}
+.eapro-field-group .eapro-cloneable-title-prefix,
+.eapro-field-group .eapro-cloneable-title-number,
+.eapro-field-group .eapro-cloneable-header-icon,
+.eapro-field.eapro-field-icon.pro_only_field,
+#eapro-section-sp_eap_upload_options_1 .eapro-field-group .eapro-field-text.accordion_content_title {
+	float: right;
+}
+
+.rtl #adminmenu #menu-posts-sp_easy_accordion li a .sp-go-pro-icon {
+  float: right;
+  margin-left: 1px;
+  margin-right: -2px;
 }

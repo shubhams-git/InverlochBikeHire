@@ -16,6 +16,9 @@ class WebPage extends Abstract_Schema_Piece {
 	 * @return bool
 	 */
 	public function is_needed() {
+		if ( $this->context->indexable->object_type === 'unknown' ) {
+			return false;
+		}
 		return ! ( $this->context->indexable->object_type === 'system-page' && $this->context->indexable->object_sub_type === '404' );
 	}
 
@@ -45,7 +48,7 @@ class WebPage extends Abstract_Schema_Piece {
 			}
 		}
 
-		$this->add_image( $data );
+		$data = $this->add_image( $data );
 
 		if ( $this->context->indexable->object_type === 'post' ) {
 			$data['datePublished'] = $this->helpers->date->format( $this->context->post->post_date_gmt );
@@ -96,13 +99,16 @@ class WebPage extends Abstract_Schema_Piece {
 	 * If we have an image, make it the primary image of the page.
 	 *
 	 * @param array $data WebPage schema data.
+	 *
+	 * @return array
 	 */
-	public function add_image( &$data ) {
+	public function add_image( $data ) {
 		if ( $this->context->has_image ) {
 			$data['primaryImageOfPage'] = [ '@id' => $this->context->canonical . Schema_IDs::PRIMARY_IMAGE_HASH ];
 			$data['image']              = [ '@id' => $this->context->canonical . Schema_IDs::PRIMARY_IMAGE_HASH ];
 			$data['thumbnailUrl']       = $this->context->main_image_url;
 		}
+		return $data;
 	}
 
 	/**
@@ -134,7 +140,7 @@ class WebPage extends Abstract_Schema_Piece {
 		/**
 		 * Filter: 'wpseo_schema_webpage_potential_action_target' - Allows filtering of the schema WebPage potentialAction target.
 		 *
-		 * @api array $targets The URLs for the WebPage potentialAction target.
+		 * @param array $targets The URLs for the WebPage potentialAction target.
 		 */
 		$targets = \apply_filters( 'wpseo_schema_webpage_potential_action_target', [ $url ] );
 

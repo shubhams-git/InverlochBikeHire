@@ -56,6 +56,18 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 		 */
 		public $post_type = array();
 		/**
+		 * Post_formats
+		 *
+		 * @var array
+		 */
+		public $post_formats = array();
+		/**
+		 * Page_templates
+		 *
+		 * @var array
+		 */
+		public $page_templates = array();
+		/**
 		 * Args
 		 *
 		 * @var array
@@ -139,9 +151,7 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 					}
 				}
 			}
-
 			return $result;
-
 		}
 
 		/**
@@ -153,7 +163,6 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 		public function add_metabox_classes( $classes ) {
 
 			global $post;
-
 			if ( ! empty( $this->post_formats ) ) {
 
 				$saved_post_format = ( is_object( $post ) ) ? get_post_format( $post ) : false;
@@ -197,9 +206,7 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 			if ( ! empty( $this->args['class'] ) ) {
 				$classes[] = $this->args['class'];
 			}
-
 			return $classes;
-
 		}
 
 		/**
@@ -213,7 +220,6 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 			if ( ! in_array( $post_type, $this->args['exclude_post_types'] ) ) {
 				add_meta_box( $this->unique, $this->args['title'], array( $this, 'add_meta_box_content' ), $this->post_type, $this->args['context'], $this->args['priority'], $this->args );
 			}
-
 		}
 
 		/**
@@ -238,9 +244,7 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 		public function get_meta_value( $field ) {
 
 			global $post;
-
 			$value = null;
-
 			if ( is_object( $post ) && ! empty( $field['id'] ) ) {
 
 				if ( 'serialize' !== $this->args['data_type'] ) {
@@ -250,13 +254,14 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 					$meta  = get_post_meta( $post->ID, $this->unique, true );
 					$value = ( isset( $meta[ $field['id'] ] ) ) ? $meta[ $field['id'] ] : null;
 				}
+			} elseif ( 'tabbed' === $field['type'] ) {
+				$value = get_post_meta( $post->ID, $this->unique, true );
 			}
 
 			$default = ( isset( $field['id'] ) ) ? $this->get_default( $field ) : '';
 			$value   = ( isset( $value ) ) ? $value : $default;
 
 			return $value;
-
 		}
 
 		/**
@@ -269,7 +274,6 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 		public function add_meta_box_content( $post, $callback ) {
 
 			global $post;
-
 			$has_nav   = ( count( $this->sections ) > 1 && 'side' !== $this->args['context'] ) ? true : false;
 			$show_all  = ( ! $has_nav ) ? ' wpcf-show-all' : '';
 			$post_type = ( is_object( $post ) ) ? $post->post_type : '';
@@ -283,9 +287,7 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 			}
 
 			wp_nonce_field( 'wpcf_metabox_nonce', 'wpcf_metabox_nonce' . $this->unique );
-
 			echo '<div class="wpcf wpcf-metabox' . esc_attr( $theme ) . '">';
-
 			echo '<div class="wpcf-wrapper' . esc_attr( $show_all ) . '">';
 
 			if ( $has_nav ) {
@@ -295,7 +297,6 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 				echo '<ul>';
 
 				$tab_key = 0;
-
 				foreach ( $this->sections as $section ) {
 
 					if ( ! empty( $section['post_type'] ) && ! in_array( $post_type, array_filter( (array) $section['post_type'] ) ) ) {
@@ -308,19 +309,14 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 					echo '<li><a href="#" data-section="' . esc_attr( $this->unique ) . '_' . esc_attr( $tab_key ) . '">' . wp_kses_post( $tab_icon . $section['title'] . $tab_error ) . '</a></li>';
 
 					$tab_key++;
-
 				}
 
 				echo '</ul>';
-
 				echo '</div>';
-
 			}
 
 			echo '<div class="wpcf-content">';
-
 			echo '<div class="wpcf-sections">';
-
 			$section_key = 0;
 
 			foreach ( $this->sections as $section ) {
@@ -340,7 +336,6 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 				echo ( ! empty( $section['description'] ) ) ? '<div class="wpcf-field wpcf-section-description">' . wp_kses_post( $section['description'] ) . '</div>' : '';
 
 				if ( ! empty( $section['fields'] ) ) {
-
 					foreach ( $section['fields'] as $field ) {
 
 						if ( ! empty( $field['id'] ) && ! empty( $errors['fields'][ $field['id'] ] ) ) {
@@ -350,20 +345,14 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 						if ( ! empty( $field['id'] ) ) {
 							$field['default'] = $this->get_default( $field );
 						}
-
 						SP_WPCF::field( $field, $this->get_meta_value( $field ), $this->unique, 'metabox' );
-
 					}
 				} else {
-
 					echo '<div class="wpcf-no-option">' . esc_html__( 'No data available.', 'wpcf' ) . '</div>';
-
 				}
 
 				echo '</div>';
-
 				$section_key++;
-
 			}
 
 			echo '</div>';
@@ -382,17 +371,12 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 				echo '</div>';
 
 			}
-
 			echo '</div>';
-
 			echo ( $has_nav && 'normal' === $nav_type ) ? '<div class="wpcf-nav-background"></div>' : '';
 
 			echo '<div class="clear"></div>';
-
 			echo '</div>';
-
 			echo '</div>';
-
 		}
 
 		/**
@@ -418,14 +402,43 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 			$request = ( ! empty( $_POST[ $this->unique ] ) ) ? $_POST[ $this->unique ] : array();  // phpcs:ignore
 
 			if ( ! empty( $request ) ) {
-
 				foreach ( $this->sections as $section ) {
-
 					if ( ! empty( $section['fields'] ) ) {
-
 						foreach ( $section['fields'] as $field ) {
+							if ( 'tabbed' === $field['type'] ) {
+								$tabs = $field['tabs'];
+								foreach ( $tabs as $fields ) {
+									$fields = $fields['fields'];
+									foreach ( $fields as $field ) {
+										$field_id    = ! empty( $field['id'] ) ? $field['id'] : '';
+										$field_value = isset( $request[ $field_id ] ) ? $request[ $field_id ] : '';
 
-							if ( ! empty( $field['id'] ) ) {
+										// Sanitize "post" request of field.
+										if ( ! isset( $field['sanitize'] ) ) {
+											if ( is_array( $field_value ) ) {
+												$data[ $field_id ] = wp_kses_post_deep( $field_value );
+											} else {
+												$data[ $field_id ] = wp_kses_post( $field_value );
+											}
+										} elseif ( isset( $field['sanitize'] ) && is_callable( $field['sanitize'] ) ) {
+											$data[ $field_id ] = call_user_func( $field['sanitize'], $field_value );
+										} else {
+											$data[ $field_id ] = $field_value;
+										}
+
+										// Validate "post" request of field.
+										if ( isset( $field['validate'] ) && is_callable( $field['validate'] ) ) {
+											$has_validated = call_user_func( $field['validate'], $field_value );
+
+											if ( ! empty( $has_validated ) ) {
+												$errors['sections'][ $count ]  = true;
+												$errors['fields'][ $field_id ] = $has_validated;
+												$data[ $field_id ]             = $this->get_meta_value( $field );
+											}
+										}
+									}
+								}
+							} elseif ( ! empty( $field['id'] ) ) {
 
 								$field_id    = $field['id'];
 								$field_value = isset( $request[ $field_id ] ) ? $request[ $field_id ] : '';
@@ -449,24 +462,19 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 										$errors['sections'][ $count ]  = true;
 										$errors['fields'][ $field_id ] = $has_validated;
 										$data[ $field_id ]             = $this->get_meta_value( $field );
-
 									}
 								}
 							}
 						}
 					}
-
 					$count++;
-
 				}
 			}
 
 			$data = apply_filters( "wpcf_{$this->unique}_save", $data, $post_id, $this );
-
 			do_action( "wpcf_{$this->unique}_save_before", $data, $post_id, $this );
 
 			if ( empty( $data ) || ! empty( $request['_reset'] ) ) {
-
 				if ( 'serialize' !== $this->args['data_type'] ) {
 					foreach ( $data as $key => $value ) {
 						delete_post_meta( $post_id, $key );
@@ -490,9 +498,7 @@ if ( ! class_exists( 'SP_WPCF_Metabox' ) ) {
 			}
 
 			do_action( "wpcf_{$this->unique}_saved", $data, $post_id, $this );
-
 			do_action( "wpcf_{$this->unique}_save_after", $data, $post_id, $this );
-
 		}
 	}
 }

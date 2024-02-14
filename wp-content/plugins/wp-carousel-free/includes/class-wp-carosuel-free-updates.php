@@ -31,6 +31,7 @@ class WP_Carousel_Free_Updates {
 		'2.4.7'  => 'updates/update-2.4.7.php',
 		'2.4.11' => 'updates/update-2.4.11.php',
 		'2.4.12' => 'updates/update-2.4.12.php',
+		'2.6.0'  => 'updates/update-2.6.0.php',
 	);
 
 	/**
@@ -41,7 +42,7 @@ class WP_Carousel_Free_Updates {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'do_updates' ) );
+		add_action( 'plugins_loaded', array( $this, 'do_updates' ), 11 );
 	}
 
 	/**

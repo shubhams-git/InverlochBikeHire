@@ -50,9 +50,12 @@ class Easy_Accordion_Free_Admin {
 		$current_screen        = get_current_screen();
 		$the_current_post_type = $current_screen->post_type;
 		if ( 'sp_easy_accordion' === $the_current_post_type ) {
-			wp_enqueue_style( 'font-awesome', esc_url( SP_EA_URL . 'public/assets/css/font-awesome.min.css' ), array(), SP_EA_VERSION, 'all' );
+			wp_enqueue_style( 'sp-ea-fontello-icons' );
+			wp_enqueue_style( 'sp-ea-style' );
+
+			wp_enqueue_script( 'sp-ea-accordion-js' );
 		}
-		wp_enqueue_style( SP_PLUGIN_NAME . 'admin', esc_url( SP_EA_URL . 'admin/css/easy-accordion-free-admin.min.css' ), array(), SP_EA_VERSION, 'all' );
+		wp_enqueue_style( 'sp-ea-style-admin' );
 	}
 
 	/**
@@ -120,9 +123,22 @@ class Easy_Accordion_Free_Admin {
 	 */
 	public function sp_eap_review_text( $text ) {
 		$screen = get_current_screen();
-		if ( 'sp_easy_accordion' === get_post_type() || 'sp_easy_accordion_page_eap_settings' === $screen->id || 'sp_easy_accordion_page_eap_help' === $screen->id ) {
+		if ( 'sp_easy_accordion' === $screen->post_type ) {
 			$url  = 'https://wordpress.org/support/plugin/easy-accordion-free/reviews/?filter=5';
-			$text = sprintf( wp_kses_post( 'If you like <strong>Easy Accordion</strong>, please leave us a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating. Your Review is very important to us as it helps us to grow more. ', 'easy-accordion-free' ), $url );
+			$text = sprintf( wp_kses_post( 'Enjoying <strong>Easy Accordion?</strong> Please rate us <span class="spea-footer-text-star">★★★★★</span> <a href="%s" target="_blank">WordPress.org.</a> Your positive feedback will help us grow more. Thank you! 😊', 'easy-accordion-free' ), $url );
+		}
+		return $text;
+	}
+	/**
+	 * Bottom version notice.
+	 *
+	 * @param string $text Version notice.
+	 * @return string
+	 */
+	public function sp_eap_version_text( $text ) {
+		$screen = get_current_screen();
+		if ( 'sp_easy_accordion' === $screen->post_type ) {
+			$text = 'Easy Accordion ' . SP_EA_VERSION;
 		}
 		return $text;
 	}
@@ -135,7 +151,7 @@ class Easy_Accordion_Free_Admin {
 	 */
 	public function after_easy_accodion_row_meta( $plugin_meta, $file ) {
 		if ( SP_EA_BASENAME === $file ) {
-			$plugin_meta[] = '<a href="https://shapedplugin.com/easy-accordion/easy-accordion-free-demo/" target="_blank">' . __( 'Live Demo', 'easy-accordion-free' ) . '</a>';
+			$plugin_meta[] = '<a href="https://easyaccordion.io/easy-accordion-free-demo/" target="_blank">' . __( 'Live Demo', 'easy-accordion-free' ) . '</a>';
 		}
 		return $plugin_meta;
 	}
@@ -146,8 +162,29 @@ class Easy_Accordion_Free_Admin {
 	 * @return void
 	 */
 	public function sp_ea_redirect_after_activation( $file ) {
-		if ( SP_EA_BASENAME === $file ) {
+		if ( SP_EA_BASENAME === $file && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			exit( esc_url( wp_safe_redirect( admin_url( 'edit.php?post_type=sp_easy_accordion&page=eap_help' ) ) ) );
 		}
+	}
+
+	/**
+	 * Add plugin action menu
+	 *
+	 * @param array  $links The action link.
+	 * @param string $file The file.
+	 *
+	 * @return array
+	 */
+	public function add_plugin_action_links( $links, $file ) {
+
+		if ( SP_EA_BASENAME === $file ) {
+			$new_links =
+				sprintf( '<a href="%s">%s</a>', admin_url( 'post-new.php?post_type=sp_easy_accordion' ), __( 'Add Accordion', 'easy-accordion-free' ) );
+			array_unshift( $links, $new_links );
+
+			$links['go_pro'] = sprintf( '<a target="_blank" href="%1$s" style="color: #35b747; font-weight: 700;">Go Pro!</a>', 'https://easyaccordion.io/pricing/?ref=1' );
+		}
+
+		return $links;
 	}
 }

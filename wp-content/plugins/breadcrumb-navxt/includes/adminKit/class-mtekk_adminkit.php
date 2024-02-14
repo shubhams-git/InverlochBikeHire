@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright 2015-2021  John Havlik  (email : john.havlik@mtekk.us)
+	Copyright 2015-2023  John Havlik  (email : john.havlik@mtekk.us)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,15 +25,46 @@ if(!class_exists('message'))
 {
 	require_once(__DIR__ . '/class-mtekk_adminkit_message.php');
 }
+if(version_compare(phpversion(), '8.0.0', '<'))
+{
+	//Include setting class
+	if(!class_exists('setting\setting_bool'))
+	{
+		require_once(__DIR__ . '/setting/php7/class-mtekk_adminkit_setting_bool.php');
+	}
+	//Include setting class
+	if(!class_exists('setting\setting_float'))
+	{
+		require_once(__DIR__ . '/setting/php7/class-mtekk_adminkit_setting_float.php');
+	}
+	//Include setting class
+	if(!class_exists('setting\setting_int'))
+	{
+		require_once(__DIR__ . '/setting/php7/class-mtekk_adminkit_setting_int.php');
+	}
+}
+else
+{
+	//Include setting class
+	if(!class_exists('setting\setting_bool'))
+	{
+		require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_bool.php');
+	}
+	//Include setting class
+	if(!class_exists('setting\setting_float'))
+	{
+		require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_float.php');
+	}
+	//Include setting class
+	if(!class_exists('setting\setting_int'))
+	{
+		require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_int.php');
+	}
+}
 //Include setting class
 if(!class_exists('setting\setting_absint'))
 {
 	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_absint.php');
-}
-//Include setting class
-if(!class_exists('setting\setting_bool'))
-{
-	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_bool.php');
 }
 //Include setting class
 if(!class_exists('setting\setting_enum'))
@@ -41,19 +72,9 @@ if(!class_exists('setting\setting_enum'))
 	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_enum.php');
 }
 //Include setting class
-if(!class_exists('setting\setting_float'))
-{
-	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_float.php');
-}
-//Include setting class
 if(!class_exists('settingsetting_\html'))
 {
 	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_html.php');
-}
-//Include setting class
-if(!class_exists('setting\setting_int'))
-{
-	require_once(__DIR__ . '/setting/class-mtekk_adminkit_setting_int.php');
 }
 //Include setting class
 if(!class_exists('setting\setting_string'))
@@ -67,7 +88,7 @@ if(!class_exists('form'))
 }
 abstract class adminKit
 {
-	const version = '3.1.0';
+	const version = '3.1.1';
 	protected $full_name;
 	protected $short_name;
 	protected $plugin_basename;
@@ -450,8 +471,9 @@ abstract class adminKit
 	 * 
 	 * @param array $settings
 	 * @param array $input
+	 * @param bool $bool_ignore_missing
 	 */
-	protected function settings_update_loop(&$settings, $input)
+	protected function settings_update_loop(&$settings, $input, $bool_ignore_missing = false)
 	{
 		foreach($settings as $key => $setting)
 		{
@@ -464,7 +486,7 @@ abstract class adminKit
 			}
 			else if($setting instanceof setting)
 			{
-				$setting->maybe_update_from_form_input($input);
+				$setting->maybe_update_from_form_input($input, $bool_ignore_missing);
 			}
 		}
 	}
@@ -614,6 +636,25 @@ abstract class adminKit
 		}
 	}
 	/**
+	 * Generates array of the new non-default settings based off of form input
+	 * 
+	 * @param array $input The form input array of setting values
+	 * @param bool $bool_ignore_missing Tell maybe_update_from_form_input to not treat missing bool setting entries as setting to false
+	 * @return array The diff array of adminkit settings
+	 */
+	private function get_settings_diff($input, $bool_ignore_missing = false)
+	{
+		//Backup default settings
+		//Must clone the defaults since PHP normally shallow copies
+		$default_settings = array_map('mtekk\adminKit\adminKit::setting_cloner', $this->settings);
+		//Run the update loop
+		$this->settings_update_loop($this->settings, $input, $bool_ignore_missing);
+		//Calculate diff
+		$new_settings = apply_filters($this->unique_prefix . '_opts_update_to_save', array_udiff_assoc($this->settings, $default_settings, array($this, 'setting_equal_check')));
+		//Return the new settings
+		return $new_settings;
+	}
+	/**
 	 * Updates the database settings from the webform
 	 * 
 	 * The general flow of data is:
@@ -628,8 +669,6 @@ abstract class adminKit
 		$this->security();
 		//Do a nonce check, prevent malicious link/form problems
 		check_admin_referer($this->unique_prefix . '_options-options');
-		//Must clone the defaults since PHP normally shallow copies
-		$default_settings = array_map('mtekk\adminKit\adminKit::setting_cloner', $this->settings);
 		//Update local options from database
 		$this->opt = adminKit::parse_args($this->get_option($this->unique_prefix . '_options'), $this->opt);
 		$this->opt = apply_filters($this->unique_prefix . '_opts_update_prebk', $this->opt);
@@ -638,9 +677,8 @@ abstract class adminKit
 		$opt_prev = $this->opt;
 		//Grab our incomming array (the data is dirty)
 		$input = $_POST[$this->unique_prefix . '_options'];
-		//Run the update loop
-		$this->settings_update_loop($this->settings, $input);
-		$new_settings = apply_filters($this->unique_prefix . '_opts_update_to_save', array_udiff_assoc($this->settings, $default_settings, array($this, 'setting_equal_check')));
+		//Run through the loop and get the diff from detauls
+		$new_settings = $this->get_settings_diff($input);
 		//FIXME: Eventually we'll save the object array, but not today
 		//Convert to opts array for saving
 		$this->opt = adminKit::settings_to_opts($new_settings);
@@ -726,12 +764,9 @@ abstract class adminKit
 			//Only continue if we have a JSON object that is for this plugin (the the WP rest_is_object() function is handy here as the REST API passes JSON)
 			if(rest_is_object($settings_upload) && isset($settings_upload['plugin']) && $settings_upload['plugin'] === $this->short_name)
 			{
-				//FIXME: Much of the innards of this are the same as ops_update, probably an opportunity for refactoring simplification
-				//Must clone the defaults since PHP normally shallow copies
-				$default_settings = array_map('mtekk\adminKit\adminKit::setting_cloner', $this->settings);
 				//Act as if the JSON file was just a bunch of POST entries for a settings save
-				$this->settings_update_loop($this->settings, $settings_upload['settings']);
-				$new_settings = apply_filters($this->unique_prefix . '_opts_update_to_save', array_udiff_assoc($this->settings, $default_settings, array($this, 'setting_equal_check')));
+				//Run through the loop and get the diff from detauls
+				$new_settings = $this->get_settings_diff($settings_upload['settings'], true);
 				//FIXME: Eventually we'll save the object array, but not today
 				//Convert to opts array for saving
 				$this->opt = adminKit::settings_to_opts($new_settings);
@@ -887,7 +922,7 @@ abstract class adminKit
 		//Set the backup options in the DB to the current options
 		$this->opts_backup();
 		//Load in the hard coded default option values
-		$this->update_option($this->unique_prefix . '_options', adminKit::settings_to_opts($this->settings), true);
+		$this->update_option($this->unique_prefix . '_options', array(), true);
 		//Reset successful, let the user know
 		$this->messages[] = new message(esc_html__('Settings successfully reset to the default values.', $this->identifier)
 			. $this->admin_anchor('undo', __('Undo the options reset.', $this->identifier), __('Undo', $this->identifier)), 'success');
@@ -957,19 +992,28 @@ abstract class adminKit
 		add_action('admin_notices', array($this, 'messages'));
 	}
 	/**
-	 * help action hook function, meant to be overridden
-	 * 
+	 * help action hook function
+	 *
 	 * @return string
-	 * 
+	 *
 	 */
 	function help()
 	{
 		$screen = get_current_screen();
+		//Exit early if the add_help_tab function doesn't exist
+		if(!method_exists($screen, 'add_help_tab'))
+		{
+			return;
+		}
 		//Add contextual help on current screen
 		if($screen->id == 'settings_page_' . $this->identifier)
 		{
-			
+			$this->help_contents($screen);
 		}
+	}
+	function help_contents(\WP_Screen &$screen)
+	{
+		
 	}
 	function dismiss_message()
 	{
@@ -1064,7 +1108,7 @@ abstract class adminKit
 	function import_form()
 	{
 		$form = '<div id="mtekk_admin_import_export_relocate">';
-		$form .= sprintf('<form action="options-general.php?page=%s" method="post" enctype="multipart/form-data" id="%s_admin_upload">', esc_attr($this->identifier), esc_attr($this->unique_prefix));
+		$form .= sprintf('<form action="%s" method="post" enctype="multipart/form-data" id="%s_admin_upload">', esc_attr($this->admin_url()), esc_attr($this->unique_prefix));
 		$form .= wp_nonce_field($this->unique_prefix . '_admin_import_export', '_wpnonce', true, false);
 		$form .= sprintf('<fieldset id="import_export" class="%s_options">', esc_attr($this->unique_prefix));
 		$form .= '<legend class="screen-reader-text">' . esc_html__( 'Import settings', $this->identifier ) . '</legend>';

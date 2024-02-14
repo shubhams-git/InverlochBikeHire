@@ -89,6 +89,15 @@ function ibh_register_admin_menus() {
         'ibh_manage_invoices_page'
     );
 
+    add_submenu_page(
+        'ibh_management',
+        'Price Points',
+        'Price Points',
+        'manage_options',
+        'ibh_price_points',
+        'ibh_manage_price_points_page'
+    );
+
     // Additional submenus can be added here as needed.
 }
 
@@ -126,6 +135,10 @@ function ibh_manage_emails_page() {
 
 function ibh_manage_invoices_page() {
     include plugin_dir_path(__FILE__) . 'pages/invoices-page.php';
+}
+
+function ibh_manage_price_points_page() {
+    include plugin_dir_path(__FILE__) . 'pages/price-points-page.php';
 }
 
 // Hook the above function into the 'admin_menu' action

@@ -112,6 +112,10 @@ abstract class Widget_Base extends Element_Base {
 		return [ 'general' ];
 	}
 
+	protected function get_upsale_data() {
+		return null;
+	}
+
 	/**
 	 * Widget base constructor.
 	 *
@@ -132,7 +136,7 @@ abstract class Widget_Base extends Element_Base {
 		$is_type_instance = $this->is_type_instance();
 
 		if ( ! $is_type_instance && null === $args ) {
-			throw new \Exception( '`$args` argument is required when initializing a full widget instance.' );
+			throw new \Exception( 'An `$args` argument is required when initializing a full widget instance.' );
 		}
 
 		if ( $is_type_instance ) {
@@ -317,10 +321,10 @@ abstract class Widget_Base extends Element_Base {
 	 *
 	 * @since 1.7.12
 	 * @access protected
-	 * @deprecated 3.1.0
+	 * @deprecated 3.1.0 Use `register_skins()` method instead.
 	 */
 	protected function _register_skins() {
-		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.1.0', __CLASS__ . '::register_skins()' );
+		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function( __METHOD__, '3.1.0', 'register_skins()' );
 
 		$this->register_skins();
 	}
@@ -364,6 +368,7 @@ abstract class Widget_Base extends Element_Base {
 			'html_wrapper_class' => $this->get_html_wrapper_class(),
 			'show_in_panel' => $this->show_in_panel(),
 			'hide_on_search' => $this->hide_on_search(),
+			'upsale_data' => $this->get_upsale_data(),
 		];
 
 		$stack = Plugin::$instance->controls_manager->get_element_stack( $this );
@@ -569,7 +574,7 @@ abstract class Widget_Base extends Element_Base {
 			}
 		}
 
-		$attributes['e-action-hash'] = Plugin::instance()->frontend->create_action_hash( 'lightbox', $action_hash_params );
+		$attributes['data-e-action-hash'] = Plugin::instance()->frontend->create_action_hash( 'lightbox', $action_hash_params );
 
 		$this->add_render_attribute( $element, $attributes, null, $overwrite );
 
@@ -1023,7 +1028,20 @@ abstract class Widget_Base extends Element_Base {
 		);
 
 		$this->end_controls_section();
+	}
 
+	/**
+	 * Init controls.
+	 *
+	 * Reset the `is_first_section` flag to true, so when the Stacks are cleared
+	 * all the controls will be registered again with their skins and settings.
+	 *
+	 * @since 3.14.0
+	 * @access protected
+	 */
+	protected function init_controls() {
+		$this->is_first_section = true;
+		parent::init_controls();
 	}
 
 	public function register_runtime_widget( $widget_name ) {
@@ -1073,6 +1091,34 @@ abstract class Widget_Base extends Element_Base {
 		$config = $this->get_responsive_widgets_config();
 
 		return $responsive_widgets_data_manager->get_asset_data_from_config( $config );
+	}
+
+	/**
+	 * Mark widget as deprecated.
+	 *
+	 * Use `get_deprecation_message()` method to print the message control at specific location in register_controls().
+	 *
+	 * @param $version string           The version of Elementor that deprecated the widget.
+	 * @param $message string         A message regarding the deprecation.
+	 * @param $replacement string   The widget that should be used instead.
+	 */
+	protected function add_deprecation_message( $version, $message, $replacement ) {
+		// Expose the config for handling in JS.
+		$this->set_config( 'deprecation', [
+			'version' => $version,
+			'message' => $message,
+			'replacement' => $replacement,
+		] );
+
+		$this->add_control(
+			'deprecation_message',
+			[
+				'type' => Controls_Manager::RAW_HTML,
+				'raw' => $message,
+				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+				'separator' => 'after',
+			]
+		);
 	}
 
 	/**

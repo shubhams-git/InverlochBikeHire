@@ -23,6 +23,41 @@ if ( ! class_exists( 'SP_EAP_Fields' ) ) {
 	abstract class SP_EAP_Fields extends SP_EAP_Abstract {
 
 		/**
+		 * Field
+		 *
+		 * @var array
+		 */
+		public $field = array();
+
+		/**
+		 * Value
+		 *
+		 * @var string
+		 */
+		public $value = '';
+
+		/**
+		 * Unique
+		 *
+		 * @var string
+		 */
+		public $unique = '';
+
+		/**
+		 * Where
+		 *
+		 * @var string
+		 */
+		public $where = '';
+
+		/**
+		 * Parent
+		 *
+		 * @var string
+		 */
+		public $parent = '';
+
+		/**
 		 * Constructor of the class.
 		 *
 		 * @param array  $field field.

@@ -24,6 +24,41 @@ if ( ! class_exists( 'SP_WPCF_Fields' ) ) {
 	abstract class SP_WPCF_Fields extends SP_WPCF_Abstract {
 
 		/**
+		 * Field
+		 *
+		 * @var array
+		 */
+		public $field = array();
+
+		/**
+		 * Value
+		 *
+		 * @var string
+		 */
+		public $value = '';
+
+		/**
+		 * Unique
+		 *
+		 * @var string
+		 */
+		public $unique = '';
+
+		/**
+		 * Where
+		 *
+		 * @var string
+		 */
+		public $where = '';
+
+		/**
+		 * Parent
+		 *
+		 * @var string
+		 */
+		public $parent = '';
+
+		/**
 		 * Create fields.
 		 *
 		 * @param  array $field field.

@@ -52,11 +52,11 @@ SP_WPCF::createSection(
 		'icon'   => 'fa fa-cogs',
 		'fields' => array(
 			array(
-				'id'      => 'wpcf_delete_all_data',
-				'type'    => 'checkbox',
-				'title'   => __( 'Clean-up Data on Plugin Deletion', 'wp-carousel-free' ),
-				'help'    => __( 'Check to remove plugin\'s data when plugin is uninstalled or deleted.', 'wp-carousel-free' ),
-				'default' => false,
+				'id'         => 'wpcf_delete_all_data',
+				'type'       => 'checkbox',
+				'title'      => __( 'Clean-up Data on Plugin Deletion', 'wp-carousel-free' ),
+				'title_help' => '<div class="sp_wpcp-short-content">' . __( 'Check to remove plugin\'s data when plugin is uninstalled or deleted.', 'wp-carousel-free' ) . '</div>',
+				'default'    => false,
 			),
 			array(
 				'type'    => 'subheading',
@@ -93,6 +93,16 @@ SP_WPCF::createSection(
 				'text_width' => 95,
 				'default'    => true,
 			),
+			array(
+				'id'         => 'wpcp_ajax_js',
+				'type'       => 'switcher',
+				'title'      => __( 'Load Script for Ajax Theme', 'wp-carousel-free' ),
+				'title_help' => '<div class="sp_wpcp-short-content">' . __( 'Enable this option for ajax theme so that the WP Carousel works perfectly with that theme.', 'wp-carousel-free' ) . '</div>',
+				'text_on'    => __( 'Enqueue', 'wp-carousel-free' ),
+				'text_off'   => __( 'Dequeue', 'wp-carousel-free' ),
+				'text_width' => 95,
+				'default'    => false,
+			),
 		),
 	)
 );
@@ -104,13 +114,25 @@ SP_WPCF::createSection(
 		'icon'   => 'fa fa-copyright',
 		'fields' => array(
 			array(
-				'id'      => 'wm_image',
-				'title'   => __( 'Watermark Image', 'wp-carousel-free' ),
-				'type'    => 'media',
+				'id'      => 'wm_watermark_type',
+				'title'   => __( 'Watermark Type', 'wp-carousel-free' ),
+				'type'    => 'button_set',
 				'class'   => 'only_pro_settings',
-				'library' => array( 'image' ),
-				'url'     => false,
-				'preview' => true,
+				'options' => array(
+					'logo' => __( 'Logo', 'wp-carousel-free' ),
+					'text' => __( 'Text', 'wp-carousel-free' ),
+				),
+				'default' => 'logo',
+			),
+			array(
+				'id'         => 'wm_image',
+				'class'      => 'only_pro_settings',
+				'title'      => __( 'Watermark Image', 'wp-carousel-free' ),
+				'type'       => 'media',
+				'library'    => array( 'image' ),
+				'url'        => false,
+				'preview'    => true,
+				'dependency' => array( 'wm_watermark_type', '==', 'logo' ),
 			),
 			array(
 				'id'      => 'wm_position',
@@ -160,13 +182,13 @@ SP_WPCF::createSection(
 				'id'         => 'wm_custom',
 				'class'      => 'wm_custom',
 				'type'       => 'switcher',
-				'class'      => 'only_pro_settings only_pro_switcher',
+				'class'      => 'only_pro_settings wpcf_show_hide',
 				'title'      => __( 'Custom Size', 'wp-carousel-free' ),
 				'title_help' => __( 'Set watermark custom size related to image (horizontally/vertically)', 'wp-carousel-free' ),
 				'default'    => false,
 				'text_on'    => __( 'Enabled', 'wp-carousel-free' ),
 				'text_off'   => __( 'Disabled', 'wp-carousel-free' ),
-				'text_width' => 95,
+				'text_width' => 100,
 			),
 			array(
 				'id'      => 'wm_quality',
@@ -192,7 +214,7 @@ SP_WPCF::createSection(
 				'type'    => 'notice',
 				'style'   => 'normal',
 				'class'   => 'watermark-pro-notice',
-				'content' => __( 'To unlock Essential Watermark Settings', 'wp-carousel-free' ) . ', <a href="https://shapedplugin.com/wp-carousel/pricing/?ref=1" target="_blank"><b>' . __( 'Upgrade To Pro', 'wp-carousel-free' ) . '!</b></a>',
+				'content' => __( 'To unlock Essential Watermark Settings', 'wp-carousel-free' ) . ', <a href="https://wordpresscarousel.com/pricing/?ref=1" target="_blank"><b>' . __( 'Upgrade To Pro', 'wp-carousel-free' ) . '!</b></a>',
 			),
 		),
 	)

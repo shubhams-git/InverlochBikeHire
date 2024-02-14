@@ -104,7 +104,6 @@ trait Button_Trait {
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'https://your-link.com', 'elementor' ),
 				'default' => [
 					'url' => '#',
 				],
@@ -185,25 +184,22 @@ trait Button_Trait {
 			[
 				'label' => esc_html__( 'Icon Spacing', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'max' => 50,
+					],
+					'em' => [
+						'max' => 5,
+					],
+					'rem' => [
+						'max' => 5,
 					],
 				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-button .elementor-align-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
 					'{{WRAPPER}} .elementor-button .elementor-align-icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
 				],
-				'condition' => $args['section_condition'],
-			]
-		);
-
-		$this->add_control(
-			'view',
-			[
-				'label' => esc_html__( 'View', 'elementor' ),
-				'type' => Controls_Manager::HIDDEN,
-				'default' => 'traditional',
 				'condition' => $args['section_condition'],
 			]
 		);
@@ -216,9 +212,16 @@ trait Button_Trait {
 				'dynamic' => [
 					'active' => true,
 				],
+				'ai' => [
+					'active' => false,
+				],
 				'default' => '',
 				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
-				'description' => esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.', 'elementor' ),
+				'description' => sprintf(
+					esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows %1$sA-z 0-9%2$s & underscore chars without spaces.', 'elementor' ),
+					'<code>',
+					'</code>'
+				),
 				'separator' => 'before',
 				'condition' => $args['section_condition'],
 			]
@@ -282,7 +285,6 @@ trait Button_Trait {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'background',
-				'label' => esc_html__( 'Background', 'elementor' ),
 				'types' => [ 'classic', 'gradient' ],
 				'exclude' => [ 'image' ],
 				'selector' => '{{WRAPPER}} .elementor-button',
@@ -327,7 +329,6 @@ trait Button_Trait {
 			Group_Control_Background::get_type(),
 			[
 				'name' => 'button_background_hover',
-				'label' => esc_html__( 'Background', 'elementor' ),
 				'types' => [ 'classic', 'gradient' ],
 				'exclude' => [ 'image' ],
 				'selector' => '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus',
@@ -378,12 +379,12 @@ trait Button_Trait {
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'border_radius',
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%', 'em' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -405,7 +406,7 @@ trait Button_Trait {
 			[
 				'label' => esc_html__( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -434,13 +435,14 @@ trait Button_Trait {
 
 		$instance->add_render_attribute( 'wrapper', 'class', 'elementor-button-wrapper' );
 
+		$instance->add_render_attribute( 'button', 'class', 'elementor-button' );
+
 		if ( ! empty( $settings['link']['url'] ) ) {
 			$instance->add_link_attributes( 'button', $settings['link'] );
 			$instance->add_render_attribute( 'button', 'class', 'elementor-button-link' );
+		} else {
+			$instance->add_render_attribute( 'button', 'role', 'button' );
 		}
-
-		$instance->add_render_attribute( 'button', 'class', 'elementor-button' );
-		$instance->add_render_attribute( 'button', 'role', 'button' );
 
 		if ( ! empty( $settings['button_css_id'] ) ) {
 			$instance->add_render_attribute( 'button', 'id', $settings['button_css_id'] );
@@ -473,13 +475,36 @@ trait Button_Trait {
 	protected function content_template() {
 		?>
 		<#
+		view.addRenderAttribute( 'wrapper', 'class', 'elementor-button-wrapper' );
+
+		view.addRenderAttribute( 'button', 'class', 'elementor-button' );
+
+		if ( '' !== settings.link.url ) {
+			view.addRenderAttribute( 'button', 'href', settings.link.url );
+			view.addRenderAttribute( 'button', 'class', 'elementor-button-link' );
+		} else {
+			view.addRenderAttribute( 'button', 'role', 'button' );
+		}
+
+		if ( '' !== settings.button_css_id ) {
+			view.addRenderAttribute( 'button', 'id', settings.button_css_id );
+		}
+
+		if ( '' !== settings.size ) {
+			view.addRenderAttribute( 'button', 'class', 'elementor-size-' + settings.size );
+		}
+
+		if ( '' !== settings.hover_animation ) {
+			view.addRenderAttribute( 'button', 'class', 'elementor-animation-' + settings.hover_animation );
+		}
+
 		view.addRenderAttribute( 'text', 'class', 'elementor-button-text' );
 		view.addInlineEditingAttributes( 'text', 'none' );
 		var iconHTML = elementor.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
 		migrated = elementor.helpers.isIconMigrated( settings, 'selected_icon' );
 		#>
-		<div class="elementor-button-wrapper">
-			<a id="{{ settings.button_css_id }}" class="elementor-button elementor-size-{{ settings.size }} elementor-animation-{{ settings.hover_animation }}" href="{{ settings.link.url }}" role="button">
+		<div {{{ view.getRenderAttributeString( 'wrapper' ) }}}>
+			<a {{{ view.getRenderAttributeString( 'button' ) }}}>
 				<span class="elementor-button-content-wrapper">
 					<# if ( settings.icon || settings.selected_icon ) { #>
 					<span class="elementor-button-icon elementor-align-icon-{{ settings.icon_align }}">
@@ -545,7 +570,7 @@ trait Button_Trait {
 		?>
 		<span <?php $instance->print_render_attribute_string( 'content-wrapper' ); ?>>
 			<?php if ( ! empty( $settings['icon'] ) || ! empty( $settings['selected_icon']['value'] ) ) : ?>
-				<span <?php $instance->print_render_attribute_string( 'icon-align' ); ?>>
+			<span <?php $instance->print_render_attribute_string( 'icon-align' ); ?>>
 				<?php if ( $is_new || $migrated ) :
 					Icons_Manager::render_icon( $settings['selected_icon'], [ 'aria-hidden' => 'true' ] );
 				else : ?>

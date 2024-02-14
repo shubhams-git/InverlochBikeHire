@@ -218,8 +218,9 @@
 								level : level,
 								sublevel : sublevel,
                                 demo_id : demo_id,
+                                import_security: $('#a13_import_nonce').val(),
                                 import_options: import_options
-							},
+                            },
 							success: function(r) { //r = response
 								if(r !== false ){
                                     //save last reply
@@ -487,7 +488,8 @@
 		},
 
         registerLicense : function(){
-            var license_input = $("#add_license_code");
+            var license_input = $("#add_license_code"),
+                purge_licence = $(".js_a13_purge_licence");
 
             if(license_input.length){
                 var submit              = license_input.next('span.code_submit'),
@@ -529,6 +531,26 @@
                     submit.addClass('disabled');
                     check_purchase_code( purchase_code );
                 });
+            }
+
+            if(purge_licence.length){
+                purge_licence.on('click',function(){
+                    if(confirm('Are you sure to start over with new licence code?')){
+                        $.ajax({
+                            type: "POST",
+                            url: G.ajaxurl,
+                            data: {
+                                action : 'apollo13framework_purge_licence', //called in backend
+                                nonce: ApolloParams.ajax_nonce,
+                            },
+                            success: function(reply) {
+                                location.reload(true);
+                            },
+                            dataType: 'json'
+                        });
+                    }
+                })
+
             }
         },
 
@@ -934,6 +956,7 @@
                             data    : {
                                 action: 'apollo13framework_import_theme_settings', //called in backend
                                 settings  : settings,
+                                import_security: $('#a13_import_theme_options_nonce').val(),
                                 unique: new Date().getTime()
                             }
                         })
@@ -1819,13 +1842,16 @@
 							var prev = columns,
 								width = sort_area.width();
 
-							if ( width ) {
-								columns = Math.min( Math.round( width / ideal_column_width ), 12 ) || 1;
+                            //if width is not present, for example in gutenberg editor due to loading and moving metaboxes, simulate width from window
+                            if(width <= 0){
+                                width = $(window).width();
+                            }
 
-								if ( ! prev || prev !== columns ) {
-									sort_area.attr( 'data-columns', columns );
-								}
-							}
+                            columns = Math.min( Math.round( width / ideal_column_width ), 12 ) || 1;
+
+                            if ( ! prev || prev !== columns ) {
+                                sort_area.attr( 'data-columns', columns );
+                            }
 						};
 
 
@@ -1865,6 +1891,25 @@
                     });
 
 					$(window).resize(debounce(setColumns, 250));
+
+                    if(document.body.classList.contains( 'block-editor-page' )){
+                        //fires after blocks in gutneberg are ready
+                        const { select, subscribe } = wp.data;
+
+                        const closeListener = subscribe( () => {
+                            const isReady = select( 'core/editor' ).__unstableIsEditorReady();
+                            if ( ! isReady ) {
+                                // Editor not ready.
+                                return;
+                            }
+                            // Close the listener as soon as we know we are ready to avoid an infinite loop.
+                            closeListener();
+
+                            // Your code is placed after this comment, once the editor is ready.
+                            setColumns();
+                        });
+                    }
+
 
 					//enable multi upload
                     mu_button.click(muUploadFile);
@@ -2020,6 +2065,7 @@
                         url: ApolloParams.ajaxurl,
                         data: {
                             action: 'apollo13framework_nava_delete_post',
+                            a13_nava : ApolloParams.nava_nonce,
                             id: id
                         },
                         success: function( result ) {
@@ -2049,6 +2095,7 @@
                     url: ApolloParams.ajaxurl,
                     data: {
                         action: 'apollo13framework_nava_add_post',
+                        a13_nava : ApolloParams.nava_nonce,
                         title: name
                     },
                     success: function( data ) {
@@ -2135,6 +2182,7 @@
                         url: G.ajaxurl,
                         data: {
                             action : 'apollo13framework_disable_ajax_notice', //called in backend
+                            nonce: ApolloParams.ajax_nonce,
                             notice_id : notice.data('notice_id')
                         },
                         success: function(reply) {

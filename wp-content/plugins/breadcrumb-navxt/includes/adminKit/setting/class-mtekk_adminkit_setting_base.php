@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright 2020-2021  John Havlik  (email : john.havlik@mtekk.us)
+	Copyright 2020-2023  John Havlik  (email : john.havlik@mtekk.us)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 namespace mtekk\adminKit\setting;
 require_once( __DIR__ . '/../../block_direct_access.php');
 //Include setting interface
-if(!interface_exists('mtekk_adminKit_setting'))
+if(!interface_exists('setting'))
 {
 	require_once( __DIR__ . '/interface-mtekk_adminkit_setting.php');
 }
@@ -63,7 +63,7 @@ abstract class setting_base implements setting,\JsonSerializable
 	{
 		$this->allow_empty = $allow_empty;
 	}
-	public function jsonSerialize()
+	public function jsonSerialize(): mixed
 	{
 		return $this->value;
 	}
@@ -73,7 +73,7 @@ abstract class setting_base implements setting,\JsonSerializable
 	 * {@inheritDoc}
 	 * @see mtekk\adminKit\setting::maybe_update_from_form_input()
 	 */
-	public function maybe_update_from_form_input($input)
+	public function maybe_update_from_form_input($input, $bool_ignore_missing = false)
 	{
 		if(isset($input[$this->get_opt_name()]))
 		{

@@ -27,6 +27,11 @@ function ibh_enqueue_admin_scripts_styles() {
             filemtime(plugin_dir_path(dirname(__FILE__)) . '/assets/css/admin.css')
         );
 
+        wp_enqueue_script('jquery-ui-dialog');
+        
+        wp_enqueue_style('wp-jquery-ui-dialog');
+
+
         wp_enqueue_script(
             'ibh-admin-js',
             plugins_url('/assets/js/admin.js', dirname(__FILE__)),

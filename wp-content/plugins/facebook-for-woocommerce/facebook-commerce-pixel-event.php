@@ -146,7 +146,7 @@ class WC_Facebookcommerce_Pixel {
 			ob_start();
 
 			?>
-			<script <?php echo self::get_script_attributes(); ?>>
+			<script <?php echo self::get_script_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.Output ?>>
 				!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 					n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 					n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -154,9 +154,9 @@ class WC_Facebookcommerce_Pixel {
 					document,'script','https://connect.facebook.net/en_US/fbevents.js');
 			</script>
 			<!-- WooCommerce Facebook Integration Begin -->
-			<script <?php echo self::get_script_attributes(); ?>>
+			<script <?php echo self::get_script_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.Output ?>>
 
-				<?php echo $this->get_pixel_init_code(); ?>
+				<?php echo $this->get_pixel_init_code(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 				fbq( 'track', 'PageView', <?php echo json_encode( self::build_params( [], 'PageView' ), JSON_PRETTY_PRINT | JSON_FORCE_OBJECT ); ?> );
 
@@ -264,8 +264,8 @@ class WC_Facebookcommerce_Pixel {
 
 			?>
 			<!-- Facebook Pixel Event Code -->
-			<script <?php echo self::get_script_attributes(); ?>>
-				<?php echo $this->get_event_code( $event_name, $params, $method ); ?>
+			<script <?php echo self::get_script_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.Output ?>>
+				<?php echo $this->get_event_code( $event_name, $params, $method ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</script>
 			<!-- End Facebook Pixel Event Code -->
 			<?php
@@ -285,14 +285,19 @@ class WC_Facebookcommerce_Pixel {
 		 * @param string $method     Name of the pixel's fbq() function to call.
 		 */
 		public function inject_event( $event_name, $params, $method = 'track' ) {
-
-			if ( \WC_Facebookcommerce_Utils::isWoocommerceIntegration() ) {
-				\WC_Facebookcommerce_Utils::wc_enqueue_js( $this->get_event_code( $event_name, self::build_params( $params, $event_name ), $method ) );
+			// If we have add to cart redirect enabled, we must defer the events to render them the next page load.
+			$should_defer = 'yes' === get_option( 'woocommerce_cart_redirect_after_add', 'no' );
+			if ( WC_Facebookcommerce_Utils::isWoocommerceIntegration() ) {
+				$code = $this->get_event_code( $event_name, self::build_params( $params, $event_name ), $method );
+				if ( $should_defer ) {
+					WC_Facebookcommerce_Utils::add_deferred_event( $code );
+				} else {
+					WC_Facebookcommerce_Utils::wc_enqueue_js( $code );
+				}
 			} else {
 				printf( $this->get_event_script( $event_name, self::build_params( $params, $event_name ), $method ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 			}
 		}
-
 
 		/**
 		 * Gets the JavaScript code to track a conditional event wrapped in <script> tag.
@@ -328,9 +333,9 @@ class WC_Facebookcommerce_Pixel {
 
 			?>
 			<!-- Facebook Pixel Event Code -->
-			<script <?php echo self::get_script_attributes(); ?>>
+			<script <?php echo self::get_script_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.Output ?>>
 				document.addEventListener( '<?php echo esc_js( $listener ); ?>', function (event) {
-					<?php echo $code; ?>
+					<?php echo $code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				}, false );
 			</script>
 			<!-- End Facebook Pixel Event Code -->
@@ -378,14 +383,14 @@ class WC_Facebookcommerce_Pixel {
 
 			?>
 			<!-- Facebook Pixel Event Code -->
-			<script <?php echo self::get_script_attributes(); ?>>
-				function handle<?php echo $event_name; ?>Event() {
-					<?php echo $code; ?>
+			<script <?php echo self::get_script_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.Output ?>>
+				function handle<?php echo $event_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>Event() {
+					<?php echo $code; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					// Some weird themes (hi, Basel) are running this script twice, so two listeners are added and we need to remove them after running one.
-					jQuery( document.body ).off( '<?php echo esc_js( $listened_event ); ?>', handle<?php echo $event_name; ?>Event );
+					jQuery( document.body ).off( '<?php echo esc_js( $listened_event ); ?>', handle<?php echo $event_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>Event );
 				}
 
-				jQuery( document.body ).one( '<?php echo esc_js( $listened_event ); ?>', handle<?php echo $event_name; ?>Event );
+				jQuery( document.body ).one( '<?php echo esc_js( $listened_event ); ?>', handle<?php echo $event_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>Event );
 			</script>
 			<!-- End Facebook Pixel Event Code -->
 			<?php
@@ -657,17 +662,28 @@ class WC_Facebookcommerce_Pixel {
 		 * Get PixelID related settings.
 		 */
 		public static function get_options() {
-			return get_option(
-				self::SETTINGS_KEY,
-				array(
-					self::PIXEL_ID_KEY     => '0',
-					self::USE_PII_KEY      => 0,
-					self::USE_S2S_KEY      => false,
-					self::ACCESS_TOKEN_KEY => '',
-				)
-			);
-		}
 
+			$default_options = array(
+				self::PIXEL_ID_KEY     => '0',
+				self::USE_PII_KEY      => 0,
+				self::USE_S2S_KEY      => false,
+				self::ACCESS_TOKEN_KEY => '',
+			);
+
+			$fb_options = get_option( self::SETTINGS_KEY );
+
+			if ( ! is_array( $fb_options ) ) {
+				$fb_options = $default_options;
+			} else {
+				foreach ( $default_options as $key => $value ) {
+					if ( ! isset( $fb_options[ $key ] ) ) {
+						$fb_options[ $key ] = $value;
+					}
+				}
+			}
+
+			return $fb_options;
+		}
 
 		/**
 		 * Gets the logged in user info

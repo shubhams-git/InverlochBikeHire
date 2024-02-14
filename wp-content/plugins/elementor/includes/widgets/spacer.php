@@ -110,7 +110,7 @@ class Widget_Spacer extends Widget_Base {
 				'default' => [
 					'size' => 50,
 				],
-				'size_units' => [ 'px', 'vh', 'em' ],
+				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 10,
@@ -124,15 +124,6 @@ class Widget_Spacer extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}}' => '--spacer-size: {{SIZE}}{{UNIT}};',
 				],
-			]
-		);
-
-		$this->add_control(
-			'view',
-			[
-				'label' => esc_html__( 'View', 'elementor' ),
-				'type' => Controls_Manager::HIDDEN,
-				'default' => 'traditional',
 			]
 		);
 
