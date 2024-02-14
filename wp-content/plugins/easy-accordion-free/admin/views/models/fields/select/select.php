@@ -116,7 +116,7 @@ if ( ! class_exists( 'SP_EAP_Field_select' ) ) {
 							echo '<option value="">' . esc_attr( $args['placeholder'] ) . '</option>';
 						}
 					}
-
+					$selected_value = '';
 					foreach ( $options as $option_key => $option ) {
 
 						if ( is_array( $option ) && ! empty( $option ) ) {
@@ -131,13 +131,19 @@ if ( ! class_exists( 'SP_EAP_Field_select' ) ) {
 							echo '</optgroup>';
 
 						} else {
-							$selected = ( in_array( $option_key, $this->value, true ) ) ? ' selected' : '';
+							$selected = ( in_array( $option_key, $this->value ) ) ? ' selected' : '';
+							if ( in_array( $option_key, $this->value ) ) {
+								$selected_value = $option_key;
+							}
 							echo '<option value="' . esc_attr( $option_key ) . '" ' . esc_attr( $selected ) . '>' . esc_attr( $option ) . '</option>';
 						}
 					}
 
 					echo '</select>';
-
+					if ( isset( $args['preview'] ) && $args['preview'] ) {
+						echo '<img src="' . SP_EAP::include_plugin_url( 'assets/images/theme-preview/' . $selected_value . '.svg' ) . '" class="theme_preview">';
+						echo '<div class="eap-pro-notice"></div>';
+					}
 				} else {
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo ( ! empty( $this->field['empty_message'] ) ) ? esc_attr( $this->field['empty_message'] ) : esc_html__( 'No data provided for this option type.', 'easy-accordion-free' );

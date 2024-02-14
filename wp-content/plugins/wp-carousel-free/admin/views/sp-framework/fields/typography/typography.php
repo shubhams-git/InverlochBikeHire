@@ -89,6 +89,7 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 					'unit'               => 'px',
 					'line_height_unit'   => '',
 					'preview_text'       => 'The quick brown fox jumps over the lazy dog',
+					'margin_bottom'      => '',
 				)
 			);
 
@@ -120,6 +121,7 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				'custom-style'       => '',
 				'type'               => '',
 				'subset'             => '',
+				'margin-bottom'      => '',
 				'extra-styles'       => array(),
 			);
 
@@ -130,10 +132,8 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 			$line_height_unit = ( ! empty( $args['line_height_unit'] ) ) ? $args['line_height_unit'] : $args['unit'];
 
 			echo '<div class="wpcf--typography' . esc_attr( $chosen_class ) . '" data-depend-id="' . esc_attr( $this->field['id'] ) . '" data-unit="' . esc_attr( $args['unit'] ) . '" data-line-height-unit="' . esc_attr( $line_height_unit ) . '" data-exclude="' . esc_attr( $args['exclude'] ) . '">';
-
 			echo '<div class="wpcf--blocks wpcf--blocks-selects">';
 
-			//
 			// Font Family.
 			if ( ! empty( $args['font_family'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -144,8 +144,7 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
-			// Backup Font Family
+			// Backup Font Family.
 			if ( ! empty( $args['backup_font_family'] ) ) {
 				echo '<div class="wpcf--block wpcf--block-backup-font-family hidden">';
 				echo '<div class="wpcf--title">' . esc_html__( 'Backup Font Family', 'wp-carousel-free' ) . '</div>';
@@ -173,11 +172,9 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Font Style and Extra Style Select.
 			if ( ! empty( $args['font_weight'] ) || ! empty( $args['font_style'] ) ) {
 
-				//
 				// Font Style Select.
 				echo '<div class="wpcf--block wpcf--block-font-style hidden">';
 				echo '<div class="wpcf--title">' . esc_html__( 'Font Style', 'wp-carousel-free' ) . '</div>';
@@ -190,7 +187,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '<input disabled type="hidden" name="' . esc_attr( $this->field_name( '[font-weight]' ) ) . '" class="wpcf--font-weight" value="' . esc_attr( $this->value['font-weight'] ) . '" />';
 				echo '<input disabled type="hidden" name="' . esc_attr( $this->field_name( '[font-style]' ) ) . '" class="wpcf--font-style" value="' . esc_attr( $this->value['font-style'] ) . '" />';
 
-				//
 				// Extra Font Style Select.
 				if ( ! empty( $args['extra_styles'] ) ) {
 					echo '<div class="wpcf--block-extra-styles hidden">';
@@ -201,10 +197,8 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				}
 
 				echo '</div>';
-
 			}
 
-			//
 			// Subset.
 			if ( ! empty( $args['subset'] ) ) {
 				echo '<div class="wpcf--block wpcf--block-subset hidden">';
@@ -214,7 +208,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Text Align.
 			if ( ! empty( $args['text_align'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -223,7 +216,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Font Variant.
 			if ( ! empty( $args['font_variant'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -240,7 +232,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Text Transform.
 			if ( ! empty( $args['text_transform'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -249,7 +240,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Text Decoration.
 			if ( ! empty( $args['text_decoration'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -270,12 +260,9 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				);
 				echo '</div>';
 			}
-
 			echo '</div>';
-
 			echo '<div class="wpcf--blocks wpcf--blocks-inputs">';
 
-			//
 			// Font Size.
 			if ( ! empty( $args['font_size'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -287,7 +274,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Line Height.
 			if ( ! empty( $args['line_height'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -299,7 +285,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Letter Spacing.
 			if ( ! empty( $args['letter_spacing'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -311,7 +296,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
 			// Word Spacing.
 			if ( ! empty( $args['word_spacing'] ) ) {
 				echo '<div class="wpcf--block">';
@@ -322,17 +306,15 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 				echo '</div>';
 			}
-
 			echo '</div>';
 
-			//
 			// Font Color.
 			if ( ! empty( $args['color'] ) ) {
 				$default_color_attr = ( ! empty( $default_value['color'] ) ) ? ' data-default-color="' . esc_attr( $default_value['color'] ) . '"' : '';
 				echo '<div class="wpcf--block wpcf--block-font-color">';
 				echo '<div class="wpcf--title">' . esc_html__( 'Font Color', 'wp-carousel-free' ) . '</div>';
 				echo '<div class="wpcf-field-color">';
-				echo '<input  type="text" name="' . esc_attr( $this->field_name( '[color]' ) ) . '" class="wpcf-color wpcf--color" value="' . esc_attr( $this->value['color'] ) . '"' . $default_color_attr . ' />';
+				echo '<input  type="text" name="' . esc_attr( $this->field_name( '[color]' ) ) . '" class="wpcf-color wpcf--color" value="' . esc_attr( $this->value['color'] ) . '"' . $default_color_attr . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $default_color_attr is escaped before being passed in.
 				echo '</div>';
 				echo '</div>';
 			}
@@ -341,11 +323,11 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '<div class="wpcf--block wpcf--block-font-color">';
 				echo '<div class="wpcf--title">' . esc_html__( 'Font Hover Color', 'wp-carousel-free' ) . '</div>';
 				echo '<div class="wpcf-field-color">';
-				echo '<input type="text" name="' . esc_attr( $this->field_name( '[hover_color]' ) ) . '" class="wpcf-color wpcf--color" value="' . esc_attr( $this->value['hover_color'] ) . '"' . $default_color_attr . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->create_select() is escaped before being passed in.
+				echo '<input type="text" name="' . esc_attr( $this->field_name( '[hover_color]' ) ) . '" class="wpcf-color wpcf--color" value="' . esc_attr( $this->value['hover_color'] ) . '"' . $default_color_attr . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $default_color_attr is escaped before being passed in.
 				echo '</div>';
 				echo '</div>';
 			}
-			//
+
 			// Custom style.
 			if ( ! empty( $args['custom_style'] ) ) {
 				echo '<div class="wpcf--block wpcf--block-custom-style">';
@@ -354,7 +336,18 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				echo '</div>';
 			}
 
-			//
+			// Margin Bottom.
+			if ( ! empty( $args['margin_bottom'] ) ) {
+				echo '<div class="wpcf--block wpcf--margin-bottom">';
+				echo '<div class="wpcf--title">' . esc_html__( 'Margin Bottom', 'wp-carousel-free' ) . '</div>';
+				echo '<div class="wpcf--input-wrap">';
+				echo '<div class="wpcf--margin-icon"><i class="fa fa-long-arrow-down"></i></div>';
+				echo '<input type="number" name="' . esc_attr( $this->field_name( '[margin-bottom]' ) ) . '" class="wpcf--margin-bottom wpcf--input wpcf-input-number" value="' . esc_attr( $this->value['margin-bottom'] ) . '" step="any" />';
+				echo '<span class="wpcf--unit wpcf--margin-unit">' . esc_attr( $args['unit'] ) . '</span>';
+				echo '</div>';
+				echo '</div>';
+			}
+
 			// Preview.
 			$always_preview = ( 'always' !== $args['preview'] ) ? ' hidden' : '';
 
@@ -367,11 +360,8 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 
 			echo '<input type="hidden" name="' . esc_attr( $this->field_name( '[type]' ) ) . '" class="wpcf--type" value="' . esc_attr( $this->value['type'] ) . '" />';
 			echo '<input type="hidden" name="' . esc_attr( $this->field_name( '[unit]' ) ) . '" class="wpcf--unit-save" value="' . esc_attr( $args['unit'] ) . '" />';
-
 			echo '</div>';
-
 			echo wp_kses_post( $this->field_after() );
-
 		}
 
 		/**
@@ -391,7 +381,6 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 
 			$output  = '<select name="' . esc_attr( $this->field_name( '[' . $name . ']' . $multiple_name ) ) . '" class="wpcf--' . esc_attr( $name ) . esc_attr( $chosen_rtl ) . '" data-placeholder="' . esc_attr( $placeholder ) . '"' . $multiple_attr . '>';
 			$output .= ( ! empty( $placeholder ) ) ? '<option value="">' . esc_attr( ( ! $this->chosen ) ? $placeholder : '' ) . '</option>' : '';
-
 			if ( ! empty( $options ) ) {
 				foreach ( $options as $option_key => $option_value ) {
 					if ( $is_multiple ) {
@@ -404,11 +393,8 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 					}
 				}
 			}
-
 			$output .= '</select>';
-
 			return $output;
-
 		}
 
 		/**
@@ -419,15 +405,10 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 		public function enqueue() {
 
 			if ( ! wp_script_is( 'wpcf-webfontloader' ) ) {
-
 				SP_WPCF::include_plugin_file( 'fields/typography/google-fonts.php' );
-
 				wp_enqueue_script( 'wpcf-webfontloader', 'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js', array( 'wpcf' ), '1.6.28', true );
-
 				$webfonts = array();
-
 				$customwebfonts = apply_filters( 'wpcf_field_typography_customwebfonts', array() );
-
 				if ( ! empty( $customwebfonts ) ) {
 					$webfonts['custom'] = array(
 						'label' => esc_html__( 'Custom Web Fonts', 'wp-carousel-free' ),
@@ -467,8 +448,7 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 				);
 
 				$defaultstyles = apply_filters( 'wpcf_field_typography_defaultstyles', array( 'normal', 'italic', '700', '700italic' ) );
-
-				$googlestyles = apply_filters(
+				$googlestyles  = apply_filters(
 					'wpcf_field_typography_googlestyles',
 					array(
 						'100'       => 'Thin 100',
@@ -503,9 +483,7 @@ if ( ! class_exists( 'SP_WPCF_Field_typography' ) ) {
 						'googlestyles'  => $googlestyles,
 					)
 				);
-
 			}
-
 		}
 	}
 }

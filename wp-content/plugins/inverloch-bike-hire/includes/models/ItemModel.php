@@ -73,17 +73,39 @@ class ItemModel {
         }
     }
 
-    // Delete an item
-    public function delete($item_id) {
-        $item_id = intval($item_id);
-        $result = $this->wpdb->delete($this->table_name, ['item_id' => $item_id], ['%d']);
-
-        if ($result) {
-            return true;
-        } else {
-            return new WP_Error('db_delete_error', 'Failed to delete item from the database.');
+// Delete an item and its associated image
+public function delete($item_id) {
+    $item_id = intval($item_id);
+    
+    // First, retrieve the image URL for the item
+    $item = $this->get_item_by_id($item_id);
+    if (!$item) {
+        return new WP_Error('item_not_found', 'Item not found.');
+    }
+    
+    $image_url = $item->image_url;
+    
+    // Convert the image URL to a file path
+    if ($image_url) {
+        $upload_dir = wp_upload_dir();
+        $image_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $image_url);
+        
+        // Check if the file exists and then delete
+        if (file_exists($image_path)) {
+            unlink($image_path);
         }
     }
+    
+    // Proceed to delete the item from the database
+    $result = $this->wpdb->delete($this->table_name, ['item_id' => $item_id], ['%d']);
+    
+    if ($result) {
+        return true;
+    } else {
+        return new WP_Error('db_delete_error', 'Failed to delete item from the database.');
+    }
+}
+
 
     // Helper methods
     private function is_id_number_unique($id_number, $exclude_id = 0) {

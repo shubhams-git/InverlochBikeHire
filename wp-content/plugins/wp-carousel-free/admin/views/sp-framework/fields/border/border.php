@@ -98,46 +98,46 @@ if ( ! class_exists( 'SP_WPCF_Field_border' ) ) {
 			$value = wp_parse_args( $this->value, $default_value );
 
 			echo wp_kses_post( $this->field_before() );
-
+			echo '<div class="wpcf-option-above-title">';
+			echo '<div class="wpcf--title"> ' . esc_html__( 'Width', 'wp-carousel-free' ) . ' </div>';
 			echo '<div class="wpcf--inputs" data-depend-id="' . esc_attr( $this->field['id'] ) . '">';
-
 			if ( ! empty( $args['all'] ) ) {
 
 				$placeholder = ( ! empty( $args['all_placeholder'] ) ) ? ' placeholder="' . esc_attr( $args['all_placeholder'] ) . '"' : '';
 
 				echo '<div class="wpcf--input">';
-				echo ( ! empty( $args['all_icon'] ) ) ? '<span class="wpcf--label wpcf--icon">' . $args['all_icon'] . '</span>' : '';
+				echo ( ! empty( $args['all_icon'] ) ) ? '<span class="wpcf--label wpcf--icon">' . wp_kses_post( $args['all_icon'] ) . '</span>' : '';
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<input type="number" name="' . esc_attr( $this->field_name( '[all]' ) ) . '" value="' . esc_attr( $value['all'] ) . '"' . $placeholder . ' class="wpcf-input-number wpcf--is-unit" step="any" />';
 				echo ( ! empty( $args['unit'] ) ) ? '<span class="wpcf--label wpcf--unit">' . esc_attr( $args['unit'] ) . '</span>' : '';
 				echo '</div>';
-
 			} else {
 
 				$properties = array();
-
 				foreach ( array( 'top', 'right', 'bottom', 'left' ) as $prop ) {
 					if ( ! empty( $args[ $prop ] ) ) {
 						$properties[] = $prop;
 					}
 				}
 
-				$properties = ( $properties === array( 'right', 'left' ) ) ? array_reverse( $properties ) : $properties;
+				$properties = ( array( 'right', 'left' ) === $properties ) ? array_reverse( $properties ) : $properties;
 
 				foreach ( $properties as $property ) {
-
 					$placeholder = ( ! empty( $args[ $property . '_placeholder' ] ) ) ? ' placeholder="' . esc_attr( $args[ $property . '_placeholder' ] ) . '"' : '';
 
 					echo '<div class="wpcf--input">';
-					echo ( ! empty( $args[ $property . '_icon' ] ) ) ? '<span class="wpcf--label wpcf--icon">' . $args[ $property . '_icon' ] . '</span>' : '';
+					echo ( ! empty( $args[ $property . '_icon' ] ) ) ? '<span class="wpcf--label wpcf--icon">' . wp_kses_post( $args[ $property . '_icon' ] ) . '</span>' : '';
 					echo '<input type="number" name="' . esc_attr( $this->field_name( '[' . $property . ']' ) ) . '" value="' . esc_attr( $value[ $property ] ) . '"' . $placeholder . ' class="wpcf-input-number wpcf--is-unit" step="any" />';// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo ( ! empty( $args['unit'] ) ) ? '<span class="wpcf--label wpcf--unit">' . esc_attr( $args['unit'] ) . '</span>' : '';
 					echo '</div>';
-
 				}
 			}
+			echo '</div>';
+			echo '</div>';
 
 			if ( ! empty( $args['style'] ) ) {
+				echo '<div class="wpcf-option-above-title">';
+				echo '<div class="wpcf--title"> ' . esc_html__( 'Style', 'wp-carousel-free' ) . '</div>';
 				echo '<div class="wpcf--input">';
 				echo '<select name="' . esc_attr( $this->field_name( '[style]' ) ) . '">';
 				foreach ( $border_props as $border_prop_key => $border_prop_value ) {
@@ -146,18 +146,21 @@ if ( ! class_exists( 'SP_WPCF_Field_border' ) ) {
 				}
 				echo '</select>';
 				echo '</div>';
+				echo '</div>';
 			}
-
-			echo '</div>';
 
 			if ( ! empty( $args['color'] ) ) {
 				$default_color_attr = ( ! empty( $default_value['color'] ) ) ? ' data-default-color="' . esc_attr( $default_value['color'] ) . '"' : '';
+				echo '<div class="wpcf--color">';
+				echo '<div class="wpcf--title">' . esc_html__( 'Color', 'wp-carousel-free' ) . '</div>';
 				echo '<div class="wpcf--color">';
 				echo '<div class="wpcf-field-color">';
 				echo '<input type="text" name="' . esc_attr( $this->field_name( '[color]' ) ) . '" value="' . esc_attr( $value['color'] ) . '" class="wpcf-color"' . $default_color_attr . ' />';// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '</div>';
 				echo '</div>';
+				echo '</div>';
 			}
+
 			if ( ! empty( $args['hover_color'] ) ) {
 				$default_color_attr = ( ! empty( $default_value['hover_color'] ) ) ? ' data-default-color="' . esc_attr( $default_value['hover_color'] ) . '"' : '';
 				echo '<div class="wpcf--color">';
@@ -166,9 +169,7 @@ if ( ! class_exists( 'SP_WPCF_Field_border' ) ) {
 				echo '</div>';
 				echo '</div>';
 			}
-
 			echo wp_kses_post( $this->field_after() );
-
 		}
 
 		/**
@@ -212,12 +213,8 @@ if ( ! class_exists( 'SP_WPCF_Field_border' ) ) {
 				$output .= '}';
 
 			}
-
 			$this->parent->output_css .= $output;
-
 			return $output;
-
 		}
-
 	}
 }

@@ -57,10 +57,28 @@ class Admin {
 
 		add_submenu_page(
 			'blockart',
-			esc_html__( 'Getting Started', 'blockart' ),
-			esc_html__( 'Getting Started', 'blockart' ),
+			esc_html__( 'Dashboard', 'blockart' ),
+			esc_html__( 'Dashboard', 'blockart' ),
 			'manage_options',
-			'blockart#/getting-started',
+			'blockart#/dashboard',
+			array( $this, 'markup' )
+		);
+
+		add_submenu_page(
+			'blockart',
+			esc_html__( 'Blocks', 'blockart' ),
+			esc_html__( 'Blocks', 'blockart' ),
+			'manage_options',
+			'blockart#/blocks',
+			array( $this, 'markup' )
+		);
+
+		add_submenu_page(
+			'blockart',
+			esc_html__( 'Products', 'blockart' ),
+			esc_html__( 'Products', 'blockart' ),
+			'manage_options',
+			'blockart#/products',
 			array( $this, 'markup' )
 		);
 
@@ -70,6 +88,15 @@ class Admin {
 			esc_html__( 'Settings', 'blockart' ),
 			'manage_options',
 			'blockart#/settings',
+			array( $this, 'markup' )
+		);
+
+		add_submenu_page(
+			'blockart',
+			esc_html__( 'Help', 'blockart' ),
+			esc_html__( 'Help', 'blockart' ),
+			'manage_options',
+			'blockart#/help',
 			array( $this, 'markup' )
 		);
 
@@ -93,41 +120,31 @@ class Admin {
 	 */
 	public function enqueue() {
 		wp_enqueue_script( 'blockart-admin' );
-		wp_enqueue_style( 'blockart-admin' );
 	}
 
 	/**
 	 * Change admin footer text on BlockArt page.
 	 *
 	 * @param string $text Admin footer text.
+	 *
 	 * @return string Admin footer text.
 	 */
-	public function admin_footer_text( $text ) {
+	public function admin_footer_text( string $text ): string {
 		if ( 'toplevel_page_blockart' !== get_current_screen()->id ) {
 			return $text;
 		}
 
-		if ( ! get_option( '_blockart_admin_footer_text_rated' ) ) {
-			$text = sprintf(
-				/* translators: 1: BlockArt, 2: Five stars */
-				esc_html__( 'Enjoyed %1$s? please leave us a %2$s rating. We really appreciate your support!', 'blockart' ),
-				sprintf( '<strong>%s</strong>', esc_html__( 'BlockArt', 'blockart' ) ),
-				'<a href="https://wordpress.org/support/plugin/blockart-blocks/reviews?rate=5#new-post" target="_blank" class="blockart-rating-link">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
-			);
-		} else {
-			$text = esc_html__( 'Thank you for creating with BlockArt.', 'blockart' );
-		}
-
-		return $text;
+		return __( 'Thank you for creating with BlockArt Blocks.', 'blockart' );
 	}
 
 	/**
 	 * Override WordPress version with plugin version.
 	 *
 	 * @param string $version Version text.
+	 *
 	 * @return string Version text.
 	 */
-	public function admin_footer_version( $version ) {
+	public function admin_footer_version( string $version ): string {
 		return 'toplevel_page_blockart' !== get_current_screen()->id ? $version : __( 'Version ', 'blockart' ) . BLOCKART_VERSION;
 	}
 
@@ -148,6 +165,7 @@ class Admin {
 	 * @since 1.0.0
 	 */
 	public function hide_admin_notices() {
+
 		// Bail if we're not on a BlockArt screen or page.
 		if ( empty( $_REQUEST['page'] ) || false === strpos( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ), 'blockart' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;

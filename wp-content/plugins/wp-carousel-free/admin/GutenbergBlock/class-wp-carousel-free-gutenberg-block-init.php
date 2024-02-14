@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin gutenberg block Initializer.
  *
@@ -53,13 +52,10 @@ if ( ! class_exists( 'WP_Carousel_Free_Gutenberg_Block_Init' ) ) {
 			/**
 			 * Register block editor css file enqueue for backend.
 			 */
-			if ( wpcf_get_option( 'wpcp_enqueue_swiper_css', true ) ) {
-				wp_enqueue_style( 'wpcf-swiper', WPCAROUSELF_URL . 'public/css/swiper-bundle.min.css', array(), WPCAROUSELF_VERSION, 'all' );
-			}
-			if ( wpcf_get_option( 'wpcp_enqueue_fa_css', true ) ) {
-				wp_enqueue_style( 'wp-carousel-free-fontawesome', WPCAROUSELF_URL . 'public/css/font-awesome.min.css', array(), WPCAROUSELF_VERSION, 'all' );
-			}
-			wp_enqueue_style( 'wp-carousel-free', WPCAROUSELF_URL . 'public/css/wp-carousel-free-public' . $this->suffix . '.css', array(), WPCAROUSELF_VERSION, 'all' );
+			wp_enqueue_style( 'wpcf-swiper' );
+			wp_enqueue_style( 'wp-carousel-free-fontawesome' );
+			wp_enqueue_style( 'wp-carousel-free' );
+			wp_enqueue_style( 'wpcf-fancybox-popup' );
 		}
 		/**
 		 * Shortcode list.
@@ -97,18 +93,18 @@ if ( ! class_exists( 'WP_Carousel_Free_Gutenberg_Block_Init' ) ) {
 			/**
 			 * Register block editor js file enqueue for backend.
 			 */
-			wp_register_script( 'wpcp-preloader', WPCAROUSELF_URL . 'public/js/preloader' . $this->suffix . '.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
-			wp_register_script( 'wpcf-swiper', WPCAROUSELF_URL . 'public/js/swiper-bundle.min.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
-			wp_register_script( 'wpcf-swiper-config', WPCAROUSELF_URL . 'public/js/wp-carousel-free-public' . $this->suffix . '.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
+			wp_register_script( 'wpcf-swiper-gb-config', WPCAROUSELF_URL . 'public/js/wp-carousel-free-public' . $this->suffix . '.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
+			wp_register_script( 'wpcf-fancybox-popup', WPCAROUSELF_URL . 'public/js/fancybox.min.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
 
 			wp_localize_script(
-				'wpcf-swiper-config',
+				'wpcf-swiper-gb-config',
 				'sp_wp_carousel_free',
 				array(
-					'url'           => WPCAROUSELF_URL,
-					'loadScript'    => WPCAROUSELF_URL . 'public/js/wp-carousel-free-public.min.js',
-					'link'          => admin_url( 'post-new.php?post_type=sp_wp_carousel' ),
-					'shortCodeList' => $this->sp_wp_carousel_free_post_list(),
+					'url'                => WPCAROUSELF_URL,
+					'loadScript'         => WPCAROUSELF_URL . 'public/js/wp-carousel-free-public.min.js',
+					'loadFancyBoxScript' => WPCAROUSELF_URL . 'public/js/fancybox-config.min.js',
+					'link'               => admin_url( 'post-new.php?post_type=sp_wp_carousel' ),
+					'shortCodeList'      => $this->sp_wp_carousel_free_post_list(),
 				)
 			);
 			/**
@@ -147,8 +143,9 @@ if ( ! class_exists( 'WP_Carousel_Free_Gutenberg_Block_Init' ) ) {
 					// Enqueue blocks.editor.build.js in the editor only.
 					'editor_script'   => array(
 						'wpcp-preloader',
-						'wpcf-swiper',
-						'wpcf-swiper-config',
+						'wpcf-swiper-js',
+						'wpcf-swiper-gb-config',
+						'wpcf-fancybox-popup',
 					),
 					// Enqueue blocks.editor.build.css in the editor only.
 					'editor_style'    => array(),
@@ -164,26 +161,16 @@ if ( ! class_exists( 'WP_Carousel_Free_Gutenberg_Block_Init' ) ) {
 		 * @return string
 		 */
 		public function sp_wp_carousel_free_render_shortcode( $attributes ) {
-
 			$class_name = '';
 			if ( ! empty( $attributes['className'] ) ) {
-				$class_name = 'class="' . $attributes['className'] . '"';
+				$class_name = 'class="' . esc_attr( $attributes['className'] ) . '"';
 			}
-
 			if ( ! $attributes['is_admin'] ) {
 				return '<div ' . $class_name . '>' . do_shortcode( '[sp_wpcarousel id="' . sanitize_text_field( $attributes['shortcode'] ) . '"]' ) . '</div>';
 			}
+			$edit_page_link = get_edit_post_link( sanitize_text_field( $attributes['shortcode'] ) );
 
-			$post_id              = intval( $attributes['shortcode'] );
-			$the_wpcf_dynamic_css = '';
-			include WPCAROUSELF_PATH . '/public/dynamic-style.php';
-			$the_wpcf_dynamic_css .= trim( html_entity_decode( wpcf_get_option( 'wpcp_custom_css' ) ) );
-			include WPCAROUSELF_PATH . '/public/responsive.php';
-
-			// Add dynamic style.
-			$style = '<style>' . $the_wpcf_dynamic_css . '</style>';
-
-			return $style . '<div id="' . uniqid() . '" ' . $class_name . ' >' . do_shortcode( '[sp_wpcarousel id="' . sanitize_text_field( $attributes['shortcode'] ) . '"]' ) . '</div>';
+			return '<div id="' . uniqid() . '" ' . $class_name . ' ><a href="' . $edit_page_link . '" target="_blank" class="sp_wp_carousel_block_edit_button">Edit View</a>' . do_shortcode( '[sp_wpcarousel id="' . sanitize_text_field( $attributes['shortcode'] ) . '"]' ) . '</div>';
 		}
 	}
 }

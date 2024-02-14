@@ -20,6 +20,8 @@ if(!function_exists('apollo13framework_admin_js_parameters')){
 
         $params['ajaxurl'] = admin_url( 'admin-ajax.php' );
         $params['input_prefix'] = A13FRAMEWORK_INPUT_PREFIX;
+        $params['nava_nonce'] = wp_create_nonce( 'nava_security' );
+        $params['ajax_nonce'] = wp_create_nonce( 'ajax_security' );
         $required_arrays = $apollo13framework_a13->get_meta_required_array();
         $params['list_of_requirements'] = $required_arrays[0];
         $params['list_of_dependent'] = $required_arrays[1];
@@ -182,6 +184,9 @@ add_action( 'wp_ajax_apollo13framework_disable_ajax_notice', 'apollo13framework_
  * Mark notice to be displayed later or disabled
  */
 function apollo13framework_disable_ajax_notice() {
+    if ( ! wp_verify_nonce( $_POST['nonce'], 'ajax_security' ) ) {
+        die ( 'Busted!');
+    }
 	$id = isset( $_POST['notice_id'] )? sanitize_text_field( wp_unslash( $_POST['notice_id'] ) ) : '';
 	$option_name = 'a13_'.A13FRAMEWORK_TPL_SLUG.'_ajax_notices';
 
@@ -205,6 +210,11 @@ add_action( 'wp_ajax_apollo13framework_rating_notice_action', 'apollo13framework
  * Mark rating notice to be displayed later or disabled
  */
 function apollo13framework_rating_notice_action() {
+    //check priviliges
+    if(!current_user_can('switch_themes')){
+        wp_die( esc_html__('Sorry, you are not allowed to access this page.', 'rife-free'), esc_html__('Something went wrong.', 'rife-free'), 403 );
+    }
+
 	$what_to_do = isset( $_POST['what'] ) ? sanitize_text_field( wp_unslash( $_POST['what'] ) ) : '';
 	$new_value  = '';
 

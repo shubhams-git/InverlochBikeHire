@@ -75,9 +75,10 @@ jQuery.noConflict();
 
 
 			//bind resize
-			$window.resize(A13F.debounce(A13F.layout.resize, 250));
+			//$window.resize(A13F.debounce(A13F.layout.resize, 250));
+			$window.on('resize', A13F.debounce(A13F.layout.resize, 250));
 			$body.on('webfontsloaded', function(){
-				$window.resize();
+				$window.trigger( 'resize' );
 			});
 
 			//enables hover states on various elements on iOS when finger is on element while scrolling for example
@@ -1414,7 +1415,7 @@ jQuery.noConflict();
 
 							//should we watch for something?
 							if(anchors_on_this_page.length){
-								$window.scroll(A13F.throttle(scrolling, 500));
+								$window.on('scroll', A13F.throttle(scrolling, 500));
 								scrolling();//initial call
 								$body.on('revolution.slide.onloaded', scrolling);
 							}
@@ -1910,7 +1911,7 @@ jQuery.noConflict();
 
 				//only if sticky version is enabled
 				if(scrolling_tracking){
-					$window.scroll(A13F.throttle(scrolling, 250));
+					$window.on('scroll', A13F.throttle(scrolling, 250));
 				}
 
 				if ( revolution_sliders.length ) {
@@ -2278,7 +2279,7 @@ jQuery.noConflict();
 
 				if(tt.length){
 					cb(); //fire after refresh
-					$window.scroll(A13F.debounce(cb, 250));
+					$window.on('scroll', A13F.debounce(cb, 250));
 				}
 			},
 
@@ -2344,7 +2345,7 @@ jQuery.noConflict();
 					//connect all anchors
 					anchors = content_anchors.add(menu_anchors).add(menu_overlay_anchors).add('#to-top');
 
-				anchors.click(function(e) {
+				anchors.on('click',function(e) {
 					if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') && location.hostname === this.hostname) {
 						var href = decodeURIComponent(this.hash),
 							target = $(href),
@@ -2372,9 +2373,9 @@ jQuery.noConflict();
 					}
 				});
 
-				$window.on('load',function(){
+				//$window.on('load',function(){
 					setTimeout( disableOtherPlugins, 300 );
-				});
+				//});
 			},
 
 			menuOverlay : function(){
@@ -3309,6 +3310,14 @@ jQuery.noConflict();
 									var new_pagination = loading_space.find('.navigation');
 									pagination.replaceWith(new_pagination);
 									pagination = new_pagination;
+
+									//jetpack doesn't replace 1px GIF image that it insert instead of the original image, as it doesn't know about not loaded yet images
+									//therefore we have to remove this 1px GIF ourself after loading images
+									var jetpack_loading_images = loading_space.find('img.jetpack-lazy-image');
+
+									if(jetpack_loading_images.length){
+										jetpack_loading_images.removeAttr('srcset');
+									}
 
 									loading_space.imagesLoaded( function() {
 										//get elements from loading space

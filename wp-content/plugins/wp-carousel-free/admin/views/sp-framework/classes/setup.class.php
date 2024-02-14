@@ -35,7 +35,7 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '2.2.4';
+		public static $version = WPCAROUSELF_VERSION;
 		/**
 		 * Dir.
 		 *
@@ -131,12 +131,88 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 			// Init action.
 			do_action( 'wpcf_init' );
 
+			self::set_locale();
+
 			add_action( 'after_setup_theme', array( 'SP_WPCF', 'setup' ) );
 			add_action( 'init', array( 'SP_WPCF', 'setup' ) );
 			add_action( 'switch_theme', array( 'SP_WPCF', 'setup' ) );
 			add_action( 'admin_enqueue_scripts', array( 'SP_WPCF', 'add_admin_enqueue_scripts' ) );
 		}
 
+		/**
+		 * Helper function to generate plugin installation and activation process.
+		 *
+		 * @param string      $plugin_slug The slug of the plugin.
+		 * @param string      $button_text The text for the install/activate button.
+		 * @param string|null $activate_capability Optional capability required for activation.
+		 * @param string|null $class_checks Check the plugin main class existed or not.
+		 * @param string|null $slug The plugin slug.
+		 *
+		 * @return array Plugin data array containing link, status, and activate URL.
+		 */
+		public static function plugin_installation_activation( $plugin_slug, $button_text, $activate_capability = null, $class_checks = null, $slug = null ) {
+			$plugin_link = add_query_arg(
+				array(
+					'tab'       => 'plugin-information',
+					'plugin'    => $slug,
+					'TB_iframe' => 'true',
+					'width'     => '772',
+					'height'    => '540',
+				),
+				admin_url( 'plugin-install.php' )
+			);
+
+			$get_plugins         = get_plugins();
+			$activate_plugin_url = '';
+			$has_plugin          = '';
+
+			$is_plugin_active = false;
+			// Check if any of the classes exist.
+			foreach ( $class_checks as $class_check ) {
+				if ( class_exists( $class_check ) ) {
+					$is_plugin_active = true;
+					break;
+				}
+			}
+
+			// Check if the plugin is active using is_plugin_active().
+			if ( $is_plugin_active || is_plugin_active( $plugin_slug ) ) {
+				$has_plugin = ' activated';
+			} elseif ( isset( $get_plugins[ $plugin_slug ] ) ) {
+				if ( 'woo-quickview/woo-quick-view.php' === $plugin_slug ) {
+					$has_plugin = ' activate_plugin';
+				} else {
+					$has_plugin = ' activate_brand';
+				}
+				$button_text = 'Activate Now';
+				if ( $activate_capability && current_user_can( $activate_capability ) ) {
+					$activate_plugin_url = add_query_arg(
+						array(
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $plugin_slug ),
+							'action'   => 'activate',
+							'plugin'   => $plugin_slug,
+						),
+						network_admin_url( 'plugins.php' )
+					);
+				}
+			}
+
+			return compact( 'plugin_link', 'has_plugin', 'button_text', 'activate_plugin_url', 'slug' );
+		}
+
+		/**
+		 * Define the locale for this plugin for internationalization.
+		 *
+		 * Uses the WP_Carousel_Free_I18n class in order to set the domain and to register the hook
+		 * with WordPress.
+		 *
+		 * @since  2.0.0
+		 */
+		public static function set_locale() {
+			include_once WPCAROUSELF_INCLUDES . '/class-wp-carousel-free-i18n.php';
+			$plugin_i18n = new WP_Carousel_Free_I18n();
+			$plugin_i18n->load_plugin_textdomain();
+		}
 		/**
 		 * Setup frameworks
 		 *
@@ -347,8 +423,9 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 					'color',
 					'color_group',
 					'custom_import',
-					'dimensions_advanced',
 					'column',
+					'dimensions_advanced',
+					'fieldset',
 					'gallery',
 					'heading',
 					'image_select',
@@ -361,6 +438,9 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 					'spacing',
 					'spinner',
 					'subheading',
+					'slider',
+					'tabbed',
+					'submessage',
 					'switcher',
 					'text',
 					'typography',
@@ -387,9 +467,7 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 		public static function set_used_fields( $sections ) {
 
 			if ( ! empty( $sections['fields'] ) ) {
-
 				foreach ( $sections['fields'] as $field ) {
-
 					if ( ! empty( $field['fields'] ) ) {
 						self::set_used_fields( $field );
 					}
@@ -407,7 +485,6 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 					}
 				}
 			}
-
 		}
 
 		/**
@@ -421,7 +498,9 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 			$wpscreen              = get_current_screen();
 			$current_screen        = get_current_screen();
 			$the_current_post_type = $current_screen->post_type;
-			if ( 'sp_wp_carousel' === $the_current_post_type ) {
+			$settings_page_base    = 'sp_wp_carousel_page_wpcp_settings' === $current_screen->base;
+			$tools_page_base       = 'sp_wp_carousel_page_wpcf_tools' === $current_screen->base;
+			if ( 'sp_wp_carousel' === $the_current_post_type || $settings_page_base || $tools_page_base ) {
 				if ( ! empty( self::$args['admin_options'] ) ) {
 					foreach ( self::$args['admin_options'] as $argument ) {
 						if ( substr( $wpscreen->id, -strlen( $argument['menu_slug'] ) ) === $argument['menu_slug'] ) {
@@ -503,6 +582,11 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 						}
 					}
 				}
+				// Load thickbox assets for quick view and brand plugin notice.
+				add_thickbox();
+
+				// Fix the CSS conflict of radio player with wp caroursel free.
+				wp_dequeue_style( 'radio-player-admin' );
 
 				do_action( 'wpcf_enqueue' );
 			}
@@ -582,9 +666,15 @@ if ( ! class_exists( 'SP_WPCF' ) ) {
 
 				if ( ! empty( $field['title'] ) ) {
 					echo '<div class="wpcf-title">';
-					echo '<h4>' . wp_kses_post( $field['title'] ) . '</h4>';
+					$help_title = ( ! empty( $field['title_help'] ) ) ? '
+					<div class="wpcf-help wpcf-title-help">
+					<span class="wpcf-help-text">' . $field['title_help'] . '</span>
+					<img src="' . self::include_plugin_url( 'assets/images/info.svg' ) . '">
+					</div>' : '';
+					echo '<h4>' . wp_kses_post( $field['title'] . $help_title ) . '</h4>';
 					echo ( ! empty( $field['subtitle'] ) ) ? '<div class="wpcf-subtitle-text">' . wp_kses_post( $field['subtitle'] ) . '</div>' : '';
 					echo '</div>';
+
 				}
 
 				echo ( ! empty( $field['title'] ) || ! empty( $field['fancy_title'] ) ) ? '<div class="wpcf-fieldset">' : '';

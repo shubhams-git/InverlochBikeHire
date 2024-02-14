@@ -45,7 +45,7 @@ if ( ! class_exists( 'SP_EAP_Field_shortcode' ) ) {
 			// Get the Post ID.
 			$post_id = get_the_ID();
 
-			echo ( ! empty( $post_id ) ) ? '<div class="eap-scode-wrap"><span class="eap-sc-title">Shortcode:</span><span class="eap-shortcode-selectable">[sp_easyaccordion id="' . esc_attr( $post_id ) . '"]</span></div><div class="eap-scode-wrap"><div class="sp_eap-after-copy-text"><i class="fa fa-check-circle"></i>  Shortcode  Copied to Clipboard! </div><span class="eap-sc-title">Template Include:</span><span class="eap-shortcode-selectable">&lt;?php echo do_shortcode(\'[sp_easyaccordion id="' . esc_attr( $post_id ) . '"]\'); ?&gt;</span></div>' : '';
+			echo ( ! empty( $post_id ) ) ? '<div class="eap-scode-wrap"><p>To display the Accordion FAQs group, copy and paste this shortcode into your post, page, custom post, block editor, or page builder. <a href="https://docs.shapedplugin.com/docs/easy-accordion-pro/configurations/how-to-use-easy-accordion-shortcode-to-your-theme-files-or-php-templates/" target="_blank">Learn how</a> to include it in your template file.</p><span class="eap-shortcode-selectable">[sp_easyaccordion id="' . esc_attr( $post_id ) . '"]</span></div><div class="sp_eap-after-copy-text"><i class="fa fa-check-circle"></i> Shortcode Copied to Clipboard! </div>' : '';
 		}
 
 	}

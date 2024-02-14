@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright 2020-2021  John Havlik  (email : john.havlik@mtekk.us)
+	Copyright 2020-2023  John Havlik  (email : john.havlik@mtekk.us)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 namespace mtekk\adminKit\setting;
 require_once( __DIR__ . '/../../block_direct_access.php');
 //Include setting base class
-if(!class_exists('mtekk_adminKit_setting_base'))
+if(!class_exists('setting_base'))
 {
 	require_once( __DIR__ . '/class-mtekk_adminkit_setting_base.php');
 }
@@ -48,6 +48,15 @@ class setting_bool extends setting_base
 	/**
 	 * 
 	 * {@inheritDoc}
+	 * @see \mtekk\adminKit\setting\setting_base::jsonSerialize()
+	 */
+	public function jsonSerialize(): bool
+	{
+		return $this->value;
+	}
+	/**
+	 * 
+	 * {@inheritDoc}
 	 * @see \mtekk\adminKit\setting\setting::get_opt_name()
 	 */
 	public function get_opt_name()
@@ -59,7 +68,7 @@ class setting_bool extends setting_base
 	 * {@inheritDoc}
 	 * @see mtekk_adminKit_setting::updateFromFormInput()
 	 */
-	public function maybe_update_from_form_input($input)
+	public function maybe_update_from_form_input($input, $bool_ignore_missing = false)
 	{
 		if(isset($input[$this->get_opt_name()]) && ($input[$this->get_opt_name()] === true || $input[$this->get_opt_name()] === '1'))
 		{
@@ -67,6 +76,11 @@ class setting_bool extends setting_base
 		}
 		else
 		{
+			//If the value wasn't set, but we are to ignore missing inputs
+			if($bool_ignore_missing)
+			{
+				return;
+			}
 			$newval = false;
 		}
 		$this->set_value($this->validate($newval));

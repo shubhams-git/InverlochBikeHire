@@ -2,6 +2,13 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.4.4 =
+
+Release Date: September 09, 2023
+
+* Overview
+	* Tested and updated to support WordPress 6.3: Lionel
+
 = 1.4.1 =
 
 Release Date: July 29, 2022

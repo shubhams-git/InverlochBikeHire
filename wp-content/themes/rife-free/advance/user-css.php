@@ -9,13 +9,14 @@ function apollo13framework_get_user_css($with_custom_css = true) {
 	/*
 	 * body part
 	 */
+    $body_bg_color         = apollo13framework_make_css_rule( 'background-color', $apollo13framework_a13->get_option_color_rgba( 'appearance_body_bg_color' ) );
 	$theme_borders_color   = apollo13framework_make_css_rule( 'background-color', $apollo13framework_a13->get_option_color_rgba( 'theme_borders_color' ) );
 	$boxed_layout_bg_color = apollo13framework_make_css_rule( 'background-color', $apollo13framework_a13->get_option_color_rgba( 'boxed_layout_bg_color' ) );
 	$headings_color        = apollo13framework_make_css_rule( 'color', $apollo13framework_a13->get_option_color_rgba( 'headings_color' ) );
 	$headings_color_hover  = apollo13framework_make_css_rule( 'color', $apollo13framework_a13->get_option_color_rgba( 'headings_color_hover' ) );
 	$headings_weight       = apollo13framework_make_css_rule( 'font-weight', $apollo13framework_a13->get_option( 'headings_weight' ) );
 	$headings_transform    = apollo13framework_make_css_rule( 'text-transform', $apollo13framework_a13->get_option( 'headings_transform' ) );
-	$cursor_css            = 'cursor: auto';
+	$cursor_css            = 'cursor: auto;';
 	$custom_cursor         = $apollo13framework_a13->get_option( 'custom_cursor' );
 	if ( $custom_cursor === 'custom' ) {
 		$cursor_css = apollo13framework_make_css_rule( 'cursor', $apollo13framework_a13->get_option_media_url( 'cursor_image' ), 'url("%s"), auto' );
@@ -577,6 +578,7 @@ a:hover{
 }
 body{
     $cursor_css
+    $body_bg_color
 }
 
 " . apollo13framework_page_background_css() . "

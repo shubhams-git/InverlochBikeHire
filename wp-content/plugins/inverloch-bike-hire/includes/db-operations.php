@@ -30,7 +30,7 @@ function ibh_create_db_tables() {
         image_url VARCHAR(255) NOT NULL,
         status ENUM('available', 'unavailable') NOT NULL,
         PRIMARY KEY  (item_id),
-        FOREIGN KEY (category_id) REFERENCES {$wpdb->prefix}ibk_category(category_id) ON DELETE CASCADE
+        FOREIGN KEY (category_id) REFERENCES {$wpdb->prefix}ibk_category(category_id) ON DELETE RESTRICT
     ) $charset_collate;";
 
     // Customer Table

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WordPress Carousel 2.4.5\n"
+"Project-Id-Version: WordPress Carousel 2.5.4\n"
 "POT-Creation-Date: 2022-04-30 11:07+0600\n"
 "PO-Revision-Date: 2022-04-30 11:07+0600\n"
 "Last-Translator: \n"
@@ -721,7 +721,7 @@ msgstr ""
 #: admin/views/metabox-config.php:809
 msgid ""
 "To unlock the following <strong>28+ amazing Lightbox</strong> options, <a "
-"href=\"https://shapedplugin.com/wp-carousel/\" "
+"href=\"https://wordpresscarousel.com/\" "
 "target=\"_blank\"><b>Upgrade To Pro!</b></a>"
 msgstr ""
 
@@ -1873,12 +1873,12 @@ msgstr ""
 msgid "No posts found"
 msgstr ""
 
-#: public/templates/loop/post-type/meta.php:13
-msgid " By "
+#: public/templates/loop/post-type/meta.php:16
+msgid "By %s"
 msgstr ""
 
-#: public/templates/loop/post-type/meta.php:15
-msgid "On "
+#: public/templates/loop/post-type/meta.php:19
+msgid "On %s"
 msgstr ""
 
 #: public/templates/loop/product-type/rating.php:15

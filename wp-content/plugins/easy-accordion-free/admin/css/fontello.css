@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'fontello';
+  font-family: 'ea-fontello';
   src: url('./font/fontello.eot?71731912');
   src: url('./font/fontello.eot?71731912#iefix') format('embedded-opentype'),
        url('./font/fontello.woff2?71731912') format('woff2'),
@@ -19,8 +19,8 @@
   }
 }
 */
-[class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "fontello";
+[class^="ea-icon-"]:before, [class*=" ea-icon-"]:before {
+  font-family: "ea-fontello";
   font-style: normal;
   font-weight: normal;
   speak: never;
@@ -54,4 +54,4 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-accordion-menu:before { content: '\e802'; } /* '' */
+.ea-icon-menu:before { content: '\e802'; } /* '' */

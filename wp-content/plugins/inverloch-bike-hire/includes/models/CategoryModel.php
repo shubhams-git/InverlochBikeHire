@@ -94,4 +94,15 @@ class CategoryModel {
             return new WP_Error('db_delete_error', 'Failed to delete category from the database.');
         }
     }
+
+    // Method to check if the category is being referenced by items
+    public function is_category_referenced($category_id) {
+        $category_id = intval($category_id);
+        $item_count = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->wpdb->prefix}ibk_item WHERE category_id = %d",
+            $category_id
+        ));
+
+        return ($item_count > 0) ? true : false;
+    }
 }

@@ -298,6 +298,9 @@ if(!function_exists('apollo13framework_make_post_image')){
             if($sizes[0] === 'full'){
                 $size = 'full';
             }
+            elseif($sizes[0] === 'a13_navigation_image_size'){
+                $size = 'a13_navigation_image_size';
+            }
             else{
                 $quality = (int)$apollo13framework_a13->get_option( 'a13ir_image_quality' );
                 $quality = ($quality > 0 && $quality <= 100) ? $quality : 90;
@@ -306,7 +309,7 @@ if(!function_exists('apollo13framework_make_post_image')){
 
             if($only_src){
                 $attachment = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), $size );
-                return $attachment[0];
+                return $attachment === false ? '' : $attachment[0];
             }
             else{
                 return get_the_post_thumbnail( $post_id, $size, array(

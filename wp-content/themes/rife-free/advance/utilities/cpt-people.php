@@ -51,7 +51,7 @@ if(!function_exists('apollo13framework_make_people_image')){
 	        if( $file_type['type'] === 'image/gif'){
 		        $src = apollo13framework_make_post_image( $item_id, array('full'), true );
 		        //get real sizes, so native lazy loading can position image properly
-		        $attachment = wp_get_attachment_image_src( get_post_thumbnail_id( $album_id ), 'full' );
+		        $attachment = wp_get_attachment_image_src( get_post_thumbnail_id( $item_id ), 'full' );
 		        $sizes = array($attachment[1], $attachment[2]);
 	        }
         }

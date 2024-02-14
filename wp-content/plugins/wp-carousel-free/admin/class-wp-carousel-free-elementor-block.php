@@ -12,6 +12,14 @@
  */
 class Wp_Carousel_Free_Element_Shortcode_Block {
 	/**
+	 * Script and style suffix
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	protected $suffix;
+
+	/**
 	 * Instance
 	 *
 	 * @since 2.4.1
@@ -54,7 +62,8 @@ class Wp_Carousel_Free_Element_Shortcode_Block {
 	public function __construct() {
 		$this->suffix = defined( 'WP_DEBUG' ) && WP_DEBUG ? '' : '.min';
 		$this->on_plugins_loaded();
-		add_action( 'wp_enqueue_scripts', array( $this, 'sp_wp_carousel_free_block_enqueue_scripts' ) );
+		add_action( 'elementor/preview/enqueue_styles', array( $this, 'sp_wp_carousel_free_block_enqueue_style' ) );
+		add_action( 'elementor/preview/enqueue_scripts', array( $this, 'sp_wp_carousel_free_block_enqueue_scripts' ) );
 		add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'sp_wp_carousel_free_element_block_icon' ) );
 	}
 
@@ -84,8 +93,30 @@ class Wp_Carousel_Free_Element_Shortcode_Block {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script( 'wpcf-swiper', WPCAROUSELF_URL . 'public/js/swiper-bundle.min.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
-		wp_enqueue_script( 'wpcf-swiper-config', WPCAROUSELF_URL . 'public/js/wp-carousel-free-public' . $this->suffix . '.js', array( 'jquery' ), WPCAROUSELF_VERSION, true );
+		wp_enqueue_script( 'wpcf-swiper-js' );
+		wp_enqueue_script( 'wpcf-fancybox-popup' );
+		wp_enqueue_script( 'wpcf-swiper-config' );
+	}
+	/**
+	 * Register the JavaScript for the elementor block area.
+	 *
+	 * @since    2.4.1
+	 */
+	public function sp_wp_carousel_free_block_enqueue_style() {
+
+		/**
+		 * An instance of this class should be passed to the run() function
+		 * defined in carousel_Free_Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The carousel_Free_Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+		wp_enqueue_style( 'wpcf-swiper' );
+		wp_enqueue_style( 'wp-carousel-free-fontawesome' );
+		wp_enqueue_style( 'wpcf-fancybox-popup' );
+		wp_enqueue_style( 'wp-carousel-free' );
 	}
 
 	/**

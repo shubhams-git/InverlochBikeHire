@@ -1,10 +1,9 @@
 === Carousel, Slider, Gallery by WP Carousel - Image Carousel & Photo Gallery, Post Carousel & Post Grid, Product Carousel & Product Grid for WooCommerce ===
 Contributors: shapedplugin, khalilu, shamimmiashuhagh, rubel_miah
-Donate link: http://shapedplugin.com/donate
 Tags: wordpress carousel, best carousel plugin, image carousel, image slider, post carousel, custom post carousel, custom taxonomy carousel, woocommerce product carousel, content carousel, video carousel, video slider, video lightbox, youtube carousel, video gallery, carousel, slider, responsive slider, responsive carousel, carousel slider, ticker carousel, center mode carousel, slide anything, image gallery, image lightbox, wordpress image gallery, photo gallery, gallery slider, wordpress gallery plugin, gallery, post slider, vimeo slider, self hosted video carousel, content slider, wordpress slider, featured content slider, html slider, horizontal carousel slider, posts content slider, product carousel, woocommerce slider, woocommerce product slider
-Requires at least: 4.5
-Tested up to: 6.0.2
-Stable tag: 2.5.0
+Requires at least: 5.0
+Tested up to: 6.4.2
+Stable tag: 2.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +15,7 @@ The Most Powerful and User-friendly Carousel & Gallery plugin. Create beautiful 
 
 [youtube https://www.youtube.com/embed/videoseries?list=PLoUb-7uG-5jO_zo3exhqUNlZ7h0FQVJTt]
 
-[__Live Demo__](https://shapedplugin.com/wp-carousel/wp-carousel-free-demo/) | [__Video Tutorials__](https://www.youtube.com/shapedplugin/) | [__Documentation__](https://docs.shapedplugin.com/docs/wordpress-carousel/introduction/) | [__Upgrade to Pro &raquo;__](https://shapedplugin.com/wp-carousel/pricing/?ref=1)
+[__Live Demo__](https://wordpresscarousel.com/wp-carousel-free-demo/) | [__Video Tutorials__](https://www.youtube.com/shapedplugin/) | [__Documentation__](https://docs.shapedplugin.com/docs/wordpress-carousel/introduction/) | [__Upgrade to Pro &raquo;__](https://wordpresscarousel.com/pricing/?ref=1)
 
 
 = Overview =
@@ -82,7 +81,7 @@ We believe that you shouldn't be a coder or hire a developer to create a carouse
 
 = WP Carousel Pro =
 
-[__WP Carousel Pro__](https://shapedplugin.com/wp-carousel/?ref=1) is the most powerful and user-friendly multi-purpose WordPress Carousel plugin to create beautiful carousels with **images, Posts, WooCommerce Products, Contents (Images, Text, HTML, Shortcodes), Video** etc. The plugin has own image and content management system and also supports **Posts, Pages, Custom Post Type, Taxonomy, Custom Taxonomy, Custom Contents, YouTube, Vimeo, Dailymotion, mp4, WebM, Self-hosted Video with Lightbox.** It's fully responsive, highly customizable and works smoothly on iPhone, iPad, Android, Firefox, Chrome, Safari, Opera and Edge.
+[__WP Carousel Pro__](https://wordpresscarousel.com/?ref=1) is the most powerful and user-friendly multi-purpose WordPress Carousel plugin to create beautiful carousels with **images, Posts, WooCommerce Products, Contents (Images, Text, HTML, Shortcodes), Video** etc. The plugin has own image and content management system and also supports **Posts, Pages, Custom Post Type, Taxonomy, Custom Taxonomy, Custom Contents, YouTube, Vimeo, Dailymotion, mp4, WebM, Self-hosted Video with Lightbox.** It's fully responsive, highly customizable and works smoothly on iPhone, iPad, Android, Firefox, Chrome, Safari, Opera and Edge.
 
 It’s even easier to put images of different height together so the width is dynamic with fixed height so that your site looks pretty. The plugin vastly improves user experience and lets you create different types of beautiful carousels easily and quickly.
 
@@ -98,7 +97,7 @@ It’s even easier to put images of different height together so the width is dy
 
 = WP Carousel Pro Features =
 
-* [__All Sample Carousels__](https://shapedplugin.com/wp-carousel/simple-image-carousel/?ref=1) (Live Demo in action).
+* [__All Sample Carousels__](https://wordpresscarousel.com/simple-image-carousel/?ref=1) (Live Demo in action).
 * Fully Responsive and Touch-friendly.
 * Advanced Shortcode Generator.
 * **Slide Anything. (e.g. Image, Post, Product, Content, Video, Text, HTML, Shortcodes etc.)**
@@ -172,7 +171,7 @@ It’s even easier to put images of different height together so the width is dy
 * Extensive Online docs & Video Tutorials.
 * **Fast and friendly support.**
 * Any new features we add in the future (which is often).
-* [__Full list of PRO features.__](https://shapedplugin.com/wp-carousel/#features)
+* [__Full list of PRO features.__](https://wordpresscarousel.com/#features)
 
 
 = Multilingual Ready =
@@ -236,7 +235,7 @@ clicking "Install Now" and then "Activate".
 
 **Uploading in WordPress Dashboard**
 
-* Download wp-carousel-free.zip
+* Download [wp-carousel-free.zip](https://downloads.wordpress.org/plugin/wp-carousel-free.zip)
 * Navigate to the ‘Add New’ in the plugins dashboard
 * Navigate to the ‘Upload’ area
 * Select wp-carousel-free.zip from your computer
@@ -245,12 +244,12 @@ clicking "Install Now" and then "Activate".
 
 **Using FTP**
 
-* Download wp-carousel-free.zip
+* Download [wp-carousel-free.zip](https://downloads.wordpress.org/plugin/wp-carousel-free.zip)
 * Extract the wp-carousel-free directory to your computer
 * Upload the wp-carousel-free directory to the /wp-content/plugins/ directory
 * Activate the plugin in the Plugin dashboard
 
-The WordPress codex contains <a href="https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation">instructions</a> on how to install a WordPress plugin.
+The WordPress codex contains <a href="https://wordpress.org/documentation/article/manage-plugins/#installing-plugins-1">instructions</a> on how to install a WordPress plugin.
 
 
 == Frequently Asked Questions ==
@@ -261,7 +260,7 @@ The WordPress codex contains <a href="https://codex.wordpress.org/Managing_Plugi
 
 
 = What types of carousel you can create using WP Carousel? =
-You can create three (3) types of carousel using **WP Carousel** such as: **Image Carousel, Post Carousel, and Product Carousel.** And with the [__Premium Version__](https://shapedplugin.com/wp-carousel/pricing/?ref=1), you can create also **Content Carousel** and **Video Carousel**.
+You can create three (3) types of carousel using **WP Carousel** such as: **Image Carousel, Post Carousel, and Product Carousel.** And with the [__Premium Version__](https://wordpresscarousel.com/pricing/?ref=1), you can create also **Content Carousel** and **Video Carousel**.
 
 = Do I need to have coding skills to use WP Carousel? =
 No. You don’t need any coding skill. No more pain writing any shortcode attributes to display carousel in your site. With just a few clicks, you can amazingly create unlimited Image, Post, and Product Carousels.
@@ -292,7 +291,7 @@ Pro version users [__Support__](https://shapedplugin.com/create-new-ticket/) and
 If you find a bug, please report it in our active [support](https://shapedplugin.com/support/?user=lite). You will be replied once the issue is resolved.
 
 = I’d like access to more features. How can I get them? =
-You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__WP Carousel Pro__](https://shapedplugin.com/wp-carousel/pricing/?ref=1) gets you to access the full version of WP Carousel, automatic lifetime updates, and support.
+You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__WP Carousel Pro__](https://wordpresscarousel.com/pricing/?ref=1) gets you to access the full version of WP Carousel, automatic lifetime updates, and support.
 
 =Is WP Carousel Multilingual Ready?=
 Yes, WP Carousel is 100% translation ready and tested with [WPML](https://wpml.org/), [Polylang](https://wordpress.org/plugins/polylang/), [qTranslate-x](https://wordpress.org/plugins/qtranslate-x/), [GTranslate](https://wordpress.org/plugins/gtranslate/), [Google Language Translator](https://wordpress.org/plugins/google-language-translator/), [WPGlobus](https://wordpress.org/plugins/wpglobus/) etc.
@@ -327,10 +326,90 @@ Thank you!
 
 == Changelog ==
 
+= 2.6.2 – Jan 23, 2024 =
+* Improved: The Help Page has been redesigned to make it more user-friendly.
+* Improved: The Order By default value of post/product is set to 'date' and Order to 'descending'.
+* Fix: The Fontello icon conflicts with other plugins' Fontello icons.
+* Tested: WooCommerce 8.5.1 compatibility.
+
+= 2.6.1 – Jan 11, 2024 =
+* Fix: The warning found after updating to the latest if the database updater does not run.
+
+= 2.6.0 – Jan 05, 2024 =
+* New: The Zoom In, Zoom Out feature
+* Improved: The Tool Tip/Help text of the plugin options to make it more user-friendly.
+* Improved: The Margin Bottom of the Section Title option has moved to the Typography Section.
+* Improved: SVG icons have been optimized. 
+* Improved: The Carousel options were reorganized by the Nested Tab system.
+* Improved: The Carousel Navigation and Pagination's Hide in mobile option have been separated.
+* Improved: Set the default image size to medium size.
+* Improved: The Lightbox options were reorganized by the Nested Tab system.
+* Fixed: The issue that the navigation right does not show in mobile view.
+
+= 2.5.10 – Nov 09, 2023 =
+* New: To add anything before and after the rating star, two hooks, 'wpcp_before_product_rating_woocommerce,' and 'wpcp_after_product_rating_woocommerce.'
+* Fix: The image counter in the lightbox displays incorrect numbers when using the lightbox with the image carousel.
+* Tested: WordPress 6.4.1 compatibility.
+* Tested: WooCommerce 8.2.2 compatibility.
+
+= 2.5.9 – Oct 19, 2023 =
+* New: The Quick View option to show the Quick View button in the product slider/grid.
+* New: The Show Brands option to show the brand's name in the product slider/grid.
+* Improved: The plugin was compatible with the Quick View for WooCommerce and Smart Brands for WooCommerce plugins.
+* Fix: Some PHPCS warnings found with PHP v8.2.
+* Tested: WooCommerce 8.2.1 compatibility.
+* Tested: WordPress 6.3.2 compatibility.
+
+= 2.5.8 – Jul 28, 2023 =
+* Fix: The plugin admin panel translation is not working if the language file is placed in the plugin language folder.
+* Updated: Minimum required version of WordPress for the plugin.
+* Tested: WooCommerce High-Performance Order Storage (HPOS) feature compatibility.
+* Tested: WooCommerce 7.9.0 compatibility.
+* Tested: WordPress 6.3 compatibility.
+
+= 2.5.7 – Jun 04, 2023 =
+* New: The Lightbox feature for the image type.
+
+= 2.5.6 – May 30, 2023 =
+* Improved: The import feature with animation.
+* Fix: The warning if the space-between value is set to empty.
+* Tested: WordPress 6.2.2 compatibility.
+
+= 2.5.5 – Apr 13, 2023 =
+* Improved: Some string translation improved.
+* Updated: The language (.pot) file.
+* Fix: The font awesome icons of the plugin conflicts with other plugin icon.
+* Tested: WordPress 6.2 compatibility.
+
+= 2.5.4 – Mar 03, 2023 =
+* New: The Load Script for Ajax Theme option was added to the settings page for Ajax theme compatibility.
+* Fix: The conflict among plugin Fontello icons with other plugin/theme icons.
+* Fix: The style conflict of the WP Carousel Plugin with the Radio Play plugin.
+* Fix: The style issue when product rating is shown in the product carousel.
+
+= 2.5.3 – Dec 21, 2022 =
+* Fix: Few warnings for deprecated shortcodes.
+* Improved: Plugin security improved.
+
+= 2.5.2 – Dec 13, 2022 =
+* New: The grid pagination alignment option of post and product type.
+* New: The grid pagination text, bg, and border color option for post and product type.
+* Improved: The post meta is placed above the post title to improve the layout style.
+* Fix: The custom CSS does not override static CSS in the preview.
+* Fix: The empty p tag before post content of the post grid or carousel.
+* Tested: WordPress 6.1.1 compatibility.
+* Tested: WooCommerce 7.1.1 compatibility.
+
+= 2.5.1 – Nov 11, 2022 =
+* Improved: Load dynamic style according to the shortcode on the page.
+* Fix: Dequeue Assets option does not work when the Elementor plugin is enabled.
+* Tested: WooCommerce 7.1.0 compatibility.
+* Tested: WordPress 6.1 compatibility.
+
 = 2.5.0 – Sept 30, 2022 =
 * New: The Free mode of Carousel layout.
 * Fix: Border width value 0 or empty does not work.
-* Fix: Grid layout breaks when the unclosed comment remains in the custom CSS field. 
+* Fix: Grid layout breaks when the unclosed comment remains in the custom CSS field.
 
 = 2.4.12 – Sept 23, 2022 =
 * New: Item vertical gap added.

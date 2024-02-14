@@ -81,7 +81,7 @@ $item_to_edit = $edit_item_id ? $itemModel->get_item_by_id($edit_item_id) : null
     <table class="wp-list-table widefat fixed striped">
         <thead>
             <tr>
-                <th>Identification Number</th>
+                <th>ID Number</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Description</th>
@@ -109,7 +109,7 @@ $item_to_edit = $edit_item_id ? $itemModel->get_item_by_id($edit_item_id) : null
             </tr>
             <?php endforeach; ?>
             <?php if (empty($items)): ?>
-                <tr><td colspan="4">No items found.</td></tr>
+                <tr><td colspan="6">No items found.</td></tr>
             <?php endif; ?>
         </tbody>
     </table>

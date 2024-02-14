@@ -2,7 +2,7 @@
 Contributors: air-1
 Tags: e-commerce, portfolio, photography, two-columns, three-columns, left-sidebar, right-sidebar, grid-layout, translation-ready, sticky-post, post-formats, custom-colors, custom-menu, featured-images, footer-widgets, full-width-template, post-formats, sticky-post, theme-options, threaded-comments, translation-ready, rtl-language-support
 Requires at least: 4.7
-Tested up to: 5.9
+Tested up to: 6.4.3
 Requires PHP: 5.3.0
 Stable tag: trunk
 License: GNU General Public License v3 or later

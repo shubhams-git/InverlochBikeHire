@@ -103,6 +103,15 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 	/** @var WooCommerce\Facebook\Utilities\Heartbeat */
 	public $heartbeat;
 
+	/** @var WooCommerce\Facebook\ExternalVersionUpdate */
+	private $external_version_update;
+
+	/** @var WooCommerce\Facebook\Feed\FeedConfigurationDetection instance. */
+	private $configuration_detection;
+
+	/** @var WooCommerce\Facebook\Products\FBCategories instance. */
+	private $fb_categories;
+
 	/**
 	 * The Debug tools instance.
 	 *
@@ -125,6 +134,23 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 		$this->init_admin();
 	}
 
+	/**
+	 * __get method for backward compatibility.
+	 *
+	 * @param string $key property name
+	 * @return mixed
+	 * @since 3.0.32
+	 */
+	public function __get( $key ) {
+		// Add warning for private properties.
+		if ( in_array( $key, array( 'configuration_detection', 'fb_categories' ), true ) ) {
+			/* translators: %s property name. */
+			_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'The %s property is private and should not be accessed outside its class.', 'facebook-for-woocommerce' ), esc_html( $key ) ), '3.0.32' );
+			return $this->$key;
+		}
+
+		return null;
+	}
 
 	/**
 	 * Initializes the plugin.
@@ -168,6 +194,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 			$this->product_sets_sync_handler = new WooCommerce\Facebook\ProductSets\Sync();
 			$this->commerce_handler          = new WooCommerce\Facebook\Commerce();
 			$this->fb_categories             = new WooCommerce\Facebook\Products\FBCategories();
+			$this->external_version_update   = new WooCommerce\Facebook\ExternalVersionUpdate\Update();
 
 			if ( wp_doing_ajax() ) {
 				$this->ajax = new WooCommerce\Facebook\AJAX();
@@ -364,7 +391,6 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 				'edit_item'                  => sprintf( esc_html__( 'Edit %s', 'facebook-for-woocommerce' ), $singular ),
 				// translators: Add new label
 				'add_new_item'               => sprintf( esc_html__( 'Add new %s', 'facebook-for-woocommerce' ), $singular ),
-				'menu_name'                  => $plural,
 				// translators: No items found text
 				'not_found'                  => sprintf( esc_html__( 'No %s found.', 'facebook-for-woocommerce' ), $plural ),
 				// translators: Search label
@@ -373,6 +399,8 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 				'separate_items_with_commas' => sprintf( esc_html__( 'Separate %s with commas', 'facebook-for-woocommerce' ), $plural ),
 				// translators: Text label
 				'choose_from_most_used'      => sprintf( esc_html__( 'Choose from the most used %s', 'facebook-for-woocommerce' ), $plural ),
+				// translators: Backlink item label
+				'back_to_items'              => sprintf( esc_html__( '&larr; Go to %s', 'facebook-for-woocommerce' ), $plural ),
 			),
 			'hierarchical'      => true,
 			'public'            => true,
@@ -436,7 +464,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 			array( 'edit.php?post_type=product', 'Products' ),
 		);
 
-		$term_id = empty( $_GET['tag_ID'] ) ? '' : $_GET['tag_ID']; //phpcs:ignore WordPress.Security
+		$term_id = empty( $_GET['tag_ID'] ) ? '' : wc_clean( wp_unslash( $_GET['tag_ID'] ) ); //phpcs:ignore WordPress.Security
 		if ( ! empty( $term_id ) ) {
 			$breadcrumbs[] = array( 'edit-tags.php?taxonomy=fb_product_set&post_type=product', 'Products Sets' );
 		}
@@ -682,7 +710,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 	 * @return string
 	 */
 	public function get_documentation_url() {
-		return 'https://docs.woocommerce.com/document/facebook-for-woocommerce/';
+		return 'https://woo.com/document/facebook-for-woocommerce/';
 	}
 
 
@@ -706,7 +734,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 	 * @return string
 	 */
 	public function get_sales_page_url() {
-		return 'https://woocommerce.com/products/facebook/';
+		return 'https://woo.com/products/facebook/';
 	}
 
 

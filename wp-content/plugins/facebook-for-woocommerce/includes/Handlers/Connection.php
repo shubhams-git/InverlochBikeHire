@@ -243,14 +243,14 @@ class Connection {
 			return;
 		}
 		try {
-			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], self::ACTION_CONNECT ) ) {
+			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), self::ACTION_CONNECT ) ) {
 				throw new ApiException( 'Invalid nonce' );
 			}
 			$is_error                 = ! empty( $_GET['err'] ) ? true : false;
-			$error_code               = ! empty( $_GET['err_code'] ) ? stripslashes( sanitize_text_field( $_GET['err_code'] ) ) : '';
-			$merchant_access_token    = ! empty( $_GET['merchant_access_token'] ) ? sanitize_text_field( $_GET['merchant_access_token'] ) : '';
-			$system_user_access_token = ! empty( $_GET['system_user_access_token'] ) ? sanitize_text_field( $_GET['system_user_access_token'] ) : '';
-			$system_user_id           = ! empty( $_GET['system_user_id'] ) ? sanitize_text_field( $_GET['system_user_id'] ) : '';
+			$error_code               = ! empty( $_GET['err_code'] ) ? stripslashes( wc_clean( wp_unslash( $_GET['err_code'] ) ) ) : '';
+			$merchant_access_token    = ! empty( $_GET['merchant_access_token'] ) ? wc_clean( wp_unslash( $_GET['merchant_access_token'] ) ) : '';
+			$system_user_access_token = ! empty( $_GET['system_user_access_token'] ) ? wc_clean( wp_unslash( $_GET['system_user_access_token'] ) ) : '';
+			$system_user_id           = ! empty( $_GET['system_user_id'] ) ? wc_clean( wp_unslash( $_GET['system_user_id'] ) ) : '';
 			if ( $is_error && $error_code ) {
 				throw new ConnectApiException( $error_code );
 			}
@@ -278,7 +278,7 @@ class Connection {
 			update_option( 'wc_facebook_has_authorized_pages_read_engagement', 'yes' );
 			// redirect to the Commerce onboarding if directed to do so
 			if ( ! empty( Helper::get_requested_value( 'connect_commerce' ) ) ) {
-				wp_redirect( $this->get_commerce_connect_url() );
+				wp_safe_redirect( $this->get_commerce_connect_url() );
 				exit;
 			}
 			facebook_for_woocommerce()->get_message_handler()->add_message( __( 'Connection successful!', 'facebook-for-woocommerce' ) );
@@ -330,7 +330,7 @@ class Connection {
 	public function handle_disconnect() {
 		check_admin_referer( self::ACTION_DISCONNECT );
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( __( 'You do not have permission to uninstall Facebook Business Extension.', 'facebook-for-woocommerce' ) );
+			wp_die( esc_html__( 'You do not have permission to uninstall Facebook Business Extension.', 'facebook-for-woocommerce' ) );
 		}
 		try {
 			$response = facebook_for_woocommerce()->get_api()->get_user();
@@ -489,6 +489,7 @@ class Connection {
 	 * @return string
 	 */
 	public function get_connect_url( $connect_commerce = false ) {
+		// nosemgrep: audit.php.wp.security.xss.query-arg
 		return add_query_arg( rawurlencode_deep( $this->get_connect_parameters( $connect_commerce ) ), self::OAUTH_URL );
 	}
 
@@ -677,7 +678,16 @@ class Connection {
 	 * @return string
 	 */
 	public function get_business_manager_id() {
-		return get_option( self::OPTION_BUSINESS_MANAGER_ID, '' );
+		$business_manager_id = get_option( self::OPTION_BUSINESS_MANAGER_ID, '' );
+		/**
+		 * Filters the Business Manager ID.
+		 *
+		 * @since 3.0.31
+		 *
+		 * @param string     $business_manager_id Business Manager ID.
+		 * @param Connection $connection          The Connection handler instance.
+		 */
+		return (string) apply_filters( 'wc_facebook_business_manager_id', $business_manager_id, $this );
 	}
 
 
@@ -846,6 +856,7 @@ class Connection {
 		 *
 		 * @param array $parameters connection parameters
 		 */
+		// nosemgrep: audit.php.wp.security.xss.query-arg
 		return apply_filters(
 			'wc_facebook_connection_parameters',
 			array(
@@ -1288,7 +1299,7 @@ class Connection {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You do not have permission to finish App Store login.', 'facebook-for-woocommerce' ) );
 		}
-		$redirect_uri = base64_decode( $_REQUEST['redirect_uri'] ); //phpcs:ignore
+		$redirect_uri = isset( $_REQUEST['redirect_uri'] ) ? base64_decode( wc_clean( wp_unslash( $_REQUEST['redirect_uri'] ) ) ) : ''; //phpcs:ignore
 		// To ensure that we are not sharing any user data with other parties, only redirect to the redirect_uri if it matches the regular expression
 		if ( empty( $redirect_uri ) || ! preg_match( '/https?:\/\/(www\.|m\.|l\.)?(\d{5}\.od\.)?(facebook|instagram|whatsapp)\.com(\/.*)?/', explode( '?', $redirect_uri )[0] ) ) {
 			wp_safe_redirect( site_url() );

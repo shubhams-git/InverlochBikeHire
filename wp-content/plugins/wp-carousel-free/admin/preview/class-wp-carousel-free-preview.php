@@ -38,7 +38,7 @@ class WP_Carousel_Free_Preview {
 	 * @since 2.0.0
 	 */
 	public function wpcf_backend_preview() {
-		$nonce = isset( $_POST['ajax_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['ajax_nonce'] ) ) : '';// phpcs:ignore
+		$nonce = isset( $_POST['ajax_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['ajax_nonce'] ) ) : ''; // phpcs:ignore
 		if ( ! wp_verify_nonce( $nonce, 'wpcf_metabox_nonce' ) ) {
 			return;
 		}
@@ -53,15 +53,15 @@ class WP_Carousel_Free_Preview {
 		$upload_data        = $setting_data['sp_wpcp_upload_options'];
 		$shortcode_data     = $setting_data['sp_wpcp_shortcode_options'];
 		$main_section_title = $setting_data['post_title'];
+		$dynamic_style      = WP_Carousel_Free_Public::load_dynamic_style( $post_id, $shortcode_data, $upload_data );
 
-		echo '<style>';
-		$the_wpcf_dynamic_css = '';
-		include WPCAROUSELF_PATH . '/public/dynamic-style.php';
-		$the_wpcf_dynamic_css .= trim( html_entity_decode( wpcf_get_option( 'wpcp_custom_css' ) ) );
-		include WPCAROUSELF_PATH . '/public/responsive.php';
-		echo $the_wpcf_dynamic_css;
-		echo '</style>';
+		if ( $dynamic_style['dynamic_css'] ) {
+			echo '<style>' . $dynamic_style['dynamic_css'] .'</style>'; // phpcs:ignore
+		}
 		WP_Carousel_Free_Shortcode::wpcf_html_show( $upload_data, $shortcode_data, $post_id, $main_section_title );
+		?>
+		<script src="<?php echo esc_url( WPCAROUSELF_URL . 'public/js/fancybox-config.min.js' ); ?>" ></script>
+		<?php
 		die();
 	}
 }

@@ -5,6 +5,11 @@ add_action( 'wp_ajax_apollo13framework_prepare_gallery_single_item_html', 'apoll
  * Just a helper to create item for gallery in album/work
  */
 function apollo13framework_prepare_gallery_single_item_html() {
+	//check priviliges
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		exit;
+	}
+
 	$array[] = isset( $_POST['item'] )? array_map( 'sanitize_text_field', wp_unslash( $_POST['item'] ) ) : array();
 	apollo13framework_prepare_external_media( $array );
 	apollo13framework_prepare_admin_gallery_html( $array );

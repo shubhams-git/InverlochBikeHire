@@ -1,10 +1,10 @@
-=== Gutenberg Blocks by BlockArt – Gutenberg Editor, Website Builder, Page Builder with Sections, Template Library & Starter Sites ===
+=== BlockArt Blocks – Gutenberg Blocks, Page Builder Blocks ,WordPress Block Plugin, Sections & Template Library  ===
 Contributors: WPBlockArt
 Tags: gutenberg, gutenberg blocks, block editor, blocks, block, editor, page builder
 Requires at least: 5.5
-Tested up to: 6.0
+Tested up to: 6.4
 Requires PHP: 7.0
-Stable tag: 1.1.2
+Stable tag: 2.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,88 +12,158 @@ Gutenberg Blocks to build any layout imaginable. Comes with advanced blocks for 
 
 == Description ==
 
+### BlockArt Blocks
+
+👉 [BlockArt Blocks Site](https://wpblockart.com/blockart-blocks/)
+👉 [Documentation](https://docs.wpblockart.com/blockart-blocks/)
+👉 [Roadmap](https://blockart.productlift.dev/)
+👉 [Give a Try](https://tastewp.com/template/blockartblocks) (Clicking this link creates a demo where you can test BlockArt Blocks.)
+
+
 ### BlockArt Gutenberg Blocks – Best WordPress Gutenberg Block Plugin.
 
-Packed with powerful features, BlockArt, offers a seamless website building experience. It offers six unique and responsive blocks to add. Moreover, you get a BlockArt Library comprised of Sections, Starter Packs, and Templates. Whether you’re a skilled designer or a beginner at WordPress, BlockArt is for you.
+Elevate your website building experience with BlockArt Blocks, a powerful page builder plugin packed with Gutenberg blocks. 
 
-Furthermore, with its simple and easy-to-use interface, you can easily design any type of WordPress pages/posts. Best of all, you can use BlockArt as a tool to bring your own creativity into reality with these simple steps:
+Get control of over 20 amazing and responsive blocks that you can use to reflect your creativity on your site. In addition to that, it also provides you with 52 sections, 7 starter packs, and 24 templates to have you ready to go.
 
-1. Start by adding a section to your page/post
-2. Choose how many columns you want to add to the section
-3. Add suitable blocks to columns for creating a unique design like Banner, CTA, Service Box, Testimonial, Pricing Table, Team, and much more
-4. Style it by making changes to general and advanced settings options
+On top of all that, the plugin offers an intuitive interface, allowing you to easily import pre-built sections, starter packs, and templates. You also get a wide range of customization options to personalize them as you wish.
 
-Or, simply choose a pre-built template and import it in a single click. Then, all there’s left to do is customize the content as per your website’s needs.
+You need no coding experience to create pages with BlockArt Blocks. Easily drag and drop blocks on your page to build the perfect pages.
 
-### THE MOST USEFUL GUTENBERG BLOCKS AND COUNTING
+BlockArt Blocks is the perfect choice to help you build your dream website effortlessly. 
 
-* **Section:** You can add various columns and nested sections. Further you can insert blocks on each section to create various unique layouts
-* **Heading:** Create a stylish title for each section with various markups from H1 to H6
-* **Paragraph:** Customize typography and style paragraphs with multiple setting options
-* **Button:** Redirect users to your important pages or website by clicking buttons
-* **Image:** Visual communication with your visitor via images
-* **Spacing:** Add space between columns to make your design more appealing and cleaner
+https://www.youtube.com/watch?v=_aQoIIbcwmM
 
-### Key Features BlockArt Has to Offer
-Here’s a brief description of each feature this WordPress Gutenberg block plugin offers. 
+### BlockArt Block’s Gutenberg Blocks
 
-1. **Speed**: We’ve created this plugin to be lightweight and fast. Hence, you don’t need to worry about your site being slow. Below are the points that make BlockArt lightning-fast:
-    * Reduced page size by limiting markup as much as possible
-    * Only the CSS used on our blocks are loaded on the page
-    * Only used Google fonts are loaded
-    * Blocks themselves are lightweight
-    * Compatible with caching plugins
+* **Section:** Easily add rows and columns to your page to create various layout variations. You can insert other blocks into these columns, making your page truly unique.
+* **Heading:** Create stylish titles with various markups from H1 to H6.
+* **Paragraph:** Share texts and information seamlessly with viewers.
+* **Button:** Direct users to other websites or webpages by assigning a block with a URL. Also, you can add multiple buttons for certain purposes.
+* **Image:** Enhance your website’s visual appeal by inserting relevant images or photographs.
+* **Spacing:** Maintain a clutter-free and clean page by creating gaps between blocks.
+* **Social Share:** Allow users to share your content through their social profiles in just a click.
+* **Tabs:** Add and display your website’s content in different tabs on your page. 
+* **Table of Content:** Summarize and display the contents’ headings as a list.
+* **Counter:** Show your statistics in numbers to display on your webpage.
+* **Lottie Animation:** Upload Lottie animations to your webpage to enhance your content.
+* **Team:** Add the team block to showcase your team members and their description.
+* **Countdown:** Display a countdown for certain occasion or event right on your website.
+* **Info Box:** Display customizable and informative boxes with titles, paragraphs, and buttons to direct users to other internal pages.
+* **Slider:** Add beautiful and responsive sliders to showcase elements like text, images, videos, and more on your page.
+* **Blockquote:** Add inspiring and motivational quotes alongside the name of the person who coined it.
+* **Timeline:** Display your history via a properly demonstrated way.
+* **Notice:** Highlight important and urgent news, announcements, and other content that requires users’ immediate attention.
+* **Progress:** Display progress for certain tasks, projects, and more on a scale from 0-100 in an attractive bar.
+* **Call to Action:** Prompt your users to go through the link with some text and a button to click into.
+* **Google Map:** Insert a map on your page to let your clients know where you’re operating from.
+* **Testimonial:** IEarn trust from users by showcasing what views your users have of you.
+* **Icon:** Insert 50+ customizable icons to your pages and add links to them to direct users to another page.
+* **Icon List:** Create a list and add 50+ icons to them, making your presentation much more unique.
+* **Modal:** Create a CTA button to display additional information and a button to redirect users to another page.
 
-2. **Pre-built templates**: With a single-click you can import pre-built templates, sections, and sites. What’s more is that you can import as many templates as you want.
-    * You can import any sections/templates from starter pack to the page/post
-    * For a better experience, related templates are listed while editing blocks 
-    * Live editing - see actual changes in design as you edit
-    * Beautiful ready-to-import demo sites designed by professional UI/UX designers
+### Key Features of BlockArt Blocks
+Here are the features BlockArt Blocks offers you to have the perfect WordPress website building experience.
 
-3. **Copy and paste styles**: Easily copy the style you created and reuse it by pasting it anywhere on your page/post.
-    * Click the button in the block toolbar to copy the style of any block
-    * Paste the block across any tabs of the browseR
-    * Keyboard shortcuts available: Ctrl + C, Ctrl + Alt + V
+1. **Speed**: BlockArt Blocks is created as a lightweight and fast plugin. Hence, you can rely on it to make your site fast and effective. Here are a few reasons that support our statement:
+    * Reduced Page Size: Minimized markup to reduce page size
+    * Google Fonts Integration: Loads Google fonts locally improving site speed and make the site compliant to GDPR.
+    * Lightweight Blocks: Our blocks are designed for optimal performance. 
+    * Caching Compatibility: BlockArt Blocks integrates with caching plugins for improved speed. 
 
-4. **Responsive editing**: All the blocks are fully responsive and customizable.
-    * Responsive editing tools are provided to fully control block features like font size, line height, margin, padding, alignment, etc.
-    * Show/hide block in desktop, tablet, mobile
-    * Preview in responsive mode while editing
+2. **Pre-built templates**: With a wide variety of BlockArt Blocks’ ready-made templates, all you need to do is import them with just a click. The fun part is you can customize them!
+    * Import any templates from the library.
+    * Real time editing, allowing you to view the changes you made at the same time.
+    * Beautiful ready-to-use templates designed by professional UI/UX designers.
+
+3. **Copy and paste styles**: Copy and paste styles from one block to another.
+    * Copy styles that you’ve created and paste them anywhere else on the page/post. 
+
+4. **Responsive editing**: BlockArt Blocks provides you with fully responsive blocks that allow you to maintain the beauty of your website on any device.
+    * Responsive on all devices. 
+    * Settings provided to control individual block’s width, size, type, height, and more.
 
 5. **Dashboard widget area and customizer widget editor**: Add BlockArt blocks as a widget on the sidebar as well.
     * Works perfectly just like in page editor
 
-### ONLY NECESSARY FEATURES, NO CLUTTER
-Below we’ve mentioned all the necessary feature BlockArt has to offer which makes it the crowd’s favorite.
+### Additional Features of BlockArt Blocks 
+* Huge number of layout possibilities:
+	With BlockArt Blocks, you can create dozens of different layouts for your website. With so many blocks, demos, and customization options, your creativity is the only limitation.
 
-* Unlimited layout possibilities
-* Choice of units: px, em, %, rem
-* Full width and contained section container
-* Typography: font family font weight, line height, text transform, decoration, letter spacing
-* Text colors
-* Background color, hover color, background image and overlay
-* Size and spacing: width, height, margin/padding, border/box shadow/border radius
-* Horizontal and vertical alignment
-* Various icons available to add to your button
+* Customize measurements with four units:
+	BlockArt Blocks offers you to change measurements for blocks with four types of measurements i.e. px, rem, em, percentage.
+	
+* Responsive alignment:
+	Users from any device will be able to view and explore your website with ease. The responsive alignment makes sure your website maintains its size and beauty on all devices.
+	
+* Change colors of blocks and their background:
+	You can change the colors of blocks and their background with a wide range of colors. On top of that you can choose colors to apply on normal and hover conditions.
 
-### Ready-to-use Website Demos for Gutenberg
+* Enable Box Shadow:
+	Display shadows of blocks with different types of colors. You can also customize the length, blur, spread, and the position of the shadow.
+	
+* Dozens of icons to add to buttons:
+	There are tons of icons that you can find and apply on the buttons to make them look attractive and catchy. You can also configure their size and gap manually.
 
-We’ve professionally created 17 pre-built starter templates using BlockArt and the Zakra theme. Further, you can easily import them with just a few clicks. To add more, they are fully customizable to create a beautiful website.
+* Option to insert additional CSS classes:
+	If you’re interested, you can add CSS classes to the blocks for your personal touch.
+	
+### Ready-to-Use Website Demos
 
-You get starter templates for almost every niche such as Agency, Digital Marketing, Wedding, Portfolio, Charity, Blogs, and more.
+We’ve furnished 7 pre-built templates that includes more templates inside them to successfully build a complete website. These templates can help you create WordPress websites for the following purposes: 
 
-[See Website Demos](https://zakratheme.com/demos/)
+* Freelancer 
+* Product selling 
+* Charity 
+* Travel 
+* Professional 
+* Wedding 
+* Spa
+
+Along with the templates, you can add 52 different sections to enhance your website’s look made by some of the best designers. You’ve got the ability to customize them and make them fit for your purpose. 
+
+In conclusion, BlockArt Blocks is the perfect Gutenberg WordPress page builder plugin to build a fully functional, responsive, and professional website. 
+
+### BlockArt Blocks Compatibility with WordPress Themes
+
+BlockArt Blocks is compatible with most themes out there. Here are a few popular ones listed below:
+
+* Zakra
+* ColorMag
+* Kadence
+
+### BlockArt Blocks Compatibility with WordPress Themes
+Like WordPress themes, BlockArt Blocks is compatible with most WordPress plugins. Some of them are as follows:
+
+* Everest Forms
+* User Registration
+* Contact Form 7
 
 ### Documentation and Support
 👉 If you face any problem while creating a website using BlockArt then, visit the [Documentation](https://docs.wpblockart.com/) page.
 👉 To ask more questions, visit our plugin’s support on the [plugin’s forum](https://wordpress.org/support/plugin/blockart-blocks/).
 👉 You can also contact us directly via the contact form. For that visit our website [BlockArt](https://wpblockart.com/).
 
+### GET IN TOUCH WITH US
+👉 [Facebook Group](https://www.facebook.com/groups/themegrill)
+👉 [Twitter](http://twitter.com/themegrill)
+👉 [YouTube](https://www.youtube.com/@ThemeGrillOfficial)
+
+### EXPLORE MORE PRODUCTS FROM OUR TEAM
+Love BlockArt Blocks? If so, we recommend you check out our other WordPress themes and plugins.
+
+ * [Masteriyo](https://masteriyo.com/) A Powerful and Easy WordPress LMS Plugin.
+ * [User Registration](https://wpuserregistration.com/) #1 Best WordPress User Registration Plugin.
+ * [Magazine Blocks](https://wpblockart.com/magazine-blocks/) Powerful Gutenberg Blocks to Create Magazine Styled Websites.
+ * [Zakra](https://zakratheme.com/) Best WordPress Multipurpose Theme Powering 60K+ Websites.
+ * [ColorMag](https://themegrill.com/themes/colormag/) #1 Magazine & News Style WordPress Theme.
+ * [Everest Forms](https://everestforms.net/) Flexible WordPress Form Builder Plugin.
+
 == Frequently Asked Questions ==
 
 = Is BlockArt plugin free?
 
-Yes! The plugin is completely free of cost. You can download, install, and start creating your website using BlockArt. 
+Yes! The plugin is completely free of cost. You can download, install, and start creating your website using BlockArt.
 
 = Does it work with any WordPress theme?
 
@@ -101,7 +171,7 @@ Yes! It works with any theme that has been created following the WordPress codin
 
 = Do I need coding skills to create a website using BlockArt?
 
-No! You don’t need to know a single line of code to create awesome websites using BlockArt.  
+No! You don’t need to know a single line of code to create awesome websites using BlockArt.
 
 = Can I use this plugin with other block plugins?
 
@@ -116,6 +186,178 @@ Absolutely Yes! BlockArt has been created using the Gutenberg editor. Hence, it 
 BlockArt Library is a collection of Sections, Starter Packs, and Templates that you can import to create a page/post.
 
 == Changelog ==
+= 2.1.4 - 05-02-2024 =
+* Fix - Notice block cookie dismiss issue.
+* Fix - Style guide design issue.
+* Fix - Modal block design issue.
+* Fix - Counter block reset issue.
+* Fix - Social Share block design issue.
+
+= 2.1.3 - 19-01-2024 =
+* Fix - Control design issue.
+* Fix - Toc block issue.
+* Fix - Global Typography issue.
+* Fix - Button block hover color issue.
+* Fix - Social share icon block option issue.
+* Fix - Tab block background issue.
+
+= 2.1.2 - 16-01-2024 =
+* Tweak - Update stable tag.
+
+= 2.1.1 - 16-01-2024 =
+* Enhancement - Backward compatibility.
+
+= 2.1.0 - 15-01-2024 =
+* Enhancement - Slider Control.
+* Enhancement - Dimension Control.
+* Enhancement - Color Control.
+* Enhancement - Background Control.
+* Enhancement - Preset Control.
+* Enhancement - Alignment Control.
+* Enhancement - Select Control.
+* Enhancement - Typography Control.
+* Enhancement - Border Control.
+* Enhancement - Box shadow Control.
+* Enhancement - Icon Picker Control.
+* Enhancement - Library modal design.
+* Added       - Left Sidebar Panel.
+* Added       - Global color and typography setting.
+
+= 2.0.11 - 04-01-2024 =
+* Fix - Button block migration.
+* Fix - Button block duplicate id issue.
+
+= 2.0.10 - 26-12-2023 =
+* Fix - Library search issue .
+* Fix - Copy/paste style.
+* Fix - CSS generation issue.
+
+= 2.0.9.1 - 06-12-2023 =
+* Fix - Js issue.
+* Fix - Button block issue.
+
+= 2.0.9 - 06-12-2023 =
+* Added - New Modal Block.
+* Added - New Icon Block.
+* Added - New Icon List Block.
+* Fix   - Google map layout issue.
+* Fix   - Social share icon gap issue.
+* Fix   - List gap and collapsible size issue.
+* Fix   - Tab block padding issue.
+
+= 2.0.8 - 23-11-2023 =
+* Fix - React compatibility issue.
+
+= 2.0.7.2 - 09-11-2023 =
+* Fix   - Asset generation.
+* Tweak - Update `Tested up to`.
+
+= 2.0.7 - 09-11-2023 =
+* Added   - New Call To Action Block.
+* Added   - New Slider Block.
+* Added   - New Testimonial Block.
+* Added   - New Progress Block.
+* Added   - New Blockquote Block.
+* Added   - New Notice Block.
+* Added   - New Timeline Block.
+* Added   - New Map Block.
+* Feature – Load Google fonts locally.
+* Feature – Preload local fonts.
+* Feature – Maintenance mode.
+* Feature – Editor options.
+
+= 2.0.6 - 17-10-2023 =
+* Fix - Table of contents block markup issue.
+* Fix - Countdown number option issue.
+* Fix - Typography issue.
+* Fix - Copy/Paste style.
+* Fix - Background image size and repeat issue.
+* Fix - Section vertical alignment issue.
+
+= 2.0.5.2 - 13-10-2023 =
+* Fix - Fix php error.
+
+= 2.0.5.1 - 13-10-2023 =
+* Fix - Image block width.
+* Fix - JS error.
+
+= 2.0.5 - 12-10-2023 =
+* Added   - New Tabs Block.
+* Added   - New Table of Content Block.
+* Added   - New Social Share Block.
+* Added   - New Lottie Animation Block.
+* Added   - New Counter Block.
+* Feature – Option to the counter block alignment.
+* Feature – Option to change start number, end number, and decimal places.
+* Feature – Option to change prefix, suffix, and thousand separator.
+* Feature – Option to change counter icon and icon size.
+* Feature – Option to change counter number markup, color, and typography.
+* Feature – Option to change counter background, border, and text typography.
+* Added   - New Countdown Block.
+* Feature – Option to change countdown date and time.
+* Feature – Option to change countdown layout.
+* Feature – Option to change countdown label character, and customize its color, and typography.
+* Feature – Option to change digit color and typography.
+* Feature – Option to change separator character, customize its color, and adjust its position.
+* Feature – Option to change digit box background, alignment, gap, padding, and border.
+* Feature – Option to change countdown block border.
+* Added   - New Team Block.
+* Feature – Option to change block background and alignment.
+* Feature – Option to enable and change team image.
+* Feature – Option to enable heading and customize its color, markup, typography, and margin.
+* Feature – Option to enable, customize, and style designation, text, including color, typography, and margin.
+* Feature – Option to change block border.
+* Feature – Option to change social icon and their URL.
+* Added   - New Info Box Block.
+* Feature – Option to change URL and URL content area.
+* Feature – Option to change layout and block background.
+* Feature – Option to change icon and its size.
+* Feature – Option to enable title, text, button and customize its color, and typography.
+* Feature - Additional image block features.
+* Fix     - Column icon issue.
+
+= 2.0.4 - 05-10-2023 =
+* Fix - Widget block style.
+* Fix - Php error.
+
+= 2.0.3 - 29-09-2023 =
+* Enhancement: Update google fonts.
+
+= 2.0.2 - 26-09-2023 =
+* Fix - button block js error.
+
+= 2.0.1 - 26-09-2023 =
+* Feature – Option to add top separator on section block.
+* Feature – Option to add bottom separator on section block.
+* Feature – Option to change button hover style on button block.
+* Feature – Option to add button animation.
+* Feature – Option to change button opacity.
+* Feature – Option to change button position properties.
+* Feature – Option to change button html tag.
+* Feature – Option to enable button caption.
+
+= 2.0.0.1 - 20-04-2023 =
+* Fix - Block CSS generation issue.
+
+= 2.0.0 - 17-04-2023 =
+* Fix           - React 18 render errors.
+* Enhancement   - CSS generation for blocks used with block themes.
+* Enhancement   - Dynamic CSS filename with timestamp to avoid browser caching issues.
+
+= 1.1.4 - 27-02-2023 =
+* Fix         - Flickering issue while using block URL setting.
+* FIx         - Block issue while text is selected among multiple blocks.
+* Enhancement - Tooltip component.
+
+= 1.1.3.1 - 13-12-2022 =
+* Fix - Blocks CSS issue added via customizer.
+
+= 1.1.3 - 08-12-2022 =
+* Fix - Block render issue in widget block editor.
+* Fix - Block css generation issue in customizer.
+* Fix - Possible PHP errors.
+* Fix - Button block focus and active state colors issue.
+
 = 1.1.2 - 22-09-2022 =
 * Enhancement - Optimize dynamic blocks CSS.
 * Fix         - Background image setting not working.

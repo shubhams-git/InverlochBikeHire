@@ -88,6 +88,11 @@ class Apollo13Framework_Rifef {
 	}
 
 	function rating_notice(){
+		//check priviliges
+		if(!current_user_can('switch_themes')){
+			return;
+		}
+
 		$display_rating_notice = true;
 		$option_name = 'a13_'.A13FRAMEWORK_TPL_SLUG.'_rating';
 		$rating_option = get_option( $option_name );

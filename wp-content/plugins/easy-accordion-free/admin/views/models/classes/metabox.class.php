@@ -55,6 +55,18 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 		 */
 		public $post_type = array();
 		/**
+		 * Post_formats
+		 *
+		 * @var array
+		 */
+		public $post_formats = array();
+		/**
+		 * Page_templates
+		 *
+		 * @var array
+		 */
+		public $page_templates = array();
+		/**
 		 * $args variable
 		 *
 		 * @var string
@@ -258,7 +270,7 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 		/**
 		 * Add metabox content.
 		 *
-		 * @param array  $post post.
+		 * @param object $post post.
 		 * @param string $callback callback function.
 		 */
 		public function add_meta_box_content( $post, $callback ) {
@@ -348,7 +360,7 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 
 			echo '</div>';
 
-			echo '<a class="btn btn-success" id="sp__eap-show-preview" data-id="' . $post->ID . '"href=""> <i class="fa fa-eye" aria-hidden="true"></i> Show Preview</a>';
+			echo '<a class="btn btn-success" id="sp__eap-show-preview" data-id="' . esc_attr( $post->ID ) . '"href=""> <i class="fa fa-eye" aria-hidden="true"></i> Show Preview</a>';
 
 			echo '<div class="clear"></div>';
 
@@ -405,7 +417,7 @@ if ( ! class_exists( 'SP_EAP_Metabox' ) ) {
 
 						foreach ( $section['fields'] as $field ) {
 
-							if ( ! empty( $field['id'] ) ) {
+							if ( ! empty( $field['id'] ) && ! isset( $field['only_pro'] ) ) {
 
 								$field_id    = $field['id'];
 								$field_value = isset( $request[ $field_id ] ) ? $request[ $field_id ] : '';

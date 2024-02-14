@@ -11,5 +11,5 @@
 
 if ( $show_post_content ) {
 	?>
-<p><?php the_excerpt(); ?></p>
+<div class='wpcp-post-content'><?php the_excerpt(); ?></div>
 <?php } ?>

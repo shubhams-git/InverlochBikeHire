@@ -4072,7 +4072,6 @@ div.wpcf7-response-output{
 	font-size: 13px;
 	line-height: 20px;
 	text-align: center;
-	display: none;
 	/*cursor: pointer;*//*there is no action on this div*/
 }
 .form-info.error,

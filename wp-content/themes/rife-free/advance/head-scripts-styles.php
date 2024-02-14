@@ -340,9 +340,9 @@ if(!function_exists( 'apollo13framework_get_web_fonts_static' )) {
 
             foreach( $fonts as $font ) {
                 $url_part = str_replace(' ', '%20', $font['font-family'] );
-                $weights  = str_replace( 'italic', 'i', implode( ',', $font['variants'] ) );
+                $weights  = array_key_exists('variants', $font)? str_replace( 'italic', 'i', implode( ',', $font['variants'] ) ) : '';
                 $url_part .= strlen( $weights ) ? ':' . $weights : '';
-                $_subsets = implode( ',', $font['subsets'] );
+                $_subsets = implode( ',', (array)$font['subsets'] );
                 if(strlen( $_subsets )){
                     $subsets[] = $_subsets;
                 }

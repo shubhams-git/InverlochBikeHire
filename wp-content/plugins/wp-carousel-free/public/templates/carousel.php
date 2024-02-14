@@ -27,11 +27,11 @@ if ( ! defined( 'WPINC' ) ) {
 		WPCF_Helper::get_item_loops( $upload_data, $shortcode_data, $carousel_type, $post_id );
 		?>
 		</div>
-		<?php if ( 'hide' !== $wpcp_dots ) { ?>
+		<?php if ( $wpcp_dots ) { ?>
 			<div class="wpcp-swiper-dots swiper-pagination"></div>
 		<?php } ?>
 		<!-- If we need navigation buttons -->
-		<?php if ( 'hide' !== $wpcp_arrows ) { ?>
+		<?php if ( $wpcp_arrows ) { ?>
 			<div class="wpcp-prev-button swiper-button-prev"><i class="fa fa-angle-left"></i></div>
 			<div class="wpcp-next-button swiper-button-next"><i class="fa fa-angle-right"></i></div>
 		<?php } ?>

@@ -30,6 +30,7 @@ class Easy_Accordion_Free_Updates {
 		'2.0.6'  => 'updates/update-2.0.6.php',
 		'2.0.7'  => 'updates/update-2.0.7.php',
 		'2.1.14' => 'updates/update-2.1.14.php',
+		'2.3.0'  => 'updates/update-2.3.0.php',
 	);
 
 	/**
