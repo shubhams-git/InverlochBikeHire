@@ -6,20 +6,23 @@
 
 /* Review notice */
 #sp-eafree-review-notice {
-    padding:15px 15px 15px 0;
+    padding: 18px 15px 18px 0;
     background-color:#fff;
-    border-radius:3px;
-    margin:20px 20px 0 0;
+    border-radius: 5px;
+    margin: 20px 20px 0 0;
+    box-shadow: 0 0 20px 0 rgba(36,39,50,.08);
 }
 #sp-eafree-review-notice .sp-eafree-plugin-icon {
     width:125px;
     float:left;
     line-height:90px;
     text-align:center;
+    margin-left: 8px;
 }
 #sp-eafree-review-notice .sp-eafree-plugin-icon img {
-    max-width:83px;
+    max-width:94px;
     vertical-align:middle;
+    margin-right: 8px;
 }
 #sp-eafree-review-notice .sp-eafree-notice-text {
     overflow:hidden;
@@ -74,9 +77,19 @@
     overflow: hidden;
   }
 
-  .sp-easy-accordion .ea-body p{
+  .sp-easy-accordion .ea-body :is(p, li, div){
       font-size: 16px;
       line-height: 24px;
+  }
+  .sp-easy-accordion .ea-body ul, .sp-easy-accordion .ea-body ol {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	padding-inline-start: 40px;
+  }
+  .sp-easy-accordion .ea-body ul{
+	list-style: disc;
   }
 
   #sp_eap_live_preview .handle-order-higher,
@@ -105,10 +118,8 @@
 /**
 Go Pro
 **/
-#adminmenu #menu-posts-sp_easy_accordion li:last-child a,
-#adminmenu #menu-posts-sp_easy_accordion li:last-child a:hover {
-    color:#11b916;
-    font-weight: 700;
+#adminmenu #menu-posts-sp_easy_accordion li:nth-child(7) a {
+    color: #f9be48;
 }
 #adminmenu #menu-posts-sp_easy_accordion li a .sp-go-pro-icon {
     background-image: url(../img/premium.svg);
@@ -119,4 +130,15 @@ Go Pro
     margin-right: 1px;
     margin-left: -2px;
     margin-top: -2px;
+}
+
+.block-editor-page a.sp-easyaccordion-block-edit-button,
+a.sp-easyaccordion-block-edit-button {
+	display: inline-block;
+	text-decoration: underline;
+	font-size: 16px;
+	margin: 10px 0;
+}
+.spea-footer-text-star {
+    color: #dba617;
 }

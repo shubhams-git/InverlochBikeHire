@@ -51,11 +51,11 @@ class WP_Carousel_Free_Review {
 			</div>
 			<div class="sp-wpcfree-notice-text">
 				<h3>Enjoying <strong>WP Carousel</strong>?</h3>
-				<p>Hope that you had a good experience with the <strong>WP Carousel</strong>. Would you please show us a little love by rating us in the <a href="https://wordpress.org/support/plugin/wp-carousel-free/reviews/?filter=5#new-post" target="_blank"><strong>WordPress.org</strong></a>?
-				Just a minute to rate it. Thank you!</p>
+				<p>We hope you had a wonderful experience using <strong>WP Carousel</strong>. Please take a moment to leave a review on <a href="https://wordpress.org/support/plugin/wp-carousel-free/reviews/?filter=5#new-post" target="_blank"><strong>WordPress.org</strong></a>.
+				Your positive review will help us improve. Thank you! 😊</p>
 
 				<p class="sp-wpcfree-review-actions">
-					<a href="https://wordpress.org/support/plugin/wp-carousel-free/reviews/?filter=5#new-post" target="_blank" class="button button-primary notice-dismissed rate-wp-carousel">Rate WP Carousel</a>
+					<a href="https://wordpress.org/support/plugin/wp-carousel-free/reviews/?filter=5#new-post" target="_blank" class="button button-primary notice-dismissed rate-wp-carousel">Ok, you deserve ★★★★★</a>
 					<a href="#" class="notice-dismissed remind-me-later"><span class="dashicons dashicons-clock"></span>Nope, maybe later
 </a>
 					<a href="#" class="notice-dismissed never-show-again"><span class="dashicons dashicons-dismiss"></span>Never show again</a>
@@ -103,13 +103,13 @@ class WP_Carousel_Free_Review {
 	public function dismiss_review_notice() {
 		$review = array();
 		$nonce  = ( ! empty( $_POST['nonce'] ) ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
-		if ( wp_verify_nonce( $nonce, 'wpcfree-review-notice' ) ) {
+		if ( current_user_can( 'manage_options' ) && wp_verify_nonce( $nonce, 'wpcfree-review-notice' ) ) {
 			$notice_dismissed = ( ! empty( $_POST['notice_dismissed_data'] ) ) ? sanitize_text_field( wp_unslash( $_POST['notice_dismissed_data'] ) ) : '';
 
 			switch ( $notice_dismissed ) {
 				case '1':
 					$review['time']      = time();
-					$review['dismissed'] = false;
+					$review['dismissed'] = true;
 					break;
 				case '2':
 					$review['time']      = time();

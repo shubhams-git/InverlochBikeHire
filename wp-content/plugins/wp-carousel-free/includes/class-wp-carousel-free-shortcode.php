@@ -17,8 +17,6 @@
  * This is used to define shortcode, shortcode attributes, and carousel types.
  */
 class WP_Carousel_Free_Shortcode {
-
-
 	/**
 	 * Holds the class object.
 	 *
@@ -34,7 +32,6 @@ class WP_Carousel_Free_Shortcode {
 	 */
 	public $post_id;
 
-
 	/**
 	 * Allows for accessing single instance of class. Class should only be constructed once per call.
 	 *
@@ -48,7 +45,6 @@ class WP_Carousel_Free_Shortcode {
 		}
 		return self::$instance;
 	}
-
 
 	/**
 	 * Full html show.
@@ -73,7 +69,14 @@ class WP_Carousel_Free_Shortcode {
 			'right' => '20',
 		);
 		// Carousel Column.
-		$column_number = isset( $shortcode_data['wpcp_number_of_columns'] ) ? $shortcode_data['wpcp_number_of_columns'] : '';
+		$column_number   = isset( $shortcode_data['wpcp_number_of_columns'] ) ? $shortcode_data['wpcp_number_of_columns'] : '';
+		$image_link_show = isset( $shortcode_data['wpcp_click_action_type_group']['wpcp_logo_link_show'] ) ? $shortcode_data['wpcp_click_action_type_group']['wpcp_logo_link_show'] : 'l_box';
+
+		if ( ( 'image-carousel' === $carousel_type && 'l_box' === $image_link_show ) ) {
+			wp_enqueue_style( 'wpcf-fancybox-popup' );
+			wp_enqueue_script( 'wpcf-fancybox-popup' );
+			wp_enqueue_script( 'wpcf-fancybox-config' );
+		}
 
 		// Carousel Settings.
 		$preloader = isset( $shortcode_data['wpcp_preloader'] ) ? $shortcode_data['wpcp_preloader'] : true;
@@ -95,36 +98,36 @@ class WP_Carousel_Free_Shortcode {
 		}
 
 		if ( 'carousel' === $wpcp_layout ) {
-
-			$wpcp_dots = isset( $shortcode_data['wpcp_pagination'] ) ? $shortcode_data['wpcp_pagination'] : '';
-			switch ( $wpcp_dots ) {
-				case 'show':
-					$dots        = 'true';
-					$dots_mobile = 'true';
-					break;
-				case 'hide':
-					$dots        = 'false';
-					$dots_mobile = 'false';
-					break;
-				case 'hide_mobile':
-					$dots        = 'true';
-					$dots_mobile = 'false';
-					break;
+			/**
+			 * Functionalities of carousel pagination show/hide and hide on mobile options/
+			 */
+			$wpcp_dots                      = isset( $shortcode_data['wpcp_carousel_pagination']['wpcp_pagination'] ) ? $shortcode_data['wpcp_carousel_pagination']['wpcp_pagination'] : 'show';
+			$wpcp_pagination_hide_on_mobile = isset( $shortcode_data['wpcp_carousel_pagination']['wpcp_pagination_hide_on_mobile'] ) ? $shortcode_data['wpcp_carousel_pagination']['wpcp_pagination_hide_on_mobile'] : '';
+			$dots                           = 'false';
+			$dots_mobile                    = 'false';
+			if ( $wpcp_dots ) {
+				$dots        = 'true';
+				$dots_mobile = 'false';
 			}
-			$wpcp_arrows = isset( $shortcode_data['wpcp_navigation'] ) ? $shortcode_data['wpcp_navigation'] : 'show';
-			switch ( $wpcp_arrows ) {
-				case 'show':
-					$arrows        = 'true';
-					$arrows_mobile = 'true';
-					break;
-				case 'hide':
-					$arrows        = 'false';
-					$arrows_mobile = 'false';
-					break;
-				case 'hide_mobile':
-					$arrows        = 'true';
-					$arrows_mobile = 'false';
-					break;
+			if ( $wpcp_pagination_hide_on_mobile ) {
+				$dots        = 'true';
+				$dots_mobile = 'true';
+			}
+
+			/**
+			* Functionalities of carousel navigation show/hide and hide on mobile options.
+			*/
+			$wpcp_arrows         = isset( $shortcode_data['wpcp_carousel_navigation']['wpcp_navigation'] ) ? $shortcode_data['wpcp_carousel_navigation']['wpcp_navigation'] : '';
+			$wpcp_hide_on_mobile = isset( $shortcode_data['wpcp_carousel_navigation']['wpcp_hide_on_mobile'] ) ? $shortcode_data['wpcp_carousel_navigation']['wpcp_hide_on_mobile'] : '';
+			$arrows              = 'false';
+			$arrows_mobile       = 'false';
+			if ( $wpcp_arrows ) {
+				$arrows        = 'true';
+				$arrows_mobile = 'false';
+			}
+			if ( $wpcp_hide_on_mobile ) {
+				$arrows        = 'true';
+				$arrows_mobile = 'true';
 			}
 
 			// Responsive screen sizes.
@@ -143,36 +146,38 @@ class WP_Carousel_Free_Shortcode {
 			$column_tablet         = isset( $column_number['tablet'] ) && ! empty( $column_number['tablet'] ) ? $column_number['tablet'] : $old_column_tablet;
 			$old_column_mobile     = isset( $column_number['column5'] ) ? $column_number['column5'] : '1';
 			$column_mobile         = isset( $column_number['mobile'] ) && ! empty( $column_number['mobile'] ) ? $column_number['mobile'] : $old_column_mobile;
-			$auto_play             = $shortcode_data['wpcp_carousel_auto_play'] ? 'true' : 'false';
-			$old_autoplay_speed    = isset( $shortcode_data['carousel_auto_play_speed'] ) && is_numeric( $shortcode_data['carousel_auto_play_speed'] ) ? $shortcode_data['carousel_auto_play_speed'] : '3000';
-			$autoplay_speed        = isset( $shortcode_data['carousel_auto_play_speed']['all'] ) && ! empty( $shortcode_data['carousel_auto_play_speed']['all'] ) ? $shortcode_data['carousel_auto_play_speed']['all'] : $old_autoplay_speed;
-			$old_speed             = isset( $shortcode_data['standard_carousel_scroll_speed'] ) && is_numeric( $shortcode_data['standard_carousel_scroll_speed'] ) ? $shortcode_data['standard_carousel_scroll_speed'] : '600';
-			$speed                 = isset( $shortcode_data['standard_carousel_scroll_speed']['all'] ) && ! empty( $shortcode_data['standard_carousel_scroll_speed']['all'] ) ? $shortcode_data['standard_carousel_scroll_speed']['all'] : $old_speed;
-			$infinite              = $shortcode_data['carousel_infinite'] ? 'true' : 'false';
-			$pause_on_hover        = $shortcode_data['carousel_pause_on_hover'] ? 'true' : 'false';
+			$is_auto_play          = isset( $shortcode_data['wpcp_carousel_auto_play'] ) ? $shortcode_data['wpcp_carousel_auto_play'] : true;
+			$auto_play             = $is_auto_play ? 'true' : 'false';
+			$autoplay_speed        = isset( $shortcode_data['carousel_auto_play_speed'] ) && is_string( $shortcode_data['carousel_auto_play_speed'] ) ? $shortcode_data['carousel_auto_play_speed'] : '3000';
+			$speed                 = isset( $shortcode_data['standard_carousel_scroll_speed'] ) && is_string( $shortcode_data['standard_carousel_scroll_speed'] ) ? $shortcode_data['standard_carousel_scroll_speed'] : '600';
+			$is_infinite           = isset( $shortcode_data['carousel_infinite'] ) ? $shortcode_data['carousel_infinite'] : '';
+			$infinite              = $is_infinite ? 'true' : 'false';
+			$is_pause_on_hover     = isset( $shortcode_data['carousel_pause_on_hover'] ) ? $shortcode_data['carousel_pause_on_hover'] : '';
+			$pause_on_hover        = $is_pause_on_hover ? 'true' : 'false';
 			$carousel_direction    = isset( $shortcode_data['wpcp_carousel_direction'] ) ? $shortcode_data['wpcp_carousel_direction'] : '';
 			$lazy_load_image       = isset( $shortcode_data['wpcp_image_lazy_load'] ) ? $shortcode_data['wpcp_image_lazy_load'] : 'false';
-			$draggable             = $shortcode_data['slider_draggable'] ? 'true' : 'false';
+			$is_draggable          = isset( $shortcode_data['slider_draggable'] ) ? $shortcode_data['slider_draggable'] : true;
+			$draggable             = $is_draggable ? 'true' : 'false';
 			$free_mode             = isset( $shortcode_data['free_mode'] ) && $shortcode_data['free_mode'] ? 'true' : 'false';
-			$swipe                 = $shortcode_data['slider_swipe'] ? 'true' : 'false';
+			$space_between         = isset( $item_gap['top'] ) && is_numeric( $item_gap['top'] ) ? $item_gap['top'] : '20';
+			$is_swipe              = isset( $shortcode_data['slider_swipe'] ) ? $shortcode_data['slider_swipe'] : true;
+			$swipe                 = $is_swipe ? 'true' : 'false';
 			$is_swipetoslide       = isset( $shortcode_data['carousel_swipetoslide'] ) ? $shortcode_data['carousel_swipetoslide'] : true;
 			$swipetoslide          = $is_swipetoslide ? 'true' : 'false';
 			$rtl                   = ( 'ltr' === $carousel_direction ) ? 'true' : 'false';
 			$carousel_classes     .= ' wpcp-standard';
-			$wpcp_swiper_options   = 'data-swiper=\'{ "accessibility":true, "spaceBetween":' . $item_gap['top'] . ', "arrows":' . $arrows . ', "freeMode": ' . $free_mode . ', "autoplay":' . $auto_play . ', "autoplaySpeed":' . $autoplay_speed . ', "dots":' . $dots . ', "infinite":' . $infinite . ', "speed":' . $speed . ', "pauseOnHover":' . $pause_on_hover . ',
+			$wpcp_swiper_options   = 'data-swiper=\'{ "accessibility":true, "spaceBetween":' . $space_between . ', "arrows":' . $arrows . ', "freeMode": ' . $free_mode . ', "autoplay":' . $auto_play . ', "autoplaySpeed":' . $autoplay_speed . ', "dots":' . $dots . ', "infinite":' . $infinite . ', "speed":' . $speed . ', "pauseOnHover":' . $pause_on_hover . ',
 			"slidesToShow":{"lg_desktop":' . $column_lg_desktop . ', "desktop": ' . $column_desktop . ', "laptop": ' . $column_sm_desktop . ', "tablet": ' . $column_tablet . ', "mobile": ' . $column_mobile . '}, "responsive":{"desktop":' . $desktop_size . ', "laptop": ' . $laptop_size . ', "tablet": ' . $tablet_size . ', "mobile": ' . $mobile_size . '}, "rtl":' . $rtl . ', "lazyLoad": "' . $lazy_load_image . '", "swipe": ' . $swipe . ', "draggable": ' . $draggable . ', "swipeToSlide":' . $swipetoslide . ' }\' ';
 			// Carousel Configurations.
 			if ( wpcf_get_option( 'wpcp_swiper_js', true ) ) {
-				wp_enqueue_script( 'wpcf-swiper' );
+				wp_enqueue_script( 'wpcf-swiper-js' );
 			}
 			wp_enqueue_script( 'wpcf-swiper-config' );
-			ob_start();
 			include WPCAROUSELF_PATH . '/public/templates/carousel.php';
 			$html = ob_get_contents();
 			return apply_filters( 'sp_wpcp_carousel_slider', $html, $post_id );
 		}
 		if ( 'grid' === $wpcp_layout ) {
-			ob_start();
 			include WPCAROUSELF_PATH . '/public/templates/gallery.php';
 			$html = ob_get_contents();
 			return apply_filters( 'sp_wpcp_carousel_gallery', $html, $post_id );
@@ -186,17 +191,35 @@ class WP_Carousel_Free_Shortcode {
 	 * @return void
 	 */
 	public function sp_wp_carousel_shortcode( $attributes ) {
-		if ( empty( $attributes['id'] ) ) {
+		if ( empty( $attributes['id'] ) || 'sp_wp_carousel' !== get_post_type( $attributes['id'] ) || ( get_post_status( $attributes['id'] ) === 'trash' ) ) {
 			return;
 		}
-
-		$post_id = intval( $attributes['id'] );
+		$post_id = esc_attr( intval( $attributes['id'] ) );
 
 		// Video Carousel.
 		$upload_data        = get_post_meta( $post_id, 'sp_wpcp_upload_options', true );
 		$shortcode_data     = get_post_meta( $post_id, 'sp_wpcp_shortcode_options', true );
 		$main_section_title = get_the_title( $post_id );
 
+		// Stylesheet loading problem solving here. Shortcode id to push page id option for getting how many shortcode in the page.
+		// Get the existing shortcode ids from the current page.
+		$get_page_data      = WP_Carousel_Free_Public::get_page_data();
+		$found_generator_id = $get_page_data['generator_id'];
+		ob_start();
+		if ( wpcf_get_option( 'wpcp_ajax_js', false ) ) {
+			wp_enqueue_script( 'wpcf-ajax-theme' );
+		}
+		// This shortcode id not in page id option. Enqueue stylesheets in shortcode.
+		if ( ! is_array( $found_generator_id ) || ! $found_generator_id || ! in_array( $post_id, $found_generator_id ) || wpcf_get_option( 'wpcp_ajax_js', false ) ) {
+			wp_enqueue_style( 'wpcf-swiper' );
+			wp_enqueue_style( 'wp-carousel-free-fontawesome' );
+			wp_enqueue_style( 'wp-carousel-free' );
+
+			$dynamic_style = WP_Carousel_Free_Public::load_dynamic_style( $post_id, $shortcode_data, $upload_data );
+			echo '<style id="wp_carousel_dynamic_css' . esc_attr( $post_id ) . '">' . $dynamic_style['dynamic_css'] . '</style>';
+		}
+		// Update options if the existing shortcode id option not found.
+		WP_Carousel_Free_Public::wpf_db_options_update( $post_id, $get_page_data );
 		self::wpcf_html_show( $upload_data, $shortcode_data, $post_id, $main_section_title );
 		return ob_get_clean();
 	}

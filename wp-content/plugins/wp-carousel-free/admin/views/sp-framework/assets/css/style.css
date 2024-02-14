@@ -38,8 +38,10 @@
  *     03. 27. Field: switcher
  *     03. 29. Field: text
  *     03. 31. Field: typography
+ *     03. 32. Field: tabbed
  *     03. 34. Field: heading
  *     03. 35. Field: subheading
+ *     03. 36. Field: submessage
  *     03. 37. Field: notice
  *     03. 40. Field: others
  * 04. Widget
@@ -65,11 +67,13 @@
 .wpcf {
 	position: relative;
 }
-.wpcf label{
+
+.wpcf label {
 	padding: 0;
 	margin: 0;
 	display: inline-block;
 }
+
 .wpcf .wpcf-field-carousel_type label {
 	padding: 0;
 	/* margin: 0; */
@@ -524,16 +528,152 @@
 .wpcf-tooltip {
 	position: absolute;
 	z-index: 5000001;
-	font-size: 12px;
-	line-height: 1.4;
-	text-align: center;
+	text-align: left;
 	text-decoration: none;
-	padding: 6px 12px;
-	max-width: 200px;
+	max-width: 250px;
+	background-color: rgba(12, 25, 36, .9);
+	border-radius: 5px;
+	padding: 15px;
+	color: #94b2c1;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.wpcf-tooltip.sp_wpcp-short-content {
+	margin-top: 8px;
+}
+
+.wpcf-tooltip .sp_wpcp-open-live-demo,
+.wpcf-tooltip .sp_wpcp-open-docs {
+	margin-top: 10px;
+	display: inline-block;
+	line-height: 34px;
+	background-color: #1d81f9;
+	border-radius: 3px;
+	padding: 0 12px;
+	font-size: 11px;
+	text-transform: capitalize;
+	text-decoration: none;
 	color: #fff;
-	background-color: #000;
-	background-color: rgba(0, 0, 0, 0.85);
+	margin-bottom: 0px;
+	font-weight: 500;
+}
+
+.wpcf-tooltip .sp_wpcp-open-live-demo {
+	background-color: transparent;
+	border: 2px solid #1d81f9;
+	line-height: 32px;
+	color: #1d81f9;
+}
+
+.wpcf-tooltip .sp_wpcp-open-docs:hover,
+.wpcf-tooltip .sp_wpcp-open-live-demo:hover {
+	background-color: #226DE5;
+	border-color: #226DE5;
+	color: #ffffff;
+}
+
+.wpcf-tooltip .sp_wpcp-info-label {
+	color: #fff;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: 500;
+	text-transform: capitalize;
+	margin-bottom: 6px;
+	text-align: left;
+}
+
+.wpcf-tooltip .sp_wpcp-open-docs {
+	margin-top: 10px;
+}
+
+.wpcf-tooltip .sp_wpcp-img-tag {
+	margin-bottom: 6px;
+	min-width: 240px;
+}
+
+.wpcf-tooltip .sp_wpcp-img-tag img {
+	background-color: #f4f4f4;
 	border-radius: 4px;
+}
+
+.wpcf-field-subheading .wpcf-title {
+	width: 100%;
+}
+
+.wpcf-help-text.wpcf-support {
+	display: none;
+}
+
+.wpcf-tooltip.support-tooltip {
+	max-width: 300px;
+}
+
+.wpcf-tooltip.support-tooltip a.sp_wpcp-open-docs {
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	padding: 8px 8px 8px 8px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.wpcf-tooltip a.sp_wpcp-open-docs {
+	margin-right: 10px;
+}
+
+.wpcf-tooltip.support-tooltip a.sp_wpcp-open-docs.support {
+	background: #fff;
+	color: #000;
+}
+
+.wpcf-tooltip.support-tooltip a.sp_wpcp-open-docs.support:hover {
+	background: #f5f5f5;
+}
+
+.wpcf-tooltip.support-tooltip a.sp_wpcp-open-docs.feature-request {
+	background: transparent;
+	color: #1d81f9;
+	border: 2px solid #1d81f9;
+	text-transform: none;
+}
+
+.wpcf-tooltip.support-tooltip a.sp_wpcp-open-docs.feature-request:hover {
+	background: #1d81f9;
+	color: #fff;
+	border: 2px solid #1d81f9;
+}
+
+.wpcf-tooltip.support-tooltip .sp_wpcp-info-label {
+	text-transform: none;
+}
+
+.wpcf-tooltip:before,
+.wpcf-tooltip:after {
+	content: '';
+	width: 0;
+	position: absolute;
+	height: 0;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid rgba(12, 25, 36, .95);
+	left: -10px;
+	top: calc(50% - 7px);
+}
+
+.wpcf-tooltip:after {
+	border: 15px solid transparent;
+	left: -30px;
+	top: calc(50% - 15px);
+}
+
+span.tooltip-icon {
+	width: 25px;
+	display: inline-block;
 }
 
 /**
@@ -836,6 +976,7 @@
 	width: calc(80% - 20px);
 }
 
+
 .wpcf-pseudo-field {
 	padding: 0 5px 0 0 !important;
 	display: inline-block;
@@ -998,6 +1139,10 @@
 	border-bottom-right-radius: 0 !important;
 }
 
+.wpcf-field.wpcf-field-column.wpcp_number_of_columns .wpcf-fieldset {
+	padding-top: 10px;
+}
+
 .wpcf-field-dimensions_advanced.wpcp_carousel_row_pro_only {
 	pointer-events: none;
 	opacity: .7;
@@ -1040,6 +1185,10 @@
 	background-color: #f7f7f7;
 	user-select: none;
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wpcf-field-button_set.wpcf_navigation_icons .wpcf--button {
+	padding: 7px 10px;
 }
 
 .wpcf-field-button_set .wpcf--button:first-child {
@@ -1276,6 +1425,10 @@
 	margin: 0 5px 5px 0;
 }
 
+.wpcf-field-image_select .wpcf--image{
+	margin: 0 0 5px 0;
+}
+
 .wpcf-field-icon_select .wpcf--inline-list .wpcf--icon,
 .wpcf-field-image_select .wpcf--inline-list .wpcf--image {
 	display: inline-block;
@@ -1326,19 +1479,19 @@
 	line-height: 20px;
 }
 
-.wpcf-field-image_select figure img,
+/*.wpcf-field-image_select figure img,
 .wpcf-field-icon_select figure {
-	/* max-width: 100%;
+	 max-width: 100%;
   vertical-align: bottom;
   background-color: #fff;
   border: 2px solid #eee; */
-	/* opacity: 0.75; */
-	/* -moz-transition: all 0.15s ease-out;
+/* opacity: 0.75; */
+/* -moz-transition: all 0.15s ease-out;
   -o-transition: all 0.15s ease-out;
   -webkit-transition: all 0.15s ease-out;
-  transition: all 0.15s ease-out; */
+  transition: all 0.15s ease-out; 
 }
-
+*/
 .wpcf-field-icon_select .wpcf--active figure {
 	border-color: #52b3d9;
 	opacity: 1;
@@ -1366,6 +1519,11 @@
 	display: none;
 }
 
+.wpcf-help img {
+	width: 14px;
+	vertical-align: middle !important;
+}
+
 /**
  * 03. 22. Field: select
  */
@@ -1381,6 +1539,16 @@
 	max-width: 100%;
 	margin: 0;
 	float: left;
+}
+
+.wpcf-field-select.wpcp-carousel-nav-position select {
+	float: none;
+}
+
+.wpcf-field-select.wpcp-carousel-nav-position img.icon_preview {
+	margin-top: 20px;
+	width: 170px;
+	display: block;
 }
 
 .wpcf-field-select .wpcf-hide-select {
@@ -1671,6 +1839,92 @@
 	margin-top: 5px;
 }
 
+/**
+ * 03. 32. Field: tabbed
+ */
+.wpcf-field-tabbed .wpcf-tabbed-nav {
+	width: 270px;
+	border-right: 1px solid rgba(221, 221, 221, 1);
+}
+
+.wpcf-field-tabbed.wpcf-field {
+	display: flex;
+	margin: 30px;
+	border: 1px solid rgba(221, 221, 221, 1);
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-sections {
+	float: left;
+	width: 100%;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-section {
+	border: none;
+	background: #fff;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.wpcf-field-tabbed:nth-child(2) .wpcf-tabbed-section {
+	padding-top: 0;
+}
+
+.wpcf-field-tabbed.wpcf-field:not(.hidden) {
+	padding: 0 !important;
+	border: 1px solid rgba(221, 221, 221, 1) !important;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-section>.wpcf-field {
+	padding: 20px;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-nav .wpcf--icon {
+	padding-right: 5px;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-nav a {
+	display: block;
+	padding: 12px 15px;
+	margin-top: 0;
+	position: relative;
+	text-decoration: none;
+	color: #343434;
+	font-weight: 600;
+	border-bottom: 1px solid rgba(204, 204, 204, 1);
+	-moz-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	overflow: hidden;
+	background: rgba(245, 245, 245, 1);
+	text-transform: uppercase;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-nav a:last-child {
+	margin-bottom: 0px;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-nav a:hover {
+	background-color: #f9f9f9;
+}
+
+.wpcf-field-tabbed .wpcf-tabbed-nav a:focus {
+	box-shadow: none;
+	outline: none;
+}
+
+.wpcf-field-tabbed .wpcf-pros-tabbed-nav a:focus,
+.wpcf-field-tabbed .wpcf-tabbed-nav a.wpcf-tabbed-active {
+	background-color: #fff;
+	-webkit-box-shadow: inset 3px 0 #178087;
+	box-shadow: inset 3px 0 #178087;
+	color: #178087;
+	font-weight: 600;
+	border-right-color: #fff;
+	margin-right: -1px;
+	border-right: none;
+}
+
 
 /**
  * 03. 34. Field: heading
@@ -1691,6 +1945,64 @@
 	padding-top: 17px;
 	padding-bottom: 17px;
 	color: #23282d;
+	background-color: #eaecee;
+	margin-right: -10px;
+	margin-left: -10px;
+	text-transform: uppercase;
+}
+
+/**
+ * 03. 36. Field: submessage
+ */
+.wpcf-field-submessage {
+	padding: 0 !important;
+	border: 0 !important;
+}
+
+.wpcf-field-submessage+.wpcf-field {
+	border-top: 0 !important;
+}
+
+.wpcf-submessage {
+	font-size: 14px;
+	padding: 17px 20px;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+
+.wpcf-submessage-success {
+	color: #3c763d;
+	border-color: #d6e9c6;
+	background-color: #dff0d8;
+}
+
+.wpcf-submessage.wpcf-submessage-info {
+	color: #999999;
+	font-style: italic;
+}
+
+.wpcf-submessage-info a.brand-plugin-install,
+.wpcf-submessage-info a.activate_brand,
+.wpcf-submessage-info a.quick-view-install,
+.wpcf-submessage-info a.quick-view-install.activate_plugin {
+	font-weight: 500;
+}
+
+.wpcf-submessage-warning {
+	color: #8a6d3b;
+	border-color: #faebcc;
+	background-color: #fcf8e3;
+}
+
+.wpcf-submessage-danger {
+	color: #a94442;
+	border-color: #ebccd1;
+	background-color: #f2dede;
+}
+
+.wpcf-submessage-normal {
+	color: #23282d;
+	border-color: #eee;
 	background-color: #f7f7f7;
 }
 
@@ -1702,8 +2014,8 @@
 }
 
 .wpcf-notice {
-	color: #999;
-	font-style: italic;
+	/* color: #999; */
+	/* font-style: italic; */
 	font-size: 13px;
 	padding: 12px 12px 12px 0 !important;
 	border: none !important;
@@ -2122,8 +2434,8 @@
 	width: 100%;
 	margin-top: 6px;
 	font-weight: 400;
-	color: #999;
-	font-style: italic;
+	/* color: #999; */
+	/* font-style: italic; */
 }
 
 .wpcf-error-text {
@@ -2210,6 +2522,12 @@
 .wpcf-form-success {
 	/* color: #fff; */
 	border-left-color: #46b450;
+}
+
+.wpcf-form-success.error {
+	padding: 12px;
+	margin: 0 0 15px 0;
+	border-left-color: #d63638;
 }
 
 .wpcf-form-warning {
@@ -2932,43 +3250,118 @@ Slider Field
 	color: #fff;
 }
 
-.wpcf--wrap {
-	display: inline-block;
-	margin: 0 20px 0 0;
-	width: 50%;
-	vertical-align: super;
+
+.wpcf-field-slider .wpcf--wrap {
+	display: flex;
+	align-items: center;
+}
+
+.wpcf-field-slider .wpcf--input {
+	display: flex;
+}
+
+.wpcf-field-slider .wpcf--unit {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	user-select: none;
+	padding: 0 6px;
+	font-size: 11px;
+	line-height: 1;
+	border-radius: 0 4px 4px 0;
+	color: #555;
+	border: 1px solid #7e8993;
+	border-left: 0;
+	background-color: #f5f5f5;
+}
+
+.wpcf-field-slider .wpcf-slider-ui {
+	margin-right: 15px;
+}
+
+.wpcf-field-slider input[type="number"] {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	width: 65px;
+	text-align: center;
+	padding: 0;
+}
+
+.wpcf-field-slider .wpcf--is-unit {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 .wpcf-field-slider .ui-slider {
 	position: relative;
+	max-width: 400px;
 	width: 100%;
-	height: 8px;
-	background: #f8f8f8;
-	border: 1px solid #e2e2e2;
-	border-radius: 2px;
+	height: 10px;
+	margin-right: 15px;
+	border: 1px solid #c5c5c5;
+	background: #fff;
+	border-radius: 3px;
+
 }
 
 .wpcf-field-slider .ui-slider-range {
-	background: #dddddd;
-	height: 8px;
+	height: 10px;
+	border: none;
+	background: #0085ba;
+	border-radius: 2px;
 }
 
 .wpcf-field-slider .ui-slider-handle {
-	height: 16px;
-	width: 16px;
-	background: #22aade;
 	position: absolute;
-	top: -4px;
+	width: 18px;
+	height: 18px;
+	top: -5px;
+	margin-left: -8px;
+	border: 1px solid #c5c5c5;
+	background: #f8f8f8;
 	border-radius: 2px;
+}
+
+.wpcf-field-slider .ui-state-active,
+.wpcf-field-slider .ui-slider-handle:hover {
 	cursor: pointer;
 }
 
-@media (min-width: 1400px) {
+.wpcf-field .wpcf--transparent-slider {
+	position: absolute;
+	width: 190px;
+	margin-left: 2px;
+	height: 18px;
+}
 
-	.wpcf.wpcf-options .wpcf--wrap,
-	.sp-metabox-framework .wpcf--wrap {
-		width: 35%;
-	}
+.wpcf-field .wpcf--transparent-slider .ui-slider-handle {
+	position: absolute;
+	top: -3px;
+	bottom: -3px;
+	z-index: 5;
+	border-color: #aaa;
+	border-style: solid;
+	border-width: 4px 3px;
+	width: 10px;
+	height: 16px;
+	margin: 0 -5px;
+	background: none;
+	cursor: ew-resize;
+	opacity: 0.9;
+	border-radius: 4px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.wpcf-field .wpcf--transparent-slider .ui-slider-handle:before {
+	content: " ";
+	position: absolute;
+	left: -2px;
+	right: -2px;
+	top: -3px;
+	bottom: -3px;
+	border: 2px solid #fff;
+	border-radius: 3px;
 }
 
 /* Help Page */
@@ -3378,23 +3771,41 @@ Advanced Typography Field*/
 	margin-top: 5px
 }
 
-.wpcf-field-image_select .wpcf--image img {
-	color: #7b8898;
-	margin-right: 0;
-	outline: solid 3px transparent;
-	border-radius: 2px;
-	cursor: pointer;
-	text-align: center;
-	width: 80px;
-	outline-offset: -3px;
-}
-
 .wpcf-field-image_select .wpcf--image.wpcf--active img {
 	outline-color: #257F87;
 }
 
-/* Admin header */
+.wpcf-field-image_select .wpcf--image img {
+	color: #7b8898;
+	margin-right: 5px;
+	outline: solid 2px #dae0e4;
+	border-radius: 2px;
+	cursor: pointer;
+	text-align: center;
+	outline-offset: -2px;
+}
 
+/* Image Dimension of Layout Type and Item Style options */
+.wpcf-field-image_select:not(.wpcf_carousel_mode, .wpcp_content_position, .wpcp_logo_link_show_class) .wpcf--image img {
+	height: 78px;
+	width: 98px;
+}
+
+/* Image Dimension of carousel pagination style option */
+.wpcf-field-image_select.wpcp_carousel_pagination_width .wpcf--image img {
+	height: 32px;
+	width: 80px;
+}
+
+/* image dimension of click action type option */
+.wpcp_logo_link_show_class .wpcf--image img {
+	border: 2px solid #dae0e4;
+}
+
+.wpcf-field.wpcf-field-image_select.wpcp_logo_link_show_class{
+	padding-left: 0;
+}
+/* Admin header */
 #sp_wpcp_upload_options .wpcp-admin-header {
 	background-color: #157592;
 	background: linear-gradient(-45deg, #22afba, #157592);
@@ -3439,6 +3850,7 @@ Advanced Typography Field*/
 	transform: translateY(0);
 	padding: 0;
 	float: left;
+	margin-left: 4px;
 }
 
 /*
@@ -3514,10 +3926,11 @@ Advanced Typography Field*/
 }
 
 /* help */
+.wpcf-field .wpcf-help.wpcf-title-help,
 .wpcf-field.wpcf-field-checkbox .wpcf-help {
 	display: inline-block;
 	float: none;
-	vertical-align: middle;
+	/* vertical-align: middle; */
 }
 
 /* Import export css */
@@ -3673,7 +4086,7 @@ Advanced Typography Field*/
 	background-color: rgba(247, 247, 247, 0.4) !important;
 }
 
-.wpcf-field.wpcf-field-switcher.only_pro_switcher .wpcf--ball::after {
+.wpcf-field.wpcf-field-switcher.wpcf_show_hide .wpcf--ball::after {
 	content: "PRO";
 	position: relative;
 	text-align: center;
@@ -3681,45 +4094,43 @@ Advanced Typography Field*/
 	float: right;
 	font-weight: 600;
 	font-size: 8px;
-	color: #a5a5a5;
+	color: #8796A1;
 	opacity: 1;
 	line-height: 18px;
 }
 
-.wpcf-field.wpcf-field-switcher.only_pro_switcher .wpcf--switcher {
-	background: #cbcfd0;
+.wpcf-field.wpcf-field-switcher.wpcf_show_hide .wpcf--switcher {
+	/* background: #cbcfd0; */
+	background: #B0BCC4;
 	pointer-events: none;
 }
 
-.wpcf-field-button_set .wpcf--button.wpcf-pro-only:after,
+.wpcf-field-button_set:not(.wpcp_carousel_orientation) .wpcf--button.wpcf-pro-only:after,
 .wpcf-field-image_select .wpcf--image.wpcf-pro-only:after {
 	position: absolute;
 	top: 0;
 	right: 0;
 	background-color: #cbd6df;
-	font-weight: 500;
+	font-weight: 600;
 	padding: 0 4px;
 	content: "PRO";
 	text-align: center;
 	font-size: 8px;
 	line-height: 11px;
 	opacity: 1;
+	color: #7b8898;
+	border-bottom-left-radius: 1px;
 }
 
 .wpcf-field-image_select .wpcf--image.wpcf-pro-only:after {
-	top: 2px;
-	right: 2px;
-	border-radius: 0 1px 0 0;
+	top: 4px;
+	right: 9px;
 }
 
 .wpcf-field-image_select.wpcp_layout .wpcf--image-group .wpcf--image:last-child.wpcf-pro-only:after {
-	right: 12px;
+	right: 9px;
 }
 
-.wpcf-field.wpcf-field-switcher.only_pro_switcher .sp_wpcp--switcher {
-	background: #cbcfd0;
-	pointer-events: none;
-}
 
 .wpcf-field-image_select.wpcp_grid_mode .wpcf--image img {
 	width: 60px;
@@ -3738,19 +4149,29 @@ Advanced Typography Field*/
 }
 
 /* Carousel Row style */
-.only_pro_switcher,
-.only_pro_settings,
-.pro_only_field,
-.wpcf-field-column.wpcp_carousel_row_pro_only {
+.wpcf-field.only_pro_settings>.wpcf-fieldset,
+.wpcf-field.pro_only_field>.wpcf-fieldset,
+.wpcf-field-column.wpcp_carousel_row_pro_only,
+.wpcf-field-spacing.wpcp_carousel_row_pro_only {
 	opacity: .7;
 	pointer-events: none;
 }
 
-.wpcf-field-column.wpcp_carousel_row_pro_only .wpcf--inputs .wpcf--input:nth-child(5) {
+.wpcf-field-spacing.wpcp_carousel_pagination_pro_options,
+.wpcf-field-button_set.wpcp_carousel_pagination_pro_options .wpcf--sibling:not(:nth-child(1)),
+.wpcf-field-image_select.wpcp_carousel_pagination_width .wpcf--sibling:not(:nth-child(1)),
+.wpcf-field-button_set.wpcf_navigation_icons .wpcf--sibling:not(:nth-child(1)),
+.wpcf-field.carousel-nav-pro-options {
+	opacity: .6;
+	pointer-events: none;
+}
+
+.wpcf-field-button_set.wpcf_navigation_icons .wpcf--sibling:nth-child(8)::after,
+.wpcf-field-spacing.wpcp_carousel_row_pro_only .wpcf--inputs .wpcf--input:nth-child(5) {
 	position: relative;
 }
 
-.wpcf-field-column.wpcp_carousel_row_pro_only .wpcf--inputs .wpcf--input:nth-child(5)::after {
+.wpcf-field-spacing.wpcp_carousel_row_pro_only .wpcf--inputs .wpcf--input:nth-child(5)::after {
 	position: absolute;
 	content: "PRO";
 	background-color: #d4d4d4;
@@ -3854,6 +4275,14 @@ Live Preview.
 	padding-bottom: 5px;
 }
 
+.wpcp-slide-margin .wpcf-fieldset {
+	padding-top: 20px;
+}
+
+.wpcf-field-spacing .sp_wpcp--title {
+	color: #999;
+}
+
 .watermark-pro-notice,
 .wpcf-metabox .watermark-pro-notice {
 	padding-top: 0px;
@@ -3861,4 +4290,235 @@ Live Preview.
 
 .watermark-pro-notice strong {
 	color: #999;
+}
+
+.wpcf-field.wpcf-field-notice.sp-settings-pro-notice {
+	padding: 0;
+	padding-left: 20px;
+}
+
+.wpcf-field.wpcf-field-notice.typography-pro-notice {
+	padding-bottom: 0;
+}
+
+.wpcf-section[data-section-id="watermark-settings"] .sp_wpcp--preview {
+	display: none;
+}
+
+/* Brand and Quicke view css for preview */
+#sp-wpcf-preview-box .sp-smart-brand-single-product .sp-smart-brand-name {
+	display: inline-block;
+}
+
+#sp-wpcf-preview-box .wpcp-carousel-section.wpcp-product-carousel .wpcp-cart-button a.button+.button.sp-wqv-view-button {
+	margin-left: 5px;
+}
+
+.wpcf-field-image_select.wpcp_layout .wpcf--active figure:before,
+.wpcf-field-image_select.wpcp_content_style .wpcf--active figure:before {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 7px;
+	font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free", FontAwesome;
+	font-weight: 900;
+	content: "\f00c";
+	width: 12px;
+	height: 12px;
+	line-height: 14px;
+	color: #fff;
+	background-color: #257f87;
+	transition: opacity .2s;
+	border-radius: 50%;
+}
+
+/* CSS for the lightbox settings tab */
+.wpcf-field-tabbed.wp-carousel-lightbox-settings-tabs .wpcf-tabbed-nav a {
+	padding: 12px 14px;
+}
+
+.wpcf-field-tabbed.wp-carousel-lightbox-settings-tabs .wpc-lightbox-general {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+div#wpcf-section-sp_wpcp_shortcode_options_0,
+div#wpcf-section-sp_wpcp_shortcode_options_1,
+div#wpcf-section-sp_wpcp_shortcode_options_2 {
+	padding: 10px;
+}
+
+.wpcf-field.wpcf-field-notice.image-settings-tab-notice {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+
+/* Style for the item border option */
+.wpcf-field-border .wpcf-option-above-title,
+.wpcf-field-border .wpcf-option-above-title .wpcf--color {
+	float: left;
+}
+
+.wpcf-field-border .wpcf-option-above-title .wpcf--title,
+.wpcf-field-border .wpcf--color .wpcf--title {
+	color: #999;
+	margin-bottom: 5px;
+}
+
+/* Margin bottom from the section title in Typography tabs */
+.wpcf-field-typography .wpcf--margin-icon {
+	padding: 5px 14px;
+	background-color: #eeeeee;
+	border: 1px solid #cccc;
+	border-radius: 4px;
+	margin-right: 2px;
+}
+
+.wpcf--block.wpcf--margin-bottom {
+	position: relative;
+}
+
+.wpcf-field-typography .wpcf--block {
+	max-width: 100%;
+	padding-right: 6px;
+	padding-bottom: 6px;
+	float: left;
+}
+
+.wpcf-field-typography .wpcf--block.wpcf--margin-bottom .wpcf--input-wrap {
+	display: flex;
+}
+
+.wpcf-field-typography .wpcf--block .wpcf--unit.wpcf--margin-unit {
+	right: -75px;
+	padding: 14px 10px;
+	top: 0;
+	border: 1px solid #cccc;
+}
+
+/* Styles for the carousel navigation & pagination */
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style {
+    padding: 0 0 20px 0;
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 10px;
+    justify-content: flex-start;
+    float: right;
+    width: calc(80% - 20px);
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_navigation,
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_pagination {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    max-width: fit-content;
+    padding-left: 0;
+    flex: 1;
+    position: static;
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field .wpcf-title {
+    width: 100%;
+    max-width: 49%;
+}
+
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcp_navigation .wpcf-title,
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcp_pagination .wpcf-title {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcp_hide_on_mobile .wpcf-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 0;
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_pagination,
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_navigation {
+    padding-right: 10px;
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_hide_on_mobile {
+    display: flex;
+    width: 220px;
+}
+
+/**
+ * 12. Responsive of Navigation and Pagination options.
+ */
+@media only screen and (max-width: 1200px) {
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_navigation,
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_pagination,
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_hide_on_mobile {
+        display: block;
+    }
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_hide_on_mobile {
+        padding: 0;
+    }
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_hide_on_mobile {
+        padding-top: 20px;
+    }
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content {
+        float: none;
+        margin-left: 0;
+        padding-top: 20px;
+        padding-left: 20px;
+    }
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field .wpcf-title {
+        left: 0;
+        position: unset;
+    }
+}
+
+/* Responsiveness for the click action type's title */
+@media (min-width: 1200px) and (max-width: 1375px) {
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field .wpcf-title {
+        max-width: 20%;
+    }
+}
+
+/* Responsiveness for the carousel navigation option's title */
+@media (min-width: 1200px) and (max-width: 1500px) {
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field.wpcp_pagination .wpcf-title,
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field.wpcp_navigation .wpcf-title {
+        max-width: 25%;
+    }
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcf-fieldset-content>.wpcf-field.wpcp_navigation .wpcf-title {
+        top: 20px;
+    }
+}
+
+/* Responsiveness for the carousel navigation option's title */
+@media (min-width: 1200px) and (max-width: 1268px) {
+
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_pagination,
+    .wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_navigation {
+        padding-top: 20px;
+    }
+}
+
+.wpcf-field.wpcf-field-fieldset.wpcf-navigation-and-pagination-style .wpcp_hide_on_mobile.wpcf-depend-hidden.wpcf-depend-on{
+	display: none;
 }

@@ -158,7 +158,8 @@ if ( ! class_exists( 'WPCF_Helper' ) ) {
 			if ( ! empty( $preloader_image ) && $preloader ) {
 				ob_start();
 				include self::wpcf_locate_template( 'preloader.php' );
-				echo apply_filters( 'sp_wpcp_preloader', ob_get_clean() );
+				$prloader = apply_filters( 'sp_wpcp_preloader', ob_get_clean() );
+				echo wp_kses_post( $prloader );
 			}
 		}
 
@@ -174,13 +175,14 @@ if ( ! class_exists( 'WPCF_Helper' ) ) {
 		public static function get_item_loops( $upload_data, $shortcode_data, $carousel_type, $post_id ) {
 			$show_slide_image = isset( $shortcode_data['show_image'] ) ? $shortcode_data['show_image'] : '';
 			$show_img_title   = isset( $shortcode_data['wpcp_post_title'] ) ? $shortcode_data['wpcp_post_title'] : '';
+			$image_link_show  = isset( $shortcode_data['wpcp_click_action_type_group']['wpcp_logo_link_show'] ) ? $shortcode_data['wpcp_click_action_type_group']['wpcp_logo_link_show'] : 'l_box';
 			$wpcp_layout      = isset( $shortcode_data['wpcp_layout'] ) ? $shortcode_data['wpcp_layout'] : 'carousel';
 			$lazy_load_img    = apply_filters( 'wpcp_lazy_load_img', WPCAROUSELF_URL . 'public/css/spinner.svg' );
 			$lazy_load_image  = isset( $shortcode_data['wpcp_image_lazy_load'] ) ? $shortcode_data['wpcp_image_lazy_load'] : 'false';
 
 			$_image_title_att      = isset( $shortcode_data['_image_title_attr'] ) ? $shortcode_data['_image_title_attr'] : '';
 			$show_image_title_attr = ( $_image_title_att ) ? 'true' : 'false';
-			$image_sizes           = isset( $shortcode_data['wpcp_image_sizes'] ) ? $shortcode_data['wpcp_image_sizes'] : '';
+			$image_sizes           = isset( $shortcode_data['wpcp_image_sizes'] ) ? $shortcode_data['wpcp_image_sizes'] : 'medium';
 			$post_order_by         = isset( $shortcode_data['wpcp_post_order_by'] ) ? $shortcode_data['wpcp_post_order_by'] : '';
 			$post_order            = isset( $shortcode_data['wpcp_post_order'] ) ? $shortcode_data['wpcp_post_order'] : '';
 			$grid_column           = '';
@@ -199,11 +201,12 @@ if ( ! class_exists( 'WPCF_Helper' ) ) {
 			}
 
 			if ( 'product-carousel' === $carousel_type ) {
-				$show_product_name   = $shortcode_data['wpcp_product_name'];
-				$show_product_price  = $shortcode_data['wpcp_product_price'];
-				$show_product_rating = $shortcode_data['wpcp_product_rating'];
-				$show_product_cart   = $shortcode_data['wpcp_product_cart'];
-				$product_query       = self::wpcp_query( $upload_data, $shortcode_data, $post_id );
+				$show_quick_view_button = isset( $shortcode_data['quick_view'] ) ? $shortcode_data['quick_view'] : true;
+				$show_product_name      = $shortcode_data['wpcp_product_name'];
+				$show_product_price     = $shortcode_data['wpcp_product_price'];
+				$show_product_rating    = $shortcode_data['wpcp_product_rating'];
+				$show_product_cart      = $shortcode_data['wpcp_product_cart'];
+				$product_query          = self::wpcp_query( $upload_data, $shortcode_data, $post_id );
 				if ( $product_query->have_posts() ) {
 					while ( $product_query->have_posts() ) :
 						$product_query->the_post();
@@ -258,7 +261,8 @@ if ( ! class_exists( 'WPCF_Helper' ) ) {
 		 */
 		public static function get_pagination( $upload_data, $shortcode_data, $post_id ) {
 			$wpcp_pagination = isset( $shortcode_data['wpcp_source_pagination'] ) ? $shortcode_data['wpcp_source_pagination'] : false;
-			$wpcp_layout     = isset( $shortcode_data['wpcp_layout'] ) ? $shortcode_data['wpcp_layout'] : 'carousel';
+
+			$wpcp_layout = isset( $shortcode_data['wpcp_layout'] ) ? $shortcode_data['wpcp_layout'] : 'carousel';
 			if ( $wpcp_pagination && 'carousel' !== $wpcp_layout ) {
 				$carousel_type = isset( $upload_data['wpcp_carousel_type'] ) ? $upload_data['wpcp_carousel_type'] : '';
 				if ( 'post-carousel' === $carousel_type || 'product-carousel' === $carousel_type ) {

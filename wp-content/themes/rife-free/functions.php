@@ -32,27 +32,3 @@ else{
 global $apollo13framework_a13;
 $apollo13framework_a13 = new Apollo13Framework();
 $apollo13framework_a13->start();
-
-
-//mainly to help remove any extra recaptha
-function rankya_contactform7check_dequeue() {
-	$check_cf7 = false;
-	if( is_page('Contact Us') ) {//this name follow contact us name
-        	$check_cf7 = true;
-    }
-    if( !$check_cf7 ) {
-      wp_deregister_script( 'contact-form-7' );
-	  wp_dequeue_script( 'contact-form-7' );
-	
-	
-	  //leave this here you MUST specify this if using recaptcha
-	  wp_dequeue_script( 'google-recaptcha' );
-	  wp_deregister_script( 'google-recaptcha' );
-	  
-	   //Styles
-	   wp_deregister_style('contact-form-7');
-       wp_dequeue_style( 'contact-form-7' );
-		
-    }
-}
-add_action( 'wp_enqueue_scripts', 'rankya_contactform7check_dequeue', 78 );

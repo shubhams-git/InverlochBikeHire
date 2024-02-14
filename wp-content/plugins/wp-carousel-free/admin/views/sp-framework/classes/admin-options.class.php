@@ -691,9 +691,10 @@ if ( ! class_exists( 'SP_WPCF_Options' ) ) {
 			echo '<div class="wpcf wpcf-options' . esc_attr( $theme . $class . $wrapper_class ) . '" data-slug="' . esc_attr( $this->args['menu_slug'] ) . '" data-unique="' . esc_attr( $this->unique ) . '">';
 			$notice_class = ( ! empty( $this->notice ) ) ? 'wpcf-form-show' : '';
 			$notice_text  = ( ! empty( $this->notice ) ) ? $this->notice : '';
-			// echo '<div class="wpcf-form-result wpcf-form-success ' . esc_attr( $notice_class ) . '">' . wp_kses_post( $notice_text ) . '</div>';.
 
-			// echo ( $this->args['show_form_warning'] ) ? '<div class="wpcf-form-result wpcf-form-warning">' . esc_html__( 'You have unsaved changes, save your changes!', 'wp-carousel-free' ) . '</div>' : '';.
+			if ( ! $show_buttons ) {
+				echo '<div class="wpcf-form-result wpcf-form-success ' . esc_attr( $notice_class ) . '">' . wp_kses_post( $notice_text ) . '</div>';
+			}
 
 			echo '<div class="wpcf-container">';
 

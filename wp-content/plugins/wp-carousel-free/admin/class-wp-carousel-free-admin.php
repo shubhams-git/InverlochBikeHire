@@ -61,10 +61,17 @@ class WP_Carousel_Free_Admin {
 	 * @return void
 	 */
 	public function enqueue_admin_styles() {
-		wp_enqueue_style( 'font-awesome', WPCAROUSELF_URL . 'public/css/font-awesome.min.css', array(), $this->version, 'all' );
+		$current_screen        = get_current_screen();
+		$the_current_post_type = $current_screen->post_type;
+		if ( 'sp_wp_carousel' === $the_current_post_type ) {
+			wp_enqueue_style( 'font-awesome', WPCAROUSELF_URL . 'public/css/font-awesome.min.css', array(), $this->version, 'all' );
+		}
 		wp_enqueue_style( $this->plugin_name . 'admin', WPCAROUSELF_URL . 'admin/css/wp-carousel-free-admin' . $this->suffix . '.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'sp_wp_carousel_tabbed_icons', WPCAROUSELF_URL . 'admin/css/fontello.css', array(), $this->version, 'all' );
+
 		// Scripts.
 		wp_enqueue_script( $this->plugin_name . 'admin', WPCAROUSELF_URL . 'admin/js/wp-carousel-free-admin' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+
 	}
 
 	/**
@@ -146,7 +153,7 @@ class WP_Carousel_Free_Admin {
 
 			array_unshift( $links, $ui_links );
 
-			$links['go_pro'] = sprintf( '<a target="_blank" href="%1$s" style="color: #35b747; font-weight: 700;">Go Pro!</a>', 'https://shapedplugin.com/wp-carousel/pricing/?ref=1' );
+			$links['go_pro'] = sprintf( '<a target="_blank" href="%1$s" style="color: #35b747; font-weight: 700;">Go Pro!</a>', 'https://wordpresscarousel.com/pricing/?ref=1' );
 		}
 
 		return $links;
@@ -172,7 +179,7 @@ class WP_Carousel_Free_Admin {
 	public function plugin_row_meta( $plugin_meta, $plugin_file ) {
 		if ( WPCAROUSELF_BASENAME === $plugin_file ) {
 			$row_meta = array(
-				'docs' => '<a href="https://shapedplugin.com/wp-carousel/wp-carousel-free-demo/" aria-label="' . esc_attr( __( 'Live Demo', 'wp-carousel-free' ) ) . '" target="_blank">' . __( 'Live Demo', 'wp-carousel-free' ) . '</a>',
+				'docs' => '<a href="https://wordpresscarousel.com/wp-carousel-free-demo/" aria-label="' . esc_attr( __( 'Live Demo', 'wp-carousel-free' ) ) . '" target="_blank">' . __( 'Live Demo', 'wp-carousel-free' ) . '</a>',
 				'ideo' => '<a href="https://docs.shapedplugin.com/docs/wordpress-carousel/introduction/" aria-label="' . esc_attr( __( 'View WP Carousel Video Tutorials', 'wp-carousel-free' ) ) . '" target="_blank">' . __( 'Docs & Video Tutorials', 'wp-carousel-free' ) . '</a>',
 			);
 
@@ -191,23 +198,39 @@ class WP_Carousel_Free_Admin {
 	 */
 	public function sp_wpcp_review_text( $text ) {
 		$screen = get_current_screen();
-		if ( 'sp_wp_carousel' === get_post_type() || 'sp_wp_carousel_page_wpcp_settings' === $screen->id || 'sp_wp_carousel_page_wpcp_help' === $screen->id ) {
+		if ( 'sp_wp_carousel' === $screen->post_type ) {
 			$url  = 'https://wordpress.org/support/plugin/wp-carousel-free/reviews/?filter=5#new-post';
-			$text = sprintf( 'If you like <strong>WP Carousel</strong>, please leave us a <a href="%s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating. Your Review is very important to us as it helps us to grow more. ', $url );
+			$text = sprintf( 'Enjoying <strong>WP Carousel?</strong> Please rate us <span class="spwpcp-footer-text-star">★★★★★</span> <a href="%s" target="_blank">WordPress.org</a>. Your positive feedback will help us grow more. Thank you! 😊', $url );
+		}
+
+		return $text;
+	}
+	/**
+	 * Bottom review notice.
+	 *
+	 * @since 2.0.0
+	 * @param string $text The review notice.
+	 * @return string
+	 */
+	public function sp_wpcp_version_text( $text ) {
+		$screen = get_current_screen();
+		if ( 'sp_wp_carousel' === $screen->post_type ) {
+			$text = 'WP Carousel ' . $this->version;
 		}
 
 		return $text;
 	}
 
 	/**
-	 * Redirect after activation.
+	 * Declare the compatibility of WooCommerce High-Performance Order Storage (HPOS) feature.
 	 *
-	 * @param string $plugin_file Path to the plugin file, relative to the plugin.
+	 * @since 2.5.7
+	 *
 	 * @return void
 	 */
-	public function sp_wpcf_redirect_after_activation( $plugin_file ) {
-		if ( WPCAROUSELF_BASENAME === $plugin_file ) {
-			exit( esc_url( wp_safe_redirect( admin_url( 'edit.php?post_type=sp_wp_carousel&page=wpcf_help' ) ) ) );
+	public function declare_compatibility_with_woo_hpos_feature() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'wp-carousel-free/wp-carousel-free.php', true );
 		}
 	}
 }

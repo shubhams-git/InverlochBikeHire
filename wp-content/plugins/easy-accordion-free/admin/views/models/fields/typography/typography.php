@@ -81,6 +81,7 @@ if ( ! class_exists( 'SP_EAP_Field_typography' ) ) {
 					'word_spacing'       => false,
 					'text_decoration'    => false,
 					'custom_style'       => false,
+					'margin_bottom'      => false,
 					'exclude'            => '',
 					'unit'               => 'px',
 					'line_height_unit'   => '',
@@ -105,6 +106,7 @@ if ( ! class_exists( 'SP_EAP_Field_typography' ) ) {
 				'custom-style'       => '',
 				'type'               => '',
 				'subset'             => '',
+				'margin-bottom'      => '',
 				'extra-styles'       => array(),
 			);
 
@@ -336,6 +338,7 @@ if ( ! class_exists( 'SP_EAP_Field_typography' ) ) {
 
 			//
 			// Font Color.
+			echo '<div class="eapro--blocks eapro--blocks-colors">';
 			if ( ! empty( $args['color'] ) ) {
 				$default_color_attr = ( ! empty( $default_value['color'] ) ) ? ' data-default-color="' . esc_attr( $default_value['color'] ) . '"' : '';
 				echo '<div class="eapro--block eapro--block-font-color">';
@@ -346,6 +349,18 @@ if ( ! class_exists( 'SP_EAP_Field_typography' ) ) {
 				echo '</div>';
 				echo '</div>';
 			}
+			// Margin Bottom.
+			if ( ! empty( $args['margin_bottom'] ) ) {
+				echo '<div class="eapro--block eapro--block-margin">';
+				echo '<div class="eapro--title">' . esc_html__( 'Margin Bottom', 'easy-accordion-free' ) . '</div>';
+				echo '<div class="eapro--blocks lw-typo-margin">';
+				echo '<div class="eapro--block eapro--unit icon"><i class="fa fa-long-arrow-down"></i></div>';
+				echo '<div class="eapro--block"><input type="number" name="' . esc_attr( $this->field_name( '[margin-bottom]' ) ) . '" class="eapro--margin-bottom eapro--input eapro-number" value="' . esc_attr( $this->value['margin-bottom'] ) . '" /></div>';
+				echo '<div class="eapro--block eapro--unit">' . esc_html( $args['unit'] ) . '</div>';
+				echo '</div>';
+				echo '</div>';
+			}
+			echo '</div>';
 
 			//
 			// Custom style.

@@ -11,10 +11,6 @@
 
 /**
  * The admin preview.
- *
- * @package    Easy_Accordion_Free
- * @subpackage Easy_Accordion_Free/admin
- * @author     ShapedPlugin <support@shapedplugin.com>
  */
 class Easy_Accordion_Free_Preview {
 	/**
@@ -60,11 +56,8 @@ class Easy_Accordion_Free_Preview {
 		$shortcode_data     = $setting['sp_eap_shortcode_options'];
 		$main_section_title = $setting['post_title'];
 
-		$ea_dynamic_css = '';
-		echo '<style>';
-		include SP_EA_PATH . 'public/dynamic-style.php';
-		echo $ea_dynamic_css;
-		echo '</style>';
+		$ea_dynamic_css = SP_EA_Front_Scripts::load_dynamic_style( $post_id, $shortcode_data );
+		echo '<style>' . $ea_dynamic_css['dynamic_css'] . '</style>';
 
 		Easy_Accordion_Free_Shortcode::sp_eap_html_show( $post_id, $upload_data, $shortcode_data, $main_section_title );
 		?>

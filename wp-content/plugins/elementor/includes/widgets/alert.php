@@ -109,7 +109,7 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'alert_title',
 			[
-				'label' => esc_html__( 'Title & Description', 'elementor' ),
+				'label' => esc_html__( 'Title', 'elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'placeholder' => esc_html__( 'Enter your title', 'elementor' ),
 				'default' => esc_html__( 'This is an Alert', 'elementor' ),
@@ -128,7 +128,6 @@ class Widget_Alert extends Widget_Base {
 				'placeholder' => esc_html__( 'Enter your description', 'elementor' ),
 				'default' => esc_html__( 'I am a description. Click the edit button to change this text.', 'elementor' ),
 				'separator' => 'none',
-				'show_label' => false,
 				'dynamic' => [
 					'active' => true,
 				],
@@ -183,15 +182,6 @@ class Widget_Alert extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
-			'view',
-			[
-				'label' => esc_html__( 'View', 'elementor' ),
-				'type' => Controls_Manager::HIDDEN,
-				'default' => 'traditional',
-			]
-		);
-
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -229,10 +219,13 @@ class Widget_Alert extends Widget_Base {
 			[
 				'label' => esc_html__( 'Left Border Width', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -339,10 +332,16 @@ class Widget_Alert extends Widget_Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -362,7 +361,7 @@ class Widget_Alert extends Widget_Base {
 						'max' => 100,
 					],
 				],
-				'size_units' => [ '%', 'px' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--dismiss-icon-vertical-position: {{SIZE}}{{UNIT}};',
 				],
@@ -380,7 +379,7 @@ class Widget_Alert extends Widget_Base {
 						'max' => 100,
 					],
 				],
-				'size_units' => [ '%', 'px' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--dismiss-icon-horizontal-position: {{SIZE}}{{UNIT}};',
 				],
@@ -424,16 +423,17 @@ class Widget_Alert extends Widget_Base {
 		$this->add_control(
 			'dismiss_icon_hover_transition_duration',
 			[
-				'label' => esc_html__( 'Transition Duration', 'elementor' ),
+				'label' => esc_html__( 'Transition Duration', 'elementor' ) . ' (s)',
 				'type' => Controls_Manager::SLIDER,
-				'selectors' => [
-					'{{WRAPPER}}' => '--dismiss-icon-hover-transition-duration: {{SIZE}}s',
-				],
 				'range' => [
 					'px' => [
+						'min' => 0,
 						'max' => 3,
 						'step' => 0.1,
 					],
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => '--dismiss-icon-hover-transition-duration: {{SIZE}}s',
 				],
 			]
 		);
@@ -490,7 +490,7 @@ class Widget_Alert extends Widget_Base {
 					} else { ?>
 						<span aria-hidden="true">&times;</span>
 					<?php } ?>
-					<span class="elementor-screen-only"><?php echo esc_html__( 'Dismiss alert', 'elementor' ); ?></span>
+					<span class="elementor-screen-only"><?php echo esc_html__( 'Dismiss this alert.', 'elementor' ); ?></span>
 				</button>
 			<?php endif; ?>
 		</div>
@@ -529,7 +529,7 @@ class Widget_Alert extends Widget_Base {
 						<# } else { #>
 							<span aria-hidden="true">&times;</span>
 						<# } #>
-						<span class="elementor-screen-only"><?php echo esc_html__( 'Dismiss alert', 'elementor' ); ?></span>
+						<span class="elementor-screen-only"><?php echo esc_html__( 'Dismiss this alert.', 'elementor' ); ?></span>
 					</button>
 				<# } #>
 			</div>

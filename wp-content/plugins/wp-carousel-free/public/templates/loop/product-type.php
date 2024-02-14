@@ -24,10 +24,14 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 		?>
 		<div class="wpcp-all-captions">
 			<?php
+			require WPCF_Helper::wpcf_locate_template( 'loop/product-type/brands-name.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/product-type/name.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/product-type/price.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/product-type/rating.php' );
 			require WPCF_Helper::wpcf_locate_template( 'loop/product-type/add_to_cart.php' );
+			if ( $show_quick_view_button ) {
+				do_action( 'sp_wps_after_product_details_inner' );
+			}
 			?>
 		</div>
 	</div>

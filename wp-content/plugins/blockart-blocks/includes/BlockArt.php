@@ -11,6 +11,7 @@ namespace BlockArt;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+use BlockArt\RestApi\RestApi;
 use BlockArt\Traits\Singleton;
 
 /**
@@ -25,35 +26,23 @@ final class BlockArt {
 	use Singleton;
 
 	/**
-	 * @var Utils
-	 */
-	public $utils;
-
-	/**
 	 * Plugin Constructor.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	protected function __construct() {
-		$this->init_props();
 		Activation::init();
 		Deactivation::init();
+		Update::init();
+		RestApi::init();
 		Admin::init();
 		Review::init();
 		Blocks::init();
 		ScriptStyle::init();
-		Ajax::init();
+		BetaTester::init();
+		MaintenanceMode::init();
 		$this->init_hooks();
-	}
-
-	/**
-	 * Init properties.
-	 *
-	 * @return void
-	 */
-	private function init_props() {
-		$this->utils = Utils::init();
 	}
 
 	/**
@@ -63,6 +52,15 @@ final class BlockArt {
 	 */
 	private function init_hooks() {
 		add_action( 'init', array( $this, 'after_wp_init' ), 0 );
+		add_filter( 'upload_mimes', array( $this, 'upload_custom_mimes' ) );
+		add_filter( 'wp_check_filetype_and_ext', array( $this, 'check_filetype_and_ext' ), 10, 5 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_global_styles' ) );
+	}
+
+	public function enqueue_global_styles() {
+		$global_styles = blockart_generate_global_styles();
+		$global_styles->enqueue_fonts();
+		$global_styles->enqueue();
 	}
 
 	/**
@@ -80,7 +78,6 @@ final class BlockArt {
 		do_action( 'blockart_before_init' );
 		$this->update_plugin_version();
 		$this->load_text_domain();
-		$this->register_settings();
 		/**
 		 * BlockArt init.
 		 *
@@ -98,6 +95,8 @@ final class BlockArt {
 	 * @return void
 	 */
 	private function update_plugin_version() {
+		$blockart_version = get_option( '_blockart_version', '' );
+		do_action( 'blockart_version_update', BLOCKART_VERSION, $blockart_version );
 		update_option( '_blockart_version', BLOCKART_VERSION );
 	}
 
@@ -109,40 +108,40 @@ final class BlockArt {
 	}
 
 	/**
-	 * Register settings.
+	 * Add custom mimes as supported format in the uploader.
 	 *
-	 * @since 1.0.0
+	 * @param array $mimes Supported mime types.
 	 */
-	private function register_settings() {
-		register_setting(
-			'_blockart_settings',
-			'_blockart_dynamic_css_print_method',
-			array(
-				'type'              => 'string',
-				'show_in_rest'      => true,
-				'default'           => 'internal-css',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-		register_setting(
-			'_blockart_settings',
-			'_blockart_widget_css',
-			array(
-				'type'              => 'string',
-				'show_in_rest'      => true,
-				'default'           => '',
-				'sanitize_callback' => '',
-			)
-		);
-		register_setting(
-			'_blockart_settings',
-			'_blockart_admin_footer_text_rated',
-			array(
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			)
-		);
+	public function upload_custom_mimes( $mimes ) {
+		$mimes['json'] = 'application/json';
+
+		return $mimes;
+	}
+
+	/**
+	 * Return valid filetype array for lottie json uploads.
+	 *
+	 * @param array  $value Filetype array.
+	 * @param string $file Original file.
+	 * @param string $filename Filename.
+	 * @param array  $mimes Mimes array.
+	 * @param string $real_mime Real mime type.
+	 * @return array
+	 */
+	public function check_filetype_and_ext( $value, $file, $filename, $mimes, $real_mime ) {
+
+		$wp_filetype = wp_check_filetype( $filename, $mimes );
+		$ext         = $wp_filetype['ext'];
+		$type        = $wp_filetype['type'];
+
+		if ( 'json' !== $ext || 'application/json' !== $type || 'text/plain' !== $real_mime ) {
+			return $value;
+		}
+
+		$value['ext']             = $wp_filetype['ext'];
+		$value['type']            = $wp_filetype['type'];
+		$value['proper_filename'] = $filename;
+
+		return $value;
 	}
 }

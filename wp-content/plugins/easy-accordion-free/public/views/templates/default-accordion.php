@@ -17,10 +17,12 @@ if ( empty( $content_sources ) ) {
 if ( $acc_section_title ) {
 	echo '<h2 class="eap_section_title eap_section_title_' . esc_attr( $post_id ) . '"> ' . wp_kses_post( $main_section_title ) . ' </h2>';
 }
-echo '<div id="sp-ea-' . esc_attr( $post_id ) . '" class="' . esc_attr( $accordion_wrapper_class ) . '" data-ex-icon="' . esc_attr( $eap_expand_icon ) . '" data-col-icon="' . esc_attr( $eap_collapse_icon ) . '"  data-ea-active="' . esc_attr( $eap_active_event ) . '"  data-ea-mode="' . esc_attr( $accordion_layout ) . '" data-preloader="' . esc_attr( $eap_preloader ) . '">';
+
+echo '<div id="' . esc_attr( $eap_accordion_uniq_id ) . '">';
+echo '<div id="sp-ea-' . esc_attr( $post_id ) . '" class="' . esc_attr( $accordion_wrapper_class ) . '" data-ex-icon="' . esc_attr( $eap_expand_icon ) . '" data-col-icon="' . esc_attr( $eap_collapse_icon ) . '"  data-ea-active="' . esc_attr( $eap_active_event ) . '"  data-ea-mode="' . esc_attr( $accordion_layout ) . '" data-preloader="' . esc_attr( $eap_preloader ) . '" data-scroll-active-item="' . esc_attr( $eap_scroll_to_active_item ) . '" data-offset-to-scroll="' . esc_attr( $eap_offset_to_scroll ) . '">';
 if ( $eap_preloader ) {
 	echo '<div id="eap-preloader-' . esc_attr( $post_id ) . '" class="accordion-preloader">';
-	echo '<img src="' . esc_url( SP_EA_URL . 'public/assets/ea_loader.gif' ) . '" alt="Loader image"/>';
+	echo '<img src="' . esc_url( SP_EA_URL . 'public/assets/ea_loader.svg' ) . '" alt="Loader image"/>';
 	echo '</div>';
 }
 $ea_key = 1;
@@ -51,8 +53,9 @@ foreach ( $content_sources as $key => $content_source ) {
 		$expand_class      = '';
 		$aria_expanded     = 'false';
 	}
+
 	$data_parent_id      = ( ! $eap_mutliple_collapse ) ? 'data-parent=#sp-ea-' . $post_id . '' : '';
-	$eap_exp_icon_markup = ( $eap_icon ) ? '<i class="ea-expand-icon fa ' . $expand_icon_first . '"></i>' : '';
+	$eap_exp_icon_markup = ( $eap_icon ) ? '<i class="ea-expand-icon ea-icon-expand-' . $expand_icon_first . '"></i>' : '';
 	$data_sptarget       = 'data-sptarget=#collapse' . $post_id . $key . '';
 	$eap_icon_markup     = $eap_exp_icon_markup;
 
@@ -107,4 +110,6 @@ if ( $eap_schema_markup ) {
 	</script>';
 
 }
+
+echo '</div>';
 echo '</div>';

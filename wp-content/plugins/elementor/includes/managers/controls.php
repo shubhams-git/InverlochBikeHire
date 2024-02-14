@@ -92,9 +92,19 @@ class Controls_Manager {
 	const RAW_HTML = 'raw_html';
 
 	/**
+	 * Notice control.
+	 */
+	const NOTICE = 'notice';
+
+	/**
 	 * Deprecated Notice control.
 	 */
 	const DEPRECATED_NOTICE = 'deprecated_notice';
+
+	/**
+	 * Alert control.
+	 */
+	const ALERT = 'alert';
 
 	/**
 	 * Popover Toggle control.
@@ -237,6 +247,11 @@ class Controls_Manager {
 	const EXIT_ANIMATION = 'exit_animation';
 
 	/**
+	 * Gaps control.
+	 */
+	const GAPS = 'gaps';
+
+	/**
 	 * Controls.
 	 *
 	 * Holds the list of all the controls. Default is `null`.
@@ -284,6 +299,20 @@ class Controls_Manager {
 	 * @var array
 	 */
 	private static $tabs;
+
+	/**
+	 * Has stacks cache been cleared.
+	 *
+	 * Boolean flag used to determine whether the controls manager stack cache has been cleared once during the current
+	 * runtime.
+	 *
+	 * @since 3.13.0
+	 * @access private
+	 * @static
+	 *
+	 * @var array
+	 */
+	private $has_stacks_cache_been_cleared = false;
 
 	/**
 	 * Init tabs.
@@ -359,6 +388,7 @@ class Controls_Manager {
 			'css-filter',
 			'text-shadow',
 			'flex-container',
+			'grid-container',
 			'flex-item',
 			'text-stroke',
 		];
@@ -382,6 +412,8 @@ class Controls_Manager {
 			self::TABS,
 			self::DIVIDER,
 			self::DEPRECATED_NOTICE,
+			self::ALERT,
+			self::NOTICE,
 
 			self::COLOR,
 			self::MEDIA,
@@ -392,6 +424,7 @@ class Controls_Manager {
 			self::CODE,
 			self::FONT,
 			self::IMAGE_DIMENSIONS,
+			self::GAPS,
 
 			self::WP_WIDGET,
 
@@ -484,7 +517,7 @@ class Controls_Manager {
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @deprecated 3.5.0 Use `$this->register()` instead.
+	 * @deprecated 3.5.0 Use `register()` method instead.
 	 *
 	 * @param string       $control_id       Control ID.
 	 * @param Base_Control $control_instance Control instance, usually the
@@ -495,7 +528,7 @@ class Controls_Manager {
 		//Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function(
 		//	__METHOD__,
 		//	'3.5.0',
-		//	'register'
+		//	'register()'
 		//);
 
 		$this->register( $control_instance, $control_id );
@@ -536,7 +569,7 @@ class Controls_Manager {
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @deprecated 3.5.0 Use `$this->unregister()` instead.
+	 * @deprecated 3.5.0 Use `unregister()` method instead.
 	 *
 	 * @param string $control_id Control ID.
 	 *
@@ -546,7 +579,7 @@ class Controls_Manager {
 		Plugin::$instance->modules_manager->get_modules( 'dev-tools' )->deprecation->deprecated_function(
 			__METHOD__,
 			'3.5.0',
-			'unregister'
+			'unregister()'
 		);
 
 		return $this->unregister( $control_id );
@@ -726,6 +759,7 @@ class Controls_Manager {
 		$this->stacks[ $stack_id ] = [
 			'tabs' => [],
 			'controls' => [],
+			'responsive_control_duplication_mode' => Plugin::$instance->breakpoints->get_responsive_control_duplication_mode(),
 		];
 	}
 
@@ -856,6 +890,27 @@ class Controls_Manager {
 	}
 
 	/**
+	 * Has Stacks Cache Been Cleared.
+	 * @since 3.13.0
+	 * @access public
+	 * @return bool True if the CSS requires to clear the controls stack cache, False otherwise.
+	 */
+	public function has_stacks_cache_been_cleared() {
+		return $this->has_stacks_cache_been_cleared;
+	}
+
+	/**
+	 * Clear stack.
+	 * This method clears the stack.
+	 * @since 3.13.0
+	 * @access public
+	 */
+	public function clear_stack_cache() {
+		$this->stacks = [];
+		$this->has_stacks_cache_been_cleared = true;
+	}
+
+	/**
 	 * Get control from stack.
 	 *
 	 * Retrieve a specific control for a given a specific stack.
@@ -952,12 +1007,17 @@ class Controls_Manager {
 	 *
 	 * @param Controls_Stack $controls_stack  Controls stack.
 	 *
-	 * @return null|array Stack data if it exist, `null` otherwise.
+	 * @return null|array Stack data if it exists, `null` otherwise.
 	 */
 	public function get_element_stack( Controls_Stack $controls_stack ) {
 		$stack_id = $controls_stack->get_unique_name();
 
 		if ( ! isset( $this->stacks[ $stack_id ] ) ) {
+			return null;
+		}
+
+		if ( $this->should_clean_stack( $this->stacks[ $stack_id ] ) ) {
+			$this->delete_stack( $controls_stack );
 			return null;
 		}
 
@@ -1060,15 +1120,15 @@ class Controls_Manager {
 		ob_start();
 		?>
 		<div class="elementor-nerd-box">
-			<img class="elementor-nerd-box-icon" src="<?php echo esc_url( ELEMENTOR_ASSETS_URL . 'images/go-pro.svg' ); ?>" />
+			<img class="elementor-nerd-box-icon" src="<?php echo esc_url( ELEMENTOR_ASSETS_URL . 'images/go-pro.svg' ); ?>" loading="lazy" />
 			<div class="elementor-nerd-box-title"><?php Utils::print_unescaped_internal_string( $texts['title'] ); ?></div>
 			<?php foreach ( $texts['messages'] as $message ) { ?>
 				<div class="elementor-nerd-box-message"><?php Utils::print_unescaped_internal_string( $message ); ?></div>
 			<?php }
 
-			// Show a `Go Pro` button only if the user doesn't have Pro.
+			// Show the upgrade button only if the user doesn't have Pro.
 			if ( $texts['link'] && ! Utils::has_pro() ) { ?>
-				<a class="elementor-nerd-box-link elementor-button elementor-button-default elementor-button-go-pro" href="<?php echo esc_url( ( $texts['link'] ) ); ?>" target="_blank">
+				<a class="elementor-button go-pro" href="<?php echo esc_url( ( $texts['link'] ) ); ?>" target="_blank">
 					<?php echo esc_html__( 'Upgrade Now', 'elementor' ); ?>
 				</a>
 			<?php } ?>
@@ -1132,5 +1192,150 @@ class Controls_Manager {
 		);
 
 		$controls_stack->end_controls_section();
+	}
+
+	/**
+	 * Check if a stack should be cleaned by the current responsive control duplication mode.
+	 *
+	 * @param $stack
+	 * @return bool
+	 */
+	private function should_clean_stack( $stack ): bool {
+		if ( ! isset( $stack['responsive_control_duplication_mode'] ) ) {
+			return false;
+		}
+
+		$stack_duplication_mode = $stack['responsive_control_duplication_mode'];
+
+		// This array provides a convenient way to map human-readable mode names to numeric values for comparison.
+		// If the current stack's mode is greater than or equal to the current mode, then we shouldn't clean the stack.
+		$modes = [
+			'off' => 1,
+			'dynamic' => 2,
+			'on' => 3,
+		];
+
+		if ( ! isset( $modes[ $stack_duplication_mode ] ) ) {
+			return false;
+		}
+
+		$current_duplication_mode = Plugin::$instance->breakpoints->get_responsive_control_duplication_mode();
+
+		if ( $modes[ $stack_duplication_mode ] >= $modes[ $current_duplication_mode ] ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public function add_display_conditions_controls( Controls_Stack $controls_stack ) {
+		if ( Utils::has_pro() ) {
+			return;
+		}
+
+		ob_start();
+		?>
+		<div class="e-control-display-conditions-promotion__wrapper">
+			<div class="e-control-display-conditions-promotion__description">
+				<span class="e-control-display-conditions-promotion__text">
+					<?php echo esc_html__( 'Display Conditions', 'elementor' ); ?>
+				</span>
+				<span class="e-control-display-conditions-promotion__lock-wrapper">
+					<i class="eicon-lock e-control-display-conditions-promotion"></i>
+				</span>
+			</div>
+			<i class="eicon-flow e-control-display-conditions-promotion"></i>
+		</div>
+		<?php
+		$control_template = ob_get_clean();
+
+		$controls_stack->add_control(
+			'display_conditions_pro',
+			[
+				'type'      => self::RAW_HTML,
+				'separator' => 'before',
+				'raw'       => $control_template,
+			]
+		);
+	}
+
+	public function add_motion_effects_promotion_control( Controls_Stack $controls_stack ) {
+		if ( Utils::has_pro() ) {
+			return;
+		}
+
+		$controls_stack->add_control(
+			'scrolling_effects_pro',
+			[
+				'type'      => self::RAW_HTML,
+				'separator' => 'before',
+				'raw'       => $this->promotion_switcher_control( esc_html__( 'Scrolling Effects', 'elementor' ), 'scrolling-effects' ),
+			]
+		);
+
+		$controls_stack->add_control(
+			'mouse_effects_pro',
+			[
+				'type'      => self::RAW_HTML,
+				'separator' => 'before',
+				'raw'       => $this->promotion_switcher_control( esc_html__( 'Mouse Effects', 'elementor' ), 'mouse-effects' ),
+			]
+		);
+
+		$controls_stack->add_control(
+			'sticky_pro',
+			[
+				'type'      => self::RAW_HTML,
+				'separator' => 'before',
+				'raw'       => $this->promotion_select_control( esc_html__( 'Sticky', 'elementor' ), 'sticky-effects' ),
+			]
+		);
+
+		$controls_stack->add_control(
+			'motion_effects_promotion_divider',
+			[
+				'type' => self::DIVIDER,
+			]
+		);
+	}
+
+	private function promotion_switcher_control( $title, $id ): string {
+		return '<div class="elementor-control-type-switcher elementor-label-inline e-control-motion-effects-promotion__wrapper">
+			<div class="elementor-control-content">
+				<div class="elementor-control-field">
+					<label>
+						' . $title . '
+					</label>
+					<span class="e-control-motion-effects-promotion__lock-wrapper">
+						<i class="eicon-lock"></i>
+					</span>
+					<div class="elementor-control-input-wrapper">
+						<label class="elementor-switch elementor-control-unit-2 e-control-' . $id . '-promotion">
+							<input type="checkbox" class="elementor-switch-input" disabled>
+							<span class="elementor-switch-label" data-off="Off"></span>
+							<span class="elementor-switch-handle"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>';
+	}
+
+	private function promotion_select_control( $title, $id ): string {
+		return '<div class="elementor-control-type-select elementor-label-inline e-control-motion-effects-promotion__wrapper">
+			<div class="elementor-control-content">
+				<div class="elementor-control-field ">
+					<label for="sticky-motion-effect-pro">
+						' . $title . '
+					</label>
+					<span class="e-control-motion-effects-promotion__lock-wrapper">
+						<i class="eicon-lock"></i>
+					</span>
+					<div class="elementor-control-input-wrapper elementor-control-unit-5 e-control-' . $id . '-promotion">
+					<div class="select-promotion elementor-control-unit-5">None</div>
+					</div>
+				</div>
+			</div>
+		</div>';
 	}
 }

@@ -261,6 +261,8 @@ if(!function_exists('apollo13framework_posts_navigation')){
                 });
                  *
                  */
+                //It seems that Jetpack is not takign "crop" instruction into consideration when moving images to its CDN. That is when below code would help
+//                $image_sizes = apply_filters( 'apollo13framework_post_navigation_image_size', array( 'a13_navigation_image_size' ) );
                 $image_sizes = apply_filters( 'apollo13framework_post_navigation_image_size', array( 245, 100 ) );
 
                 if($is_prev){
@@ -328,6 +330,11 @@ if(!function_exists('apollo13framework_new_excerpt_more')){
         global $post, $apollo13framework_a13;
         if( $apollo13framework_a13->get_option( 'blog_read_more', 'on' ) === 'off' ){
             return '';
+        }
+
+        //no post(for example JSON call)
+        if ( is_null($post) ) {
+            return $link;
         }
 
         //return read more

@@ -90,23 +90,23 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		)
 	);
 
-	$editor_panel = function () use ( $prop, $service ) {
+	$editor_panel = static function () use ( $prop, $service ) {
 
 		$description = sprintf(
 			esc_html(
-				__( "You can set up the Sendinblue integration here. For details, see %s.", 'contact-form-7' )
+				__( "You can set up the Brevo integration here. For details, see %s.", 'contact-form-7' )
 			),
 			wpcf7_link(
 				__( 'https://contactform7.com/sendinblue-integration/', 'contact-form-7' ),
-				__( 'Sendinblue integration', 'contact-form-7' )
+				__( 'Brevo integration', 'contact-form-7' )
 			)
 		);
 
-		$lists = $service->get_lists();
+		$lists = wpcf7_sendinblue_get_lists();
 		$templates = $service->get_templates();
 
 ?>
-<h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
+<h2><?php echo esc_html( __( 'Brevo', 'contact-form-7' ) ); ?></h2>
 
 <fieldset>
 	<legend><?php echo $description; ?></legend>
@@ -164,9 +164,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 						'type' => 'checkbox',
 						'name' => 'wpcf7-sendinblue[contact_lists][]',
 						'value' => $list['id'],
-						'checked' => in_array( $list['id'], $prop['contact_lists'] )
-							? 'checked'
-							: '',
+						'checked' => in_array( $list['id'], $prop['contact_lists'] ),
 					) ),
 					esc_html( $list['name'] )
 				);
@@ -246,9 +244,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				'<option %1$s>%2$s</option>',
 				wpcf7_format_atts( array(
 					'value' => 0,
-					'selected' => 0 === $prop['email_template']
-						? 'selected'
-						: '',
+					'selected' => 0 === $prop['email_template'],
 				) ),
 				esc_html( __( '&mdash; Select &mdash;', 'contact-form-7' ) )
 			);
@@ -258,9 +254,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 					'<option %1$s>%2$s</option>',
 					wpcf7_format_atts( array(
 						'value' => $template['id'],
-						'selected' => $prop['email_template'] === $template['id']
-							? 'selected'
-							: '',
+						'selected' => $prop['email_template'] === $template['id'],
 					) ),
 					esc_html( $template['name'] )
 				);
@@ -300,10 +294,46 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 	$panels += array(
 		'sendinblue-panel' => array(
-			'title' => __( 'Sendinblue', 'contact-form-7' ),
+			'title' => __( 'Brevo', 'contact-form-7' ),
 			'callback' => $editor_panel,
 		),
 	);
 
 	return $panels;
+}
+
+
+/**
+ * Retrieves contact lists from Brevo's database.
+ */
+function wpcf7_sendinblue_get_lists() {
+	static $lists = array();
+
+	$service = WPCF7_Sendinblue::get_instance();
+
+	if ( ! empty( $lists ) or ! $service->is_active() ) {
+		return $lists;
+	}
+
+	$limit = 50;
+	$offset = 0;
+
+	while ( count( $lists ) < $limit * 10 ) {
+		$lists_next = (array) $service->get_lists( array(
+			'limit' => $limit,
+			'offset' => $offset,
+		) );
+
+		if ( ! empty( $lists_next ) ) {
+			$lists = array_merge( $lists, $lists_next );
+		}
+
+		if ( count( $lists_next ) < $limit ) {
+			break;
+		}
+
+		$offset += $limit;
+	}
+
+	return $lists;
 }

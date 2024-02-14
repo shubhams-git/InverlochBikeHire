@@ -55,16 +55,16 @@ if ( ! class_exists( 'SP_WPCF_Field_gallery' ) ) {
 			$hidden = ( empty( $this->value ) ) ? ' hidden' : '';
 
 			echo wp_kses_post( $this->field_before() );
-			echo '<a href="#" class="button button-primary wpcf-button"><img src="' . WPCAROUSELF_URL . 'admin/img/layout/add-image.svg" alt="">' . esc_html( $args['add_title'] ) . '</a>';
+			echo '<a href="#" class="button button-primary wpcf-button"><img src="' . esc_url( WPCAROUSELF_URL ) . 'admin/img/layouts/add-image.svg" alt="">' . esc_html( $args['add_title'] ) . '</a>';
 
 			echo '<ul class="sp-gallery-images">';
 			if ( ! empty( $this->value ) ) {
 
 				$values = explode( ',', $this->value );
-
 				foreach ( $values as $id ) {
-					$attachment = wp_get_attachment_image_src( $id, 'thumbnail' );
-					echo '<li><img src="' . esc_url( $attachment[0] ) . '" /></li>';
+					$attachment  = wp_get_attachment_image_src( $id, 'thumbnail' );
+					$image_title = get_the_title( $id );
+					echo '<li><img title="' . esc_attr( $image_title ) . '" src="' . esc_url( $attachment[0] ) . '" /></li>';
 				}
 			}
 			echo '</ul>';
@@ -72,7 +72,7 @@ if ( ! class_exists( 'SP_WPCF_Field_gallery' ) ) {
 			echo '<a href="#" class="button wpcf-edit-gallery' . esc_attr( $hidden ) . '"><i class="fa fa-pencil-square-o"></i>' . esc_html( $args['edit_title'] ) . '</a>';
 			echo '</ul></li>';
 			echo '<ul> <li>';
-			echo '<a href="#" class="button wpcf-warning-primary wpcf-clear-gallery' . esc_attr( $hidden ) . '"><i class="fa fa-trash"></i>' . esc_html( $args['clear_title'] ). '</a>';
+			echo '<a href="#" class="button wpcf-warning-primary wpcf-clear-gallery' . esc_attr( $hidden ) . '"><i class="fa fa-trash"></i>' . esc_html( $args['clear_title'] ) . '</a>';
 			echo '</ul></li>';
 			echo '<input type="hidden" name="' . esc_attr( $this->field_name() ) . '" value="' . esc_attr( $this->value ) . '"' . $this->field_attributes() . '/>';// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $this->field_attributes() is escaped before being passed in.
 

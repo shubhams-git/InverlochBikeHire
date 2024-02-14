@@ -4,9 +4,22 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7
+class ComposerStaticInit5e7f400ffa02262b1246e9baf8140e2b
 {
+    public static $files = array (
+        '898f53366be040276e78507917363447' => __DIR__ . '/../..' . '/includes/Helpers/core.php',
+        '4ff3eaf3039158ec60820f26a51ee162' => __DIR__ . '/../..' . '/includes/Helpers/array.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Sabberworm\\CSS\\' => 15,
+        ),
+        'J' => 
+        array (
+            'JsonMachine\\' => 12,
+        ),
         'C' => 
         array (
             'Composer\\Installers\\' => 20,
@@ -19,6 +32,14 @@ class ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7
     );
 
     public static $prefixDirsPsr4 = array (
+        'Sabberworm\\CSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        ),
+        'JsonMachine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/halaxa/json-machine/src',
+        ),
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
@@ -34,16 +55,66 @@ class ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7
     );
 
     public static $classMap = array (
+        'BlockArt\\Abstracts\\Styles' => __DIR__ . '/../..' . '/includes/Abstracts/Styles.php',
         'BlockArt\\Activation' => __DIR__ . '/../..' . '/includes/Activation.php',
         'BlockArt\\Admin' => __DIR__ . '/../..' . '/includes/Admin.php',
-        'BlockArt\\Ajax' => __DIR__ . '/../..' . '/includes/Ajax.php',
+        'BlockArt\\BetaTester' => __DIR__ . '/../..' . '/includes/BetaTester.php',
         'BlockArt\\BlockArt' => __DIR__ . '/../..' . '/includes/BlockArt.php',
+        'BlockArt\\BlockStyles' => __DIR__ . '/../..' . '/includes/BlockStyles.php',
+        'BlockArt\\BlockTypes\\AbstractBlock' => __DIR__ . '/../..' . '/includes/BlockTypes/AbstractBlock.php',
+        'BlockArt\\BlockTypes\\Blockquote' => __DIR__ . '/../..' . '/includes/BlockTypes/Blockquote.php',
+        'BlockArt\\BlockTypes\\Button' => __DIR__ . '/../..' . '/includes/BlockTypes/Button.php',
+        'BlockArt\\BlockTypes\\Buttons' => __DIR__ . '/../..' . '/includes/BlockTypes/Buttons.php',
+        'BlockArt\\BlockTypes\\CallToAction' => __DIR__ . '/../..' . '/includes/BlockTypes/CallToAction.php',
+        'BlockArt\\BlockTypes\\Column' => __DIR__ . '/../..' . '/includes/BlockTypes/Column.php',
+        'BlockArt\\BlockTypes\\Countdown' => __DIR__ . '/../..' . '/includes/BlockTypes/Countdown.php',
+        'BlockArt\\BlockTypes\\Counter' => __DIR__ . '/../..' . '/includes/BlockTypes/Counter.php',
+        'BlockArt\\BlockTypes\\Heading' => __DIR__ . '/../..' . '/includes/BlockTypes/Heading.php',
+        'BlockArt\\BlockTypes\\Icon' => __DIR__ . '/../..' . '/includes/BlockTypes/Icon.php',
+        'BlockArt\\BlockTypes\\IconList' => __DIR__ . '/../..' . '/includes/BlockTypes/IconList.php',
+        'BlockArt\\BlockTypes\\IconListItem' => __DIR__ . '/../..' . '/includes/BlockTypes/IconListItem.php',
+        'BlockArt\\BlockTypes\\Image' => __DIR__ . '/../..' . '/includes/BlockTypes/Image.php',
+        'BlockArt\\BlockTypes\\Info' => __DIR__ . '/../..' . '/includes/BlockTypes/Info.php',
+        'BlockArt\\BlockTypes\\Lottie' => __DIR__ . '/../..' . '/includes/BlockTypes/Lottie.php',
+        'BlockArt\\BlockTypes\\Map' => __DIR__ . '/../..' . '/includes/BlockTypes/Map.php',
+        'BlockArt\\BlockTypes\\Modal' => __DIR__ . '/../..' . '/includes/BlockTypes/Modal.php',
+        'BlockArt\\BlockTypes\\Notice' => __DIR__ . '/../..' . '/includes/BlockTypes/Notice.php',
+        'BlockArt\\BlockTypes\\Paragraph' => __DIR__ . '/../..' . '/includes/BlockTypes/Paragraph.php',
+        'BlockArt\\BlockTypes\\Progress' => __DIR__ . '/../..' . '/includes/BlockTypes/Progress.php',
+        'BlockArt\\BlockTypes\\Section' => __DIR__ . '/../..' . '/includes/BlockTypes/Section.php',
+        'BlockArt\\BlockTypes\\Slide' => __DIR__ . '/../..' . '/includes/BlockTypes/Slide.php',
+        'BlockArt\\BlockTypes\\Slider' => __DIR__ . '/../..' . '/includes/BlockTypes/Slider.php',
+        'BlockArt\\BlockTypes\\SocialInner' => __DIR__ . '/../..' . '/includes/BlockTypes/SocialInner.php',
+        'BlockArt\\BlockTypes\\SocialShare' => __DIR__ . '/../..' . '/includes/BlockTypes/SocialShare.php',
+        'BlockArt\\BlockTypes\\Spacing' => __DIR__ . '/../..' . '/includes/BlockTypes/Spacing.php',
+        'BlockArt\\BlockTypes\\Tab' => __DIR__ . '/../..' . '/includes/BlockTypes/Tab.php',
+        'BlockArt\\BlockTypes\\TabTitles' => __DIR__ . '/../..' . '/includes/BlockTypes/TabTitles.php',
+        'BlockArt\\BlockTypes\\TableOfContents' => __DIR__ . '/../..' . '/includes/BlockTypes/TableOfContents.php',
+        'BlockArt\\BlockTypes\\Tabs' => __DIR__ . '/../..' . '/includes/BlockTypes/Tabs.php',
+        'BlockArt\\BlockTypes\\Team' => __DIR__ . '/../..' . '/includes/BlockTypes/Team.php',
+        'BlockArt\\BlockTypes\\Testimonial' => __DIR__ . '/../..' . '/includes/BlockTypes/Testimonial.php',
+        'BlockArt\\BlockTypes\\TestimonialSlide' => __DIR__ . '/../..' . '/includes/BlockTypes/TestimonialSlide.php',
+        'BlockArt\\BlockTypes\\Timeline' => __DIR__ . '/../..' . '/includes/BlockTypes/Timeline.php',
+        'BlockArt\\BlockTypes\\TimelineInner' => __DIR__ . '/../..' . '/includes/BlockTypes/TimelineInner.php',
         'BlockArt\\Blocks' => __DIR__ . '/../..' . '/includes/Blocks.php',
         'BlockArt\\Deactivation' => __DIR__ . '/../..' . '/includes/Deactivation.php',
+        'BlockArt\\GlobalStyles' => __DIR__ . '/../..' . '/includes/GlobalStyles.php',
+        'BlockArt\\Icon' => __DIR__ . '/../..' . '/includes/Icon.php',
+        'BlockArt\\MaintenanceMode' => __DIR__ . '/../..' . '/includes/MaintenanceMode.php',
+        'BlockArt\\RestApi\\Controllers\\ChangelogController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/ChangelogController.php',
+        'BlockArt\\RestApi\\Controllers\\GlobalStylesController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/GlobalStylesController.php',
+        'BlockArt\\RestApi\\Controllers\\ImageImportController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/ImageImportController.php',
+        'BlockArt\\RestApi\\Controllers\\LibraryDataController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/LibraryDataController.php',
+        'BlockArt\\RestApi\\Controllers\\RegenerateAssetsController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/RegenerateAssetsController.php',
+        'BlockArt\\RestApi\\Controllers\\SettingsController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/SettingsController.php',
+        'BlockArt\\RestApi\\Controllers\\VersionControlController' => __DIR__ . '/../..' . '/includes/RestApi/Controllers/VersionControlController.php',
+        'BlockArt\\RestApi\\RestApi' => __DIR__ . '/../..' . '/includes/RestApi/RestApi.php',
         'BlockArt\\Review' => __DIR__ . '/../..' . '/includes/Review.php',
         'BlockArt\\ScriptStyle' => __DIR__ . '/../..' . '/includes/ScriptStyle.php',
+        'BlockArt\\Setting' => __DIR__ . '/../..' . '/includes/Setting.php',
         'BlockArt\\Traits\\Singleton' => __DIR__ . '/../..' . '/includes/traits/Singleton.php',
-        'BlockArt\\Utils' => __DIR__ . '/../..' . '/includes/Utils.php',
+        'BlockArt\\Update' => __DIR__ . '/../..' . '/includes/Update.php',
+        'BlockArt\\WebFontLoader' => __DIR__ . '/../..' . '/includes/WebFontLoader.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
         'Composer\\Installers\\AimeosInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AimeosInstaller.php',
@@ -146,14 +217,75 @@ class ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7
         'Composer\\Installers\\YawikInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/YawikInstaller.php',
         'Composer\\Installers\\ZendInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ZendInstaller.php',
         'Composer\\Installers\\ZikulaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ZikulaInstaller.php',
+        'JsonMachine\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/halaxa/json-machine/src/Exception/InvalidArgumentException.php',
+        'JsonMachine\\Exception\\JsonMachineException' => __DIR__ . '/..' . '/halaxa/json-machine/src/Exception/JsonMachineException.php',
+        'JsonMachine\\Exception\\PathNotFoundException' => __DIR__ . '/..' . '/halaxa/json-machine/src/Exception/PathNotFoundException.php',
+        'JsonMachine\\Exception\\SyntaxErrorException' => __DIR__ . '/..' . '/halaxa/json-machine/src/Exception/SyntaxErrorException.php',
+        'JsonMachine\\Exception\\UnexpectedEndSyntaxErrorException' => __DIR__ . '/..' . '/halaxa/json-machine/src/Exception/UnexpectedEndSyntaxErrorException.php',
+        'JsonMachine\\FileChunks' => __DIR__ . '/..' . '/halaxa/json-machine/src/FileChunks.php',
+        'JsonMachine\\Items' => __DIR__ . '/..' . '/halaxa/json-machine/src/Items.php',
+        'JsonMachine\\ItemsOptions' => __DIR__ . '/..' . '/halaxa/json-machine/src/ItemsOptions.php',
+        'JsonMachine\\JsonDecoder\\DecodingError' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/DecodingError.php',
+        'JsonMachine\\JsonDecoder\\ErrorWrappingDecoder' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/ErrorWrappingDecoder.php',
+        'JsonMachine\\JsonDecoder\\ExtJsonDecoder' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/ExtJsonDecoder.php',
+        'JsonMachine\\JsonDecoder\\InvalidResult' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/InvalidResult.php',
+        'JsonMachine\\JsonDecoder\\ItemDecoder' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/ItemDecoder.php',
+        'JsonMachine\\JsonDecoder\\PassThruDecoder' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/PassThruDecoder.php',
+        'JsonMachine\\JsonDecoder\\ValidResult' => __DIR__ . '/..' . '/halaxa/json-machine/src/JsonDecoder/ValidResult.php',
+        'JsonMachine\\Parser' => __DIR__ . '/..' . '/halaxa/json-machine/src/Parser.php',
+        'JsonMachine\\PositionAware' => __DIR__ . '/..' . '/halaxa/json-machine/src/PositionAware.php',
+        'JsonMachine\\StreamChunks' => __DIR__ . '/..' . '/halaxa/json-machine/src/StreamChunks.php',
+        'JsonMachine\\StringChunks' => __DIR__ . '/..' . '/halaxa/json-machine/src/StringChunks.php',
+        'JsonMachine\\Tokens' => __DIR__ . '/..' . '/halaxa/json-machine/src/Tokens.php',
+        'JsonMachine\\TokensWithDebugging' => __DIR__ . '/..' . '/halaxa/json-machine/src/TokensWithDebugging.php',
+        'JsonMachine\\ValidJsonPointers' => __DIR__ . '/..' . '/halaxa/json-machine/src/ValidJsonPointers.php',
+        'Sabberworm\\CSS\\CSSList\\AtRuleBlockList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/CSSList/AtRuleBlockList.php',
+        'Sabberworm\\CSS\\CSSList\\CSSBlockList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/CSSList/CSSBlockList.php',
+        'Sabberworm\\CSS\\CSSList\\CSSList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/CSSList/CSSList.php',
+        'Sabberworm\\CSS\\CSSList\\Document' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/CSSList/Document.php',
+        'Sabberworm\\CSS\\CSSList\\KeyFrame' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/CSSList/KeyFrame.php',
+        'Sabberworm\\CSS\\Comment\\Comment' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Comment/Comment.php',
+        'Sabberworm\\CSS\\Comment\\Commentable' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Comment/Commentable.php',
+        'Sabberworm\\CSS\\OutputFormat' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/OutputFormat.php',
+        'Sabberworm\\CSS\\OutputFormatter' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/OutputFormatter.php',
+        'Sabberworm\\CSS\\Parser' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parser.php',
+        'Sabberworm\\CSS\\Parsing\\OutputException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/OutputException.php',
+        'Sabberworm\\CSS\\Parsing\\ParserState' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/ParserState.php',
+        'Sabberworm\\CSS\\Parsing\\SourceException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/SourceException.php',
+        'Sabberworm\\CSS\\Parsing\\UnexpectedEOFException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/UnexpectedEOFException.php',
+        'Sabberworm\\CSS\\Parsing\\UnexpectedTokenException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/UnexpectedTokenException.php',
+        'Sabberworm\\CSS\\Property\\AtRule' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/AtRule.php',
+        'Sabberworm\\CSS\\Property\\CSSNamespace' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/CSSNamespace.php',
+        'Sabberworm\\CSS\\Property\\Charset' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/Charset.php',
+        'Sabberworm\\CSS\\Property\\Import' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/Import.php',
+        'Sabberworm\\CSS\\Property\\KeyframeSelector' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/KeyframeSelector.php',
+        'Sabberworm\\CSS\\Property\\Selector' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Property/Selector.php',
+        'Sabberworm\\CSS\\Renderable' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Renderable.php',
+        'Sabberworm\\CSS\\RuleSet\\AtRuleSet' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/RuleSet/AtRuleSet.php',
+        'Sabberworm\\CSS\\RuleSet\\DeclarationBlock' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/RuleSet/DeclarationBlock.php',
+        'Sabberworm\\CSS\\RuleSet\\RuleSet' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/RuleSet/RuleSet.php',
+        'Sabberworm\\CSS\\Rule\\Rule' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Rule/Rule.php',
+        'Sabberworm\\CSS\\Settings' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Settings.php',
+        'Sabberworm\\CSS\\Value\\CSSFunction' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/CSSFunction.php',
+        'Sabberworm\\CSS\\Value\\CSSString' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/CSSString.php',
+        'Sabberworm\\CSS\\Value\\CalcFunction' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/CalcFunction.php',
+        'Sabberworm\\CSS\\Value\\CalcRuleValueList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/CalcRuleValueList.php',
+        'Sabberworm\\CSS\\Value\\Color' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/Color.php',
+        'Sabberworm\\CSS\\Value\\LineName' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/LineName.php',
+        'Sabberworm\\CSS\\Value\\PrimitiveValue' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/PrimitiveValue.php',
+        'Sabberworm\\CSS\\Value\\RuleValueList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/RuleValueList.php',
+        'Sabberworm\\CSS\\Value\\Size' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/Size.php',
+        'Sabberworm\\CSS\\Value\\URL' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/URL.php',
+        'Sabberworm\\CSS\\Value\\Value' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/Value.php',
+        'Sabberworm\\CSS\\Value\\ValueList' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Value/ValueList.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1b1b13149df9b0718e5cfd9e0b7e3eb7::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5e7f400ffa02262b1246e9baf8140e2b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5e7f400ffa02262b1246e9baf8140e2b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5e7f400ffa02262b1246e9baf8140e2b::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -135,6 +135,9 @@ class Widget_Counter extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
+				'ai' => [
+					'active' => false,
+				],
 				'default' => '',
 				'placeholder' => 1,
 			]
@@ -148,6 +151,9 @@ class Widget_Counter extends Widget_Base {
 				'dynamic' => [
 					'active' => true,
 				],
+				'ai' => [
+					'active' => false,
+				],
 				'default' => '',
 				'placeholder' => esc_html__( 'Plus', 'elementor' ),
 			]
@@ -156,7 +162,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => esc_html__( 'Animation Duration', 'elementor' ) . ' (ms)',
 				'type' => Controls_Manager::NUMBER,
 				'default' => 2000,
 				'min' => 100,
@@ -207,15 +213,6 @@ class Widget_Counter extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
-			'view',
-			[
-				'label' => esc_html__( 'View', 'elementor' ),
-				'type' => Controls_Manager::HIDDEN,
-				'default' => 'traditional',
-			]
-		);
-
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -247,6 +244,14 @@ class Widget_Counter extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
 				],
+				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Text_Stroke::get_type(),
+			[
+				'name' => 'number_stroke',
 				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
 			]
 		);
@@ -290,6 +295,14 @@ class Widget_Counter extends Widget_Base {
 				'global' => [
 					'default' => Global_Typography::TYPOGRAPHY_SECONDARY,
 				],
+				'selector' => '{{WRAPPER}} .elementor-counter-title',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Text_Stroke::get_type(),
+			[
+				'name' => 'title_stroke',
 				'selector' => '{{WRAPPER}} .elementor-counter-title',
 			]
 		);

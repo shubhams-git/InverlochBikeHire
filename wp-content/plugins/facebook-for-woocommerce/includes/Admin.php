@@ -39,6 +39,8 @@ class Admin {
 	/** @var array screens ids where to include scripts */
 	protected $screen_ids = [];
 
+	/** @var Product_Sets the product set admin handler. */
+	protected $product_sets;
 
 	/**
 	 * Admin constructor.
@@ -71,8 +73,6 @@ class Admin {
 		$this->product_sets       = new Admin\Product_Sets();
 		// add a modal in admin product pages
 		add_action( 'admin_footer', array( $this, 'render_modal_template' ) );
-		// may trigger the modal to open to warn the merchant about a conflict with the current product terms
-		add_action( 'admin_footer', array( $this, 'validate_product_excluded_terms' ) );
 
 		// add admin notice to inform that disabled products may need to be deleted manually
 		add_action( 'admin_notices', array( $this, 'maybe_show_product_disabled_sync_notice' ) );
@@ -106,6 +106,24 @@ class Admin {
 
 		// add custom taxonomy for Product Sets
 		add_filter( 'gettext', array( $this, 'change_custom_taxonomy_tip' ), 20, 2 );
+	}
+
+	/**
+	 * __get method for backward compatibility.
+	 *
+	 * @param string $key property name
+	 * @return mixed
+	 * @since 3.0.32
+	 */
+	public function __get( $key ) {
+		// Add warning for private properties.
+		if ( 'product_sets' === $key ) {
+			/* translators: %s property name. */
+			_doing_it_wrong( __FUNCTION__, sprintf( esc_html__( 'The %s property is protected and should not be accessed outside its class.', 'facebook-for-woocommerce' ), esc_html( $key ) ), '3.0.32' );
+			return $this->$key;
+		}
+
+		return null;
 	}
 
 	/**
@@ -358,7 +376,7 @@ class Admin {
 		<?php
 		printf(
 			/* translators: Placeholders: %1$s - opening <a> link tag, %2$s - closing </a> link tag */
-			__( 'You\'re removing a product from the Facebook sync that is currently listed in your %1$sFacebook catalog%2$s. Would you like to delete the product from the Facebook catalog as well?', 'facebook-for-woocommerce' ),
+			esc_html__( 'You\'re removing a product from the Facebook sync that is currently listed in your %1$sFacebook catalog%2$s. Would you like to delete the product from the Facebook catalog as well?', 'facebook-for-woocommerce' ),
 			'<a href="https://www.facebook.com/products" target="_blank">',
 			'</a>'
 		);
@@ -438,8 +456,20 @@ class Admin {
 			return;
 		}
 
-		$product = wc_get_product( $post );
-		if ( $product && Products::product_should_be_synced( $product ) ) {
+		$product        = wc_get_product( $post );
+		$should_sync    = false;
+		$no_sync_reason = '';
+
+		if ( $product instanceof \WC_Product ) {
+			try {
+				facebook_for_woocommerce()->get_product_sync_validator( $product )->validate();
+				$should_sync = true;
+			} catch ( \Exception $e ) {
+				$no_sync_reason = $e->getMessage();
+			}
+		}
+
+		if ( $should_sync ) {
 			if ( Products::is_product_visible( $product ) ) {
 				esc_html_e( 'Sync and show', 'facebook-for-woocommerce' );
 			} else {
@@ -447,6 +477,9 @@ class Admin {
 			}
 		} else {
 			esc_html_e( 'Do not sync', 'facebook-for-woocommerce' );
+			if ( ! empty( $no_sync_reason ) ) {
+				echo wc_help_tip( $no_sync_reason );
+			}
 		}
 	}
 
@@ -469,9 +502,9 @@ class Admin {
 		?>
 		<select name="fb_sync_enabled">
 			<option value="" <?php selected( $choice, '' ); ?>><?php esc_html_e( 'Filter by Facebook sync setting', 'facebook-for-woocommerce' ); ?></option>
-			<option value="<?php echo self::SYNC_MODE_SYNC_AND_SHOW; ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_AND_SHOW ); ?>><?php esc_html_e( 'Sync and show', 'facebook-for-woocommerce' ); ?></option>
-			<option value="<?php echo self::SYNC_MODE_SYNC_AND_HIDE; ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_AND_HIDE ); ?>><?php esc_html_e( 'Sync and hide', 'facebook-for-woocommerce' ); ?></option>
-			<option value="<?php echo self::SYNC_MODE_SYNC_DISABLED; ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_DISABLED ); ?>><?php esc_html_e( 'Do not sync', 'facebook-for-woocommerce' ); ?></option>
+			<option value="<?php echo esc_attr( self::SYNC_MODE_SYNC_AND_SHOW ); ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_AND_SHOW ); ?>><?php esc_html_e( 'Sync and show', 'facebook-for-woocommerce' ); ?></option>
+			<option value="<?php echo esc_attr( self::SYNC_MODE_SYNC_AND_HIDE ); ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_AND_HIDE ); ?>><?php esc_html_e( 'Sync and hide', 'facebook-for-woocommerce' ); ?></option>
+			<option value="<?php echo esc_attr( self::SYNC_MODE_SYNC_DISABLED ); ?>" <?php selected( $choice, self::SYNC_MODE_SYNC_DISABLED ); ?>><?php esc_html_e( 'Do not sync', 'facebook-for-woocommerce' ); ?></option>
 		</select>
 		<?php
 	}
@@ -498,7 +531,7 @@ class Admin {
 			// store original meta query
 			$original_meta_query = ! empty( $query_vars['meta_query'] ) ? $query_vars['meta_query'] : [];
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$filter_value = $_REQUEST['fb_sync_enabled'];
+			$filter_value = wc_clean( wp_unslash( $_REQUEST['fb_sync_enabled'] ) );
 			// by default use an "AND" clause if multiple conditions exist for a meta query
 			if ( ! empty( $query_vars['meta_query'] ) ) {
 				$query_vars['meta_query']['relation'] = 'AND';
@@ -1036,7 +1069,7 @@ class Admin {
 					)
 				),
 				count( $affected_products ),
-				'<a href="' . add_query_arg( array( 'facebook_show_affected_products' => 1 ) ) . '">',
+				'<a href="' . esc_url( add_query_arg( array( 'facebook_show_affected_products' => 1 ) ) ) . '">',
 				'</a>',
 				'<a href="https://www.facebook.com/policies/commerce/prohibited_content/subscriptions_and_digital_products" target="_blank">',
 				'</a>'
@@ -1125,7 +1158,7 @@ class Admin {
 		$tabs['fb_commerce_tab'] = array(
 			'label'  => __( 'Facebook', 'facebook-for-woocommerce' ),
 			'target' => 'facebook_options',
-			'class'  => array( 'show_if_simple', 'show_if_variable' ),
+			'class'  => array( 'show_if_simple', 'show_if_variable', 'show_if_external' ),
 		);
 
 		return $tabs;
@@ -1146,11 +1179,7 @@ class Admin {
 		// all products have sync enabled unless explicitly disabled
 		$sync_enabled = 'no' !== get_post_meta( $post->ID, Products::SYNC_ENABLED_META_KEY, true );
 		$is_visible   = ( $visibility = get_post_meta( $post->ID, Products::VISIBILITY_META_KEY, true ) ) ? wc_string_to_bool( $visibility ) : true;
-
-		$product = wc_get_product( $post );
-		if ( $product && ! facebook_for_woocommerce()->get_product_sync_validator( $product )->passes_all_checks() ) {
-			$sync_enabled = false;
-		}
+		$product 	  = wc_get_product( $post );
 
 		$description  = get_post_meta( $post->ID, \WC_Facebookcommerce_Integration::FB_PRODUCT_DESCRIPTION, true );
 		$price        = get_post_meta( $post->ID, \WC_Facebook_Product::FB_PRODUCT_PRICE, true );
@@ -1166,7 +1195,7 @@ class Admin {
 		// 'id' attribute needs to match the 'target' parameter set above
 		?>
 		<div id='facebook_options' class='panel woocommerce_options_panel'>
-			<div class='options_group show_if_simple'>
+			<div class='options_group hide_if_variable'>
 				<?php
 
 				woocommerce_wp_select(
@@ -1419,7 +1448,7 @@ class Admin {
 		if ( ! $variation instanceof \WC_Product_Variation ) {
 			return;
 		}
-		$sync_mode    = isset( $_POST['variable_facebook_sync_mode'][ $index ] ) ? $_POST['variable_facebook_sync_mode'][ $index ] : self::SYNC_MODE_SYNC_DISABLED;
+		$sync_mode    = isset( $_POST['variable_facebook_sync_mode'][ $index ] ) ? wc_clean( wp_unslash( $_POST['variable_facebook_sync_mode'][ $index ] ) ) : self::SYNC_MODE_SYNC_DISABLED;
 		$sync_enabled = self::SYNC_MODE_SYNC_DISABLED !== $sync_mode;
 		if ( self::SYNC_MODE_SYNC_AND_SHOW === $sync_mode && $variation->is_virtual() ) {
 			// force to Sync and hide
@@ -1436,7 +1465,7 @@ class Admin {
 			$posted_param = 'variable_' . \WC_Facebook_Product::FB_PRODUCT_IMAGE;
 			$image_url    = isset( $_POST[ $posted_param ][ $index ] ) ? esc_url_raw( wp_unslash( $_POST[ $posted_param ][ $index ] ) ) : null;
 			$posted_param = 'variable_' . \WC_Facebook_Product::FB_PRODUCT_PRICE;
-			$price        = isset( $_POST[ $posted_param ][ $index ] ) ? wc_format_decimal( $_POST[ $posted_param ][ $index ] ) : '';
+			$price        = isset( $_POST[ $posted_param ][ $index ] ) ? wc_format_decimal( wc_clean( wp_unslash( $_POST[ $posted_param ][ $index ] ) ) ) : '';
 			$variation->update_meta_data( \WC_Facebookcommerce_Integration::FB_PRODUCT_DESCRIPTION, $description );
 			$variation->update_meta_data( Products::PRODUCT_IMAGE_SOURCE_META_KEY, $image_source );
 			$variation->update_meta_data( \WC_Facebook_Product::FB_PRODUCT_IMAGE, $image_url );
@@ -1487,58 +1516,4 @@ class Admin {
 	}
 
 
-	/**
-	 * Maybe triggers the modal to open on the product edit screen on page load.
-	 *
-	 * If the product is set to be synced in Facebook, but belongs to a term that is set to be excluded, the modal prompts the merchant for action.
-	 *
-	 * @internal
-	 *
-	 * @since 1.10.0
-	 */
-	public function validate_product_excluded_terms() {
-		global $current_screen, $post;
-		if ( $post && $current_screen && $current_screen->id === 'product' ) :
-			$product = wc_get_product( $post );
-			if ( $product instanceof \WC_Product
-				 && Products::is_sync_enabled_for_product( $product )
-				 && Products::is_sync_excluded_for_product_terms( $product )
-			) :
-				?>
-				<script type="text/javascript">
-					jQuery( document ).ready( function( $ ) {
-
-						var productID   = parseInt( $( 'input#post_ID' ).val(), 10 ),
-							productTag  = $( 'textarea[name=\"tax_input[product_tag]\"]' ).val().split( ',' ),
-							productCat  = [];
-
-						$( '#taxonomy-product_cat input[name=\"tax_input[product_cat][]\"]:checked' ).each( function() {
-							productCat.push( parseInt( $( this ).val(), 10 ) );
-						} );
-
-						$.post( facebook_for_woocommerce_products_admin.ajax_url, {
-							action:      'facebook_for_woocommerce_set_product_sync_prompt',
-							security:     facebook_for_woocommerce_products_admin.set_product_sync_prompt_nonce,
-							sync_enabled: 'enabled',
-							product:      productID,
-							categories:   productCat,
-							tags:         productTag
-						}, function( response ) {
-
-							if ( response && ! response.success ) {
-
-								$( '#wc-backbone-modal-dialog .modal-close' ).trigger( 'click' );
-
-								new $.WCBackboneModal.View( {
-									target: 'facebook-for-woocommerce-modal',
-									string: response.data
-								} );
-							}
-						} );
-					} );
-				</script>
-				<?php
-			endif;
-		endif;
-	}
 }

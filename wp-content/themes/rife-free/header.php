@@ -48,15 +48,3 @@ do_action('apollo13framework_body_start');
     }
     ?>
     <div id="mid" class="to-move <?php echo esc_attr( apollo13framework_get_mid_classes() ); ?>">
-
-
-<?php
-/* do NOT display the badge on other pages apart from contact page*/
-if( !is_page('Contact Us')) : ?>
-<style type="text/css">
-.grecaptcha-badge { 
-visibility: hidden;
-display:none
-}
-</style>
-<?php endif; ?>

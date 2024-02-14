@@ -7,7 +7,8 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	die; } // Cannot access directly.
+	die;
+} // Cannot access directly.
 
 if ( ! function_exists( 'wpcf_sanitize_replace_a_to_b' ) ) {
 	/**

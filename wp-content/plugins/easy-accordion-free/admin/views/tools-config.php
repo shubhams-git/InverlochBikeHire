@@ -94,6 +94,13 @@ SP_EAP::createSection(
 		'icon'   => 'fa fa-arrow-circle-o-up ',
 		'fields' => array(
 			array(
+				'id'         => 'import_unSanitize',
+				'type'       => 'checkbox',
+				'title'      => __( 'Allow Iframe/Script Tags', 'easy-accordion-free' ),
+				'title_info' => __( 'Enabling this option, you are allowing to import the accordion which contains iframe, script or embed tags', 'easy-accordion-free' ),
+				'default'    => false,
+			),
+			array(
 				'class' => 'eap_import',
 				'type'  => 'custom_import',
 				'title' => __( 'Import JSON File To Upload', 'easy-accordion-free' ),

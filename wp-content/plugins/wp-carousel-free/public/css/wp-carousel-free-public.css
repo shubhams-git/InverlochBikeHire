@@ -83,6 +83,10 @@
 	padding-left: 15px;
 	padding-right: 15px;
 }
+.wpcp-carousel-section .wpcp-single-item figure {
+	margin: 0;
+	line-height: 0;
+}
 
 .wpcp-carousel-section .wpcp-single-item img[data-lazy] {
 	width: 32px;
@@ -160,7 +164,7 @@
 }
 
 .wpcp-single-item .wpcp-all-captions .wpcp-post-meta {
-	margin: 0 0 20px;
+	margin: 0 0 6px;
 	padding: 0;
 }
 
@@ -258,6 +262,11 @@
 	line-height: 22px;
 	display: inline-block;
 	font-size: 14px;
+}
+
+#sp-wpcf-preview-box .wpcp-carousel-section.wpcp-product-carousel .wpcp-cart-button a.button {
+	height: auto;
+	margin-bottom: 5px;
 }
 
 .wpcp-carousel-section.wpcp-product-carousel .wpcp-all-captions .wpcp-cart-button a.add_to_cart_button.added {
@@ -503,9 +512,96 @@ html[dir="rtl"] .wpcp-single-item {
 }
 
 .wpcp-carousel-section .wpcp-slide-image {
-	font-size: 0;
+	line-height: 0;
 	text-align: center;
+	overflow: hidden;
 }
+
 .wpcp-carousel-section i.fa {
 	font-style: normal;
+}
+.block-editor-page a.sp_wp_carousel_block_edit_button,
+a.sp_wp_carousel_block_edit_button {
+	display: inline-block;
+	text-decoration: underline;
+	font-size: 16px;
+	margin: 10px 0;
+}
+
+/* ===============================================
+Fancybox Style css.
+============================================*/
+.wpcf-fancybox-wrapper .fancybox-thumbs {
+	top: auto;
+	width: auto;
+	left: 0;
+	right: 0;
+	padding: 3px 10px 5px 10px;
+	box-sizing: border-box;
+	background: rgba(0, 0, 0, 0.3);
+	margin: 0 auto;
+}
+
+.wpcf-fancybox-wrapper .fancybox-thumbs-x .fancybox-thumbs__list {
+	margin: auto;
+}
+
+.wpcf-fancybox-wrapper .fancybox-inner {
+	right: 0 !important;
+	bottom: 0px;
+}
+
+body.admin-bar .wpcf-fancybox-wrapper.fancybox-container .fancybox-infobar,
+body.admin-bar .wpcf-fancybox-wrapper.fancybox-container .fancybox-toolbar {
+	top: 0;
+}
+
+.wpcf-fancybox-wrapper .fancybox-slide--image .fancybox-content {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.wpcf-fancybox-wrapper.fancybox-show-thumbs .fancybox-inner {
+	bottom: 95px;
+}
+
+.wpcf-fancybox-wrapper, .fancybox-container {
+	z-index: 9999929 !important;
+}
+
+.wpcf-fancybox-wrapper .fancybox-thumbs__list a:before {
+	border-width: 4px;
+}
+
+.wpcf-fancybox-wrapper .fancybox-navigation .fancybox-button .wpcp-fancybox-nav-arrow i {
+	font-size: 30px;
+}
+
+.wpcf-fancybox-wrapper .fancybox-navigation .fancybox-button {
+	background-clip: border-box;
+	width: 50px;
+}
+
+.wpcf-fancybox-wrapper .fancybox-navigation .fancybox-button.fancybox-button--arrow_right .wpcp-fancybox-nav-arrow {
+	margin-left: -15px;
+}
+
+/* Elementor lightbox conflict */
+.wpcf-fancybox-wrapper ~ .elementor-lightbox {
+	display: none !important;
+}
+/* Elementor Pro v3.14.1 conflict */
+.elementor-default .wpcp-carousel-wrapper .swiper-container:not(.swiper-container-initialized) .swiper-wrapper {
+    overflow: initial;
+}
+
+/* transition CSS for carousel image */
+.wpcp-carousel-wrapper .wpcp-carousel-section.wpcp-image-carousel .wpcp-single-item img,
+.wpcp-carousel-wrapper .wpcp-carousel-section.wpcp-post-carousel .wpcp-single-item img,
+.wpcp-carousel-wrapper .wpcp-carousel-section.wpcp-product-carousel .wpcp-single-item img {
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
 }

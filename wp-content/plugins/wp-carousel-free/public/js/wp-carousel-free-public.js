@@ -1,5 +1,6 @@
 (function ($) {
     'use strict';
+
     jQuery('body').find('.wpcp-carousel-section.wpcp-standard').each(function () {
 
         var carousel_id = $(this).attr('id');
@@ -73,4 +74,6 @@
             });
         }
     });
+
+    jQuery(document).find('.wpcp-carousel-wrapper').addClass('wpcp-loaded');
 })(jQuery);

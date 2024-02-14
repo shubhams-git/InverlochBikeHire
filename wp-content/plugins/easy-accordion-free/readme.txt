@@ -1,10 +1,9 @@
 ﻿=== Easy Accordion - Best Accordion FAQ Plugin for WordPress ===
 Contributors: shapedplugin, khalilu, rubel_miah, shamimmiashuhagh
-Donate link: https://shapedplugin.com/donate
 Tags: accordion, accordions, accordion faq, vertical accordion, faq, faqs, faq widget, accordion widget, accordion menu, wordpress faq plugin, easy accordion, premium accordion, bootstrap accordion, horizontal accordion, responsive accordion, accordion jquery, css3 accordion, accordion shortcode, collapsible content, toggle, toggle accordion, wordpress accordion plugin, wordpress accordion, bootstrap collapse, post accordion, post faq, custom post accordion, accordion grid, accordion bar, product faq, woocommerce product accordion, woocommerce accordion, wordpress post accordion, content hide, hidden content, expand content
-Requires at least: 4.3
-Tested up to: 6.0.2
-Stable tag: 2.1.19
+Requires at least: 4.7
+Tested up to: 6.4.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,14 +19,14 @@ We believe that you shouldn’t be a programmer or hire a developer to create a 
 [youtube https://www.youtube.com/watch?v=jQwLyM0Zb3M&list=PLoUb-7uG-5jPBSfjZalo6KKrc4jniAuix]
 
 
-[__Live Demo__](https://shapedplugin.com/easy-accordion/easy-accordion-free-demo/) | [__Docs__](https://docs.shapedplugin.com/docs/easy-accordion/introduction/) | [__Support__](https://shapedplugin.com/support/?user=lite) | [__Upgrade to Pro!__](https://shapedplugin.com/easy-accordion/pricing/?ref=1)
+[__Live Demo__](https://easyaccordion.io/easy-accordion-free-demo/) | [__Docs__](https://docs.shapedplugin.com/docs/easy-accordion/introduction/) | [__Support__](https://shapedplugin.com/support/?user=lite) | [__Upgrade to Pro!__](https://easyaccordion.io/pricing/?ref=1)
 
 
 = Easy Accordion 2.0 =
 
 **Easy Accordion 2.0** has completely been rebuilt and this provides you now many improvements and new amazing features. In this version, you get a totally usable accordion plugin with One Theme (Default Theme) which is the product of many hours development. 
 
-If you want [__16+ Extra Beautiful Premium Themes__](https://shapedplugin.com/easy-accordion/all-accordion-themes/) with their own customizable settings and lot of stunning features with excellent support, please purchase the [__PRO version__](https://shapedplugin.com/easy-accordion/pricing/?ref=1). 
+If you want [__16+ Extra Beautiful Premium Themes__](https://easyaccordion.io/all-accordion-themes/) with their own customizable settings and lot of stunning features with excellent support, please purchase the [__PRO version__](https://easyaccordion.io/pricing/?ref=1). 
 
 
 = Key Features = 
@@ -75,7 +74,7 @@ If you want [__16+ Extra Beautiful Premium Themes__](https://shapedplugin.com/ea
 
 = Easy Accordion Pro =
 
-[__Easy Accordion Pro__](https://shapedplugin.com/easy-accordion/?ref=1) is a highly flexible and customizable accordion plugin designed for everyone including designers & developers. The premium plugin vastly improves your styling & user experience and lets you create beautiful and touch-friendly accordion quickly in the easiest way.
+[__Easy Accordion Pro__](https://easyaccordion.io/?ref=1) is a highly flexible and customizable accordion plugin designed for everyone including designers & developers. The premium plugin vastly improves your styling & user experience and lets you create beautiful and touch-friendly accordion quickly in the easiest way.
 
 It comes with intuitive admin panel, horizontal and vertical layout and color picker for unlimited color & styling option with **16+ Modern Pre-designed Accordion Themes.** You can put the content of any type inside accordion expandable section including Shortcodes, Images, YouTube, Audio or any custom HTML code.
 
@@ -134,7 +133,7 @@ Designed and Developed by [__ShapedPlugin__](https://shapedplugin.com/)
 
 * PHP 5.6 or later
 * MySQL 5.6 or later
-* WordPress 4.3 or later
+* WordPress 4.7 or later
 
 **This section describes how to install the plugin and get it working**
 
@@ -206,11 +205,11 @@ For including on the template, copy and paste the PHP code into your template fi
 
 
 = Q. I’d like access to more features. How can I get them? =
-**A.** You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__Easy Accordion Pro__](https://shapedplugin.com/easy-accordion/pricing/?ref=1) gets you to access the full version of Easy Accordion, including 16+ Premium Themes, Automatic Lifetime Updates, and Dedicated Support.
+**A.** You can get access to more features when you purchase a license of the plugin. Purchasing a license of [__Easy Accordion Pro__](https://easyaccordion.io/pricing/?ref=1) gets you to access the full version of Easy Accordion, including 16+ Premium Themes, Automatic Lifetime Updates, and Dedicated Support.
 
 
 = Q. What if I update to Premium version? =
-**A.** Your existing accordion content will work with [__Premium Version__](https://shapedplugin.com/easy-accordion/pricing/?ref=1). So you won’t lose your developed contents.
+**A.** Your existing accordion content will work with [__Premium Version__](https://easyaccordion.io/pricing/?ref=1). So you won’t lose your developed contents.
 
 
 = Q. Is Easy Accordion is totally responsive? =
@@ -256,12 +255,75 @@ Thank you!
 1. Live Demo. 
 2. Accordion Settings (Add New).
 3. Display Settings.
-4. All Accordions.
+4. Accordion Groups.
 5. Advanced Settings.
 6. Custom CSS.
+7. Export Accordion Groups.
 
 
 == Changelog ==
+
+= 2.3.3 - Jan 18, 2024 =
+* Fix: PHP version 5.6.40 compatibility issue.
+
+= 2.3.2 - Jan 18, 2024 =
+* Improved: The Help Page has been redesigned to make it more user-friendly.
+* Improved: The Shortcode field has been enhanced.
+
+= 2.3.1 - Jan 12, 2024 =
+* Fix: A CSS conflict issue with the div or section that does not contain an accordion.
+
+= 2.3.0 - Jan 08, 2024 =
+* New: The Space Between Accordion Items option.
+* New: The Custom JS option. 
+* Improved: The Tooltip/Help text of the plugin options to make it more user-friendly.
+* Improved: The Margin Bottom of the Section Title option has moved to the Typography tab.
+* Improved: The Font Awesome asset has been replaced by the Fontello icon, as the light version used only two icons in the accordion layout.
+* Fix: The issue that the video iframe got changed into a tag automatically after updating the shortcode rarely.
+* Tested: WordPress 6.4.2 compatibility
+
+= 2.2.5 - Oct 26, 2023 =
+* New: Edit Accordion button in Gutenberg edit page.
+* Updated: WP CLI check for plugin activation redirect.
+* Fix: Few PHPCS warnings with PHP8.2.
+* Tested: WordPress 6.4 compatibility.
+
+= 2.2.4 - Aug 08, 2023 =
+* Fix: The plugin admin panel translation is not working if the language file is placed in the plugin language folder.
+* Updated: Minimum required version of WordPress for the plugin.
+* Tested: WordPress 6.3 compatibility.
+
+= 2.2.3 - Jun 08, 2023 =
+* Improved: The import feature with animation. 
+* Fix: The custom CSS does not work after importing accordions from another site.
+* Tested: WordPress 6.2.2 compatibility.
+
+= 2.2.2 - Mar 30, 2023 =
+* New: Multiple br tags in tab content support.
+* Fix: The iframe width of embedded Google Maps does not work.
+* Tested: WordPress 6.2 compatibility.
+
+= 2.2.1 - Feb 15, 2023 =
+* New: The Allow Iframe/Script Tags option in the import panel of the plugin.
+* New: Allow to skip responsive CSS from the iframe by adding a 'skip' class to the iframe.
+* Fix: Iframe does not show in accordion content with the Twenty Twenty theme.
+* Fix: Import option does not work when the accordion has iframe or script tags.
+* Removed: The hook 'sp_easy_accordion_allow_import_tags' was removed as an option added.
+
+= 2.2.0 - Dec 15, 2022 =
+* New: A hook 'sp_easy_accordion_allow_import_tags' added to modify to allow import shortcodes with special tags.
+* Improved: Plugin security improved.
+* Removed: Some deprecated shortcodes ( efaccordion, efitems, eaf_items ) has been removed.
+
+= 2.1.20 - Dec 09, 2022 =
+* New: The Scroll to Active Item option added.
+* New: A hook 'eap_offset_to_scroll' added to modify offset as per need.
+* Improved: Load Stylesheets in the header based on shortcodes on the page.
+* Improved: SVG preloading icon has been added as a pre-loader image.
+* Fix: In preview, ul li tags do not show with bullet points as frontend.
+* Fix: Few styling issues with the plugin admin panel for the RTL site.
+* Tested: WordPress 6.1.1 compatibility.
+* Tested: Compatibility with the ‘Youtube Embed Plus‘ plugin.
 
 = 2.1.19 - Oct 14, 2022 =
 * Fix: PHP 5.6 compatibility issue.
