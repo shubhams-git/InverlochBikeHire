@@ -26,7 +26,7 @@ class ReservationModel {
         $result = $this->wpdb->insert(
             $this->table_name,
             $data,
-            ['%d', '%d', '%s', '%s', '%s', '%s', '%s']
+            ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
         );
 
         if ($result) {
@@ -48,6 +48,45 @@ class ReservationModel {
         return $result > 0;
     }
 
+    // Return reservation ids by date and time range
+    public function get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time) {
+
+        $from_date = sanitize_text_field($from_date);
+        $to_date = sanitize_text_field($to_date);
+        $from_time = sanitize_text_field($from_time);
+        $to_time = sanitize_text_field($to_time);
+
+        // Prepare the SQL query
+        $query = $this->wpdb->prepare(
+            "SELECT reservation_id FROM {$this->table_name} WHERE 
+            (
+                (from_date <= %s AND to_date >= %s) OR
+                (from_date <= %s AND to_date >= %s) OR
+                (from_date <= %s AND to_date >= %s AND from_time <= %s AND to_time >= %s) OR
+                (to_date >= %s AND from_date <= %s AND to_time >= %s AND from_time <= %s) OR
+                (from_date >= %s AND from_date <= %s AND from_time >= %s AND from_time <= %s) OR
+                (to_date >= %s AND to_date <= %s AND to_time >= %s AND to_time <= %s)
+            )",
+            $from_date, $from_date,
+            $to_date, $to_date,
+            $from_date, $to_date, $from_time, $to_time,
+            $from_date, $to_date, $to_time, $from_time,
+            $from_date, $to_date, $from_time, $to_time,
+            $from_date, $to_date, $from_time, $to_time
+        );
+    
+        // Execute the query
+        $results = $this->wpdb->get_results($query);
+    
+        // Extract reservation IDs from the results
+        $reservation_ids = array();
+        foreach ($results as $result) {
+            $reservation_ids[] = $result->reservation_id;
+        }
+    
+        return $reservation_ids;
+    }    
+
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);
         $data = array_map('sanitize_text_field', $data);
@@ -56,7 +95,7 @@ class ReservationModel {
             $this->table_name,
             $data,  // data to update
             ['reservation_id' => $reservation_id],  // where clause
-            ['%d', '%d', '%s', '%s', '%s', '%s', '%s'], // data format
+            ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'], // data format
             ['%s']  // where format
         );
 

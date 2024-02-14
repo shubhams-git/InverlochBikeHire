@@ -54,6 +54,21 @@ function ibh_create_db_tables() {
         FOREIGN KEY (category_id) REFERENCES {$wpdb->prefix}ibk_category(category_id) ON DELETE CASCADE
     ) $charset_collate;";
 
+    // Reservation Table
+    $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
+        reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        customer_id MEDIUMINT(9) NOT NULL,
+        from_date DATE NOT NULL,
+        to_date DATE NOT NULL,
+        from_time VARCHAR(255) NOT NULL,
+        to_time VARCHAR(255) NOT NULL,
+        reservation_stage ENUM('provisional', 'confirmed', 'checked-out', 'checked-in') NOT NULL,
+        created_date DATETIME NOT NULL,
+        delivery_notes TEXT,
+        PRIMARY KEY  (reservation_id),
+        FOREIGN KEY (customer_id) REFERENCES {$wpdb->prefix}ibk_customer(customer_id) ON DELETE CASCADE
+    ) $charset_collate;";
+
     // Invoice Table
     $sql_invoice = "CREATE TABLE {$wpdb->prefix}ibk_invoice (
         invoice_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
@@ -62,22 +77,6 @@ function ibh_create_db_tables() {
         amount FLOAT NOT NULL,
         PRIMARY KEY  (invoice_id),
         FOREIGN KEY (reservation_id) REFERENCES {$wpdb->prefix}ibk_reservation(reservation_id) ON DELETE CASCADE
-    ) $charset_collate;";
-    
-
-    // Reservation Table
-    $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
-        reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-        customer_id MEDIUMINT(9) NOT NULL,
-        invoice_id MEDIUMINT(9),
-        from_date DATETIME NOT NULL,
-        to_date DATETIME NOT NULL,
-        reservation_stage ENUM('provisional', 'confirmed', 'checked-out', 'checked-in') NOT NULL,
-        created_date DATETIME NOT NULL,
-        delivery_notes TEXT,
-        PRIMARY KEY  (reservation_id),
-        FOREIGN KEY (customer_id) REFERENCES {$wpdb->prefix}ibk_customer(customer_id) ON DELETE CASCADE,
-        FOREIGN KEY (invoice_id) REFERENCES {$wpdb->prefix}ibk_invoice(invoice_id) ON DELETE SET NULL // Changed CASCADE to SET NULL to allow nullifying this field
     ) $charset_collate;";
     
     // Blocked Date Table
@@ -109,8 +108,8 @@ function ibh_create_db_tables() {
     dbDelta($sql_item);
     dbDelta($sql_customer);
     dbDelta($sql_price_point);
-    dbDelta($sql_invoice);
     dbDelta($sql_reservation);
+    dbDelta($sql_invoice);
     dbDelta($sql_blocked_date);
     dbDelta($sql_item_booking);
     dbDelta($sql_email);
@@ -122,12 +121,12 @@ function ibh_drop_db_tables() {
 
     $tables = [
         'item_booking',
+        'invoice',
         'reservation',
         'price_point',
         'item',
         'category',
         'customer',
-        'invoice',
         'blocked_date',
         'email',
     ];

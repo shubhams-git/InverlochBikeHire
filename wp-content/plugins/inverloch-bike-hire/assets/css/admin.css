@@ -1,0 +1,14 @@
+/* ======== Reservation-page ========= */
+.labels tr td {
+	font-weight: bold;
+    background-color: lightblue;
+}
+
+.label tr td label {
+	display: block;
+}
+
+
+[data-toggle="toggle"] {
+	display: none !important;
+}

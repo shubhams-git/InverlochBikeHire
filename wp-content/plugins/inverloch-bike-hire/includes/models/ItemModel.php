@@ -127,4 +127,22 @@ class ItemModel {
         }
         return $format;
     }
+
+    // Return all the items except for the item ids(parameter)
+    public function get_items_except_specified_ids($item_ids) {
+        if (empty($item_ids)) {
+            return $this->wpdb->get_results("SELECT * FROM {$this->table_name} WHERE status = 'available' ORDER BY category_id", OBJECT);
+        }
+    
+        $item_ids = array_map('intval', $item_ids);
+        $placeholders = implode(', ', array_fill(0, count($item_ids), '%d'));
+        $placeholders = '(' . $placeholders . ')'; // Wrap placeholders in parentheses
+    
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM {$this->table_name} WHERE item_id NOT IN {$placeholders} AND status = 'available' ORDER BY category_id",
+            $item_ids
+        );
+    
+        return $this->wpdb->get_results($query, OBJECT);
+    }
 }
