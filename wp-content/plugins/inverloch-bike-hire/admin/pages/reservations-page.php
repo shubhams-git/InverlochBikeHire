@@ -337,7 +337,7 @@ $encountered_categories = array();  // store categories
             checked = $("input[type=checkbox][name='selected_bikes[]']:checked").length;
 
             if(!checked) {
-                alert("You must check at least one checkbox.");
+                alert("You must check at least one bike.");
                 return false;
             }
         });
