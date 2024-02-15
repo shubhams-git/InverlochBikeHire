@@ -55,6 +55,7 @@ function ibh_create_db_tables() {
     ) $charset_collate;";
 
     // Reservation Table
+    // reference_number VARCHAR(50) NOT NULL,
     $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
         reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
         customer_id MEDIUMINT(9) NOT NULL,
@@ -98,6 +99,7 @@ function ibh_create_db_tables() {
     // Email Table
     $sql_email = "CREATE TABLE {$wpdb->prefix}ibk_email (
         email_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        email_type ENUM('provisional', 'confirmation') NOT NULL,
         subject VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
         PRIMARY KEY (email_id)

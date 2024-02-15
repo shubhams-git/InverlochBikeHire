@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 include_once plugin_dir_path(__FILE__) . 'models/CategoryModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/ItemModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/PricePointModel.php';
+include_once plugin_dir_path(__FILE__) . 'models/EmailModel.php';
 // Include other models as needed
 
 // Register AJAX actions for logged-in and non-logged-in users
@@ -33,6 +34,8 @@ function ibh_handle_form_submission() {
             break;
         case 'price_point': 
             handle_price_point_actions($action_type);
+        case 'email':
+            handle_email_actions($action_type);
             break;
         // Add more entities as needed
     }
@@ -71,6 +74,13 @@ function handle_price_point_actions($action_type) {
     switch ($action_type) {
         case 'update':
             update_price_points_action();
+    }
+}
+
+function handle_email_actions($action_type) {
+    switch ($action_type) {
+        case 'edit':
+            edit_email_action();
             break;
     }
 }
@@ -173,7 +183,6 @@ function delete_item_action() {
 
     wp_send_json_success(['message' => 'Item deleted successfully.']);
 }
-
 
 function add_category_action() {
     $categoryModel = new CategoryModel();
@@ -284,11 +293,28 @@ function update_price_points_action() {
     wp_send_json_success(['message' => 'Price points updated successfully.']);
 }
 
+function edit_email_action() {
+    $emailModel = new EmailModel();
+    $email_id = isset($_POST['email_id']) ? intval($_POST['email_id']) : null;
+    $check_id = $emailModel->get_email_by_id($email_id);
 
+    if (!$email_id || $check_id->email_id != $email_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent email ID.']);
+        return;
+    }
 
+    $data = [
+        'email_type' => sanitize_text_field($_POST['email_type']),
+        'subject' => sanitize_text_field($_POST['email_subject']),
+        'content' => sanitize_text_field($_POST['email_content'])
+    ];
 
+    if (!$emailModel->update($email_id, $data)) {
+        wp_send_json_error(['message' => 'Failed to update email.']);
+        return;
+    }
 
-
-
+    wp_send_json_success(['message' => 'Email updated successfully.']);
+}
 
 // Additional functions for other entities as needed
