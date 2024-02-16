@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 include_once plugin_dir_path(__DIR__) . '../includes/models/BlockedDateModel.php';
 
 $blocked_date_model = new BlockedDateModel();
+$blocked_date_model->remove_past_blocked_dates();
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_blocked_date') {

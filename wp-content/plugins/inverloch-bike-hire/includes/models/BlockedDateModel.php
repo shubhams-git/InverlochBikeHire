@@ -35,7 +35,7 @@ class BlockedDateModel {
 
     public function get_all_blocked_date() 
     {
-        return $this->wpdb->get_results("SELECT * FROM {$this->table_name}");
+        return $this->wpdb->get_results("SELECT * FROM {$this->table_name} ORDER BY date");
     }
 
     public function is_valid_blocked_date($date) {
@@ -68,6 +68,22 @@ class BlockedDateModel {
             return true;
         } else {
             return new WP_Error('db_delete_error', 'Failed to delete blocked date from the database.');
+        }
+    }
+
+    public function remove_past_blocked_dates() {
+        $currentDate = date('Y-m-d');
+        $sql = $this->wpdb->prepare(
+            "DELETE FROM {$this->wpdb->prefix}ibk_blocked_date WHERE date < %s",
+            $currentDate
+        );
+
+        $result = $this->wpdb->query($sql);
+
+        if ($result !== false) {
+            return true;
+        } else {
+            return new WP_Error('db_delete_error', 'Failed to delete blocked dates.');
         }
     }
 }
