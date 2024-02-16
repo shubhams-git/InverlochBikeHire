@@ -5,32 +5,47 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         console.log("Form submission prevented");
     
-        var formData = new FormData(this);
+        var action_type = $('#action_type').val();
+        var status = $('#status').val();
+        var check_reservations = $('#check_reservations').val();
+        
+        // If the action type is edit and status is set to unavailable and more than one reservations for the item
+        if (action_type == "edit" && status == "Unavailable" && check_reservations > 0) {
+            var confirmUpdate = prompt("Future reservations found for this item. Type 'update' to confirm changing the item to unavailable.");
+        } else {
+            var confirmUpdate = "update";
+        }
+
+        if (confirmUpdate === "update") {
+            var formData = new FormData(this);
     
-        formData.append('action', 'ibh_handle_form');
-        formData.append('_wpnonce', myAjax.nonce);
-    
-        $.ajax({
-            type: 'POST',
-            url: myAjax.ajaxurl,
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                if (response.success) {
-                    $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
-                    setTimeout(function() {
-                        window.location.href = myAjax.adminUrl + '?page=ibh_inventory'; 
-                    }, 200);
-                } else {
-                    $('#messageContainer').html('<div class="notice notice-error"><p>' + response.data.message + '</p></div>');
+            formData.append('action', 'ibh_handle_form');
+            formData.append('_wpnonce', myAjax.nonce);
+        
+            $.ajax({
+                type: 'POST',
+                url: myAjax.ajaxurl,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                        setTimeout(function() {
+                            window.location.href = myAjax.adminUrl + '?page=ibh_inventory'; 
+                        }, 200);
+                    } else {
+                        $('#messageContainer').html('<div class="notice notice-error"><p>' + response.data.message + '</p></div>');
+                    }
+                    
+                },
+                error: function(response) {
+                    $('#messageContainer').html('<div class="notice notice-error"><p>There was an error processing the request.</p></div>');
                 }
-                
-            },
-            error: function(response) {
-                $('#messageContainer').html('<div class="notice notice-error"><p>There was an error processing the request.</p></div>');
-            }
-        });
+            });
+        } else {
+            alert('Update cancelled or incorrect confirmation. No action taken.');
+        }
     });
 
     $('.delete-item').on('click', function(e) {

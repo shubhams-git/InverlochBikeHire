@@ -31,6 +31,28 @@ class ItemBookingModel {
         }
     }
 
+    // Return all reservation ids by item id
+    public function get_reservation_ids_by_item_id($item_id) {
+        $item_id = sanitize_text_field($item_id);
+
+        if (!$this->is_valid_reservation_id($item_id)) {
+            return null;
+        }
+
+        $query = $this->wpdb->prepare(
+            "SELECT reservation_id FROM {$this->table_name} WHERE item_id = %s",
+            $item_id
+        );
+
+        $results = $this->wpdb->get_results($query);
+
+        $reservation_ids = array();
+        foreach ($results as $result) {
+            $reservation_ids[] = $result->reservation_id;
+        }
+        return $reservation_ids;
+    }
+
     // Return all item ids by reservations ids
     public function get_item_ids_by_reservation_ids($reservation_ids) {
         $reservation_ids = array_map('intval', $reservation_ids);
@@ -41,12 +63,7 @@ class ItemBookingModel {
     
         $results = $this->wpdb->get_results($query);
     
-        $item_ids = array();
-        foreach ($results as $result) {
-            $item_ids[] = $result->item_id;
-        }
-    
-        return $item_ids;
+        return $results;
     }
 
     // Return the bike counts by the reservation id
@@ -65,6 +82,14 @@ class ItemBookingModel {
         } else {
             return 0;
         }
+    }
+
+    public function is_valid_reservation_id($item_id) {
+        $item_id = sanitize_text_field($item_id);
+
+        $result = $this->wpdb->get_var($this->wpdb->prepare("SELECT COUNT(*) FROM $this->table_name WHERE item_id = %d", $item_id));
+
+        return $result > 0;
     }
     
 }
