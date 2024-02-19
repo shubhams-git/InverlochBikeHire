@@ -49,42 +49,27 @@ class ReservationModel {
     }
 
     // Return reservation ids by date and time range
-    public function get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time) {
-
-        $from_date = sanitize_text_field($from_date);
-        $to_date = sanitize_text_field($to_date);
-        $from_time = sanitize_text_field($from_time);
-        $to_time = sanitize_text_field($to_time);
-
-        // Prepare the SQL query
+    public function get_reservation_ids_by_date_time_range($startDate, $endDate, $startTime, $endTime) {
+        // Sanitize input values to prevent SQL injection
+        $startDate = sanitize_text_field($startDate);
+        $endDate = sanitize_text_field($endDate);
+        $startTime = sanitize_text_field($startTime);
+        $endTime = sanitize_text_field($endTime);
+    
+        // Prepare a SQL query to fetch reservation IDs within the specified date and time range
         $query = $this->wpdb->prepare(
             "SELECT reservation_id FROM {$this->table_name} WHERE 
-            (
-                (from_date <= %s AND to_date >= %s) OR
-                (from_date <= %s AND to_date >= %s) OR
-                (from_date <= %s AND to_date >= %s AND from_time <= %s AND to_time >= %s) OR
-                (to_date >= %s AND from_date <= %s AND to_time >= %s AND from_time <= %s) OR
-                (from_date >= %s AND from_date <= %s AND from_time >= %s AND from_time <= %s) OR
-                (to_date >= %s AND to_date <= %s AND to_time >= %s AND to_time <= %s)
-            )",
-            $from_date, $from_date,
-            $to_date, $to_date,
-            $from_date, $to_date, $from_time, $to_time,
-            $from_date, $to_date, $to_time, $from_time,
-            $from_date, $to_date, $from_time, $to_time,
-            $from_date, $to_date, $from_time, $to_time
+            (from_date < %s OR (from_date = %s AND from_time < %s)) AND
+            (to_date > %s OR (to_date = %s AND to_time > %s))",
+            $endDate, $endDate, $endTime, // Checks if the reservation starts before the end of the range
+            $startDate, $startDate, $startTime  // Checks if the reservation ends after the start of the range
         );
     
-        // Execute the query
+        // Execute the query and fetch results
         $results = $this->wpdb->get_results($query);
     
-        // Extract reservation IDs from the results
-        $reservation_ids = array();
-        foreach ($results as $result) {
-            $reservation_ids[] = $result->reservation_id;
-        }
-    
-        return $reservation_ids;
+        // Extract and return reservation IDs
+        return array_map(function($result) { return $result->reservation_id; }, $results);
     }
 
     public function get_reservations_by_reservation_ids($reservation_ids) {
@@ -99,7 +84,7 @@ class ReservationModel {
 
         return $this->wpdb->get_results($query, OBJECT);
     }
-
+    
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);
         $data = array_map('sanitize_text_field', $data);
@@ -133,5 +118,20 @@ class ReservationModel {
         } else {
             return new WP_Error('db_delete_error', 'Failed to delete reservation in the database.');
         }
+    }
+
+    // Start a transaction
+    public function start_transaction() {
+        $this->wpdb->query('START TRANSACTION');
+    }
+
+    // Commit a transaction
+    public function commit_transaction() {
+        $this->wpdb->query('COMMIT');
+    }
+
+    // Rollback a transaction
+    public function rollback_transaction() {
+        $this->wpdb->query('ROLLBACK');
     }
 }

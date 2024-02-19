@@ -20,33 +20,42 @@ require_once plugin_dir_path(__DIR__) . 'includes/form-handlers.php';
  * Enqueues admin-specific scripts and styles.
  */
 function ibh_enqueue_admin_scripts_styles() {
-        wp_enqueue_style(
-            'ibh-admin-css',
-            plugins_url('/assets/css/admin.css', dirname(__FILE__)),
-            [],
-            filemtime(plugin_dir_path(dirname(__FILE__)) . '/assets/css/admin.css')
-        );
+    // Enqueue the admin CSS
+    wp_enqueue_style(
+        'ibh-admin-css',
+        plugins_url('/assets/css/admin.css', dirname(__FILE__)),
+        [],
+        filemtime(plugin_dir_path(dirname(__FILE__)) . '/assets/css/admin.css')
+    );
 
-        wp_enqueue_script('jquery-ui-dialog');
-        
-        wp_enqueue_style('wp-jquery-ui-dialog');
+    // Enqueue jQuery UI styles directly from Google's CDN for consistent UI across the admin
+    wp_enqueue_style('jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css');
 
+    // Enqueue the jQuery UI Dialog script as it's a dependency for our scripts
+    wp_enqueue_script('jquery-ui-dialog');
+    
+    // Enqueue the jQuery UI Datepicker script, which we may need for date inputs
+    wp_enqueue_script('jquery-ui-datepicker');
 
-        wp_enqueue_script(
-            'ibh-admin-js',
-            plugins_url('/assets/js/admin.js', dirname(__FILE__)),
-            ['jquery'],
-            filemtime(plugin_dir_path(dirname(__FILE__)) . '/assets/js/admin.js'),
-            true
-        );
+    // Enqueue Timepicker addon if you need time selection functionality
+    wp_enqueue_style('jquery-timepicker', '//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css');
+    wp_enqueue_script('jquery-timepicker', '//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js', array('jquery'), '1.3.5', true);
 
-        // Localize the script with new data
-        wp_localize_script('ibh-admin-js', 'myAjax', [
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'adminUrl' => admin_url('admin.php'),
-            'nonce' => wp_create_nonce('ibh_form_nonce')
-        ]);
-        
+    // Enqueue custom admin JavaScript
+    wp_enqueue_script(
+        'ibh-admin-js',
+        plugins_url('/assets/js/admin.js', dirname(__FILE__)),
+        ['jquery', 'jquery-ui-dialog', 'jquery-ui-datepicker', 'jquery-timepicker'], // Ensure jQuery and jQuery UI components are loaded as dependencies
+        filemtime(plugin_dir_path(dirname(__FILE__)) . '/assets/js/admin.js'),
+        true
+    );
+
+    // Localize the script with new data for AJAX requests
+    wp_localize_script('ibh-admin-js', 'myAjax', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'adminUrl' => admin_url('admin.php'),
+        'nonce' => wp_create_nonce('ibh_form_nonce')
+    ]);
 }
 add_action('admin_enqueue_scripts', 'ibh_enqueue_admin_scripts_styles');
 
