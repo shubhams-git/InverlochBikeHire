@@ -340,7 +340,8 @@ function updateAvailableBikesUI(data) {
         jQuery('#dynamicFormContainer').html(data.html);
         initEventListenersForDynamicContent();
     } else {
-        jQuery('#dynamicFormContainer').html('<p>No available bikes for the selected dates. Please adjust your selection.</p>');
+        var message = '<div class="notice notice-warning is-dismissible"><p><strong>No available bikes for the selected dates. Please adjust your selection or check your Inventory.</strong></p></div>';
+        jQuery('#dynamicFormContainer').html(message);
     }
 }
 
