@@ -7,6 +7,7 @@ include_once plugin_dir_path(__FILE__) . 'models/CategoryModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/ItemModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/PricePointModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/EmailModel.php';
+include_once plugin_dir_path(__FILE__) . 'models/CustomerModel.php';
 // Include other models as needed
 
 // Register AJAX actions for logged-in and non-logged-in users
@@ -36,6 +37,9 @@ function ibh_handle_form_submission() {
             handle_price_point_actions($action_type);
         case 'email':
             handle_email_actions($action_type);
+            break;
+        case 'customer':
+            handle_customer_actions($action_type);
             break;
         // Add more entities as needed
     }
@@ -81,6 +85,20 @@ function handle_email_actions($action_type) {
     switch ($action_type) {
         case 'edit':
             edit_email_action();
+            break;
+    }
+}
+
+function handle_customer_actions($action_type) {
+    switch ($action_type) {
+        case 'add':
+            add_customer_action();
+            break;
+        case 'edit':
+            edit_customer_action();
+            break;
+        case 'delete':
+            delete_customer_action();
             break;
     }
 }
@@ -315,6 +333,79 @@ function edit_email_action() {
     }
 
     wp_send_json_success(['message' => 'Email updated successfully.']);
+}
+
+function add_customer_action() {
+    $customerModel = new CustomerModel();
+    // Check if required fields are set and not empty
+    $data = [
+        'fname' => sanitize_text_field($_POST['customer_fname']),
+        'lname' => sanitize_text_field($_POST['customer_lname']),
+        'email' => sanitize_text_field($_POST['customer_email']),
+        'mobile_phone' => sanitize_text_field($_POST['customer_mobile_phone']),
+        'address' => sanitize_text_field($_POST['customer_address'])
+    ];
+
+    $insertResult = $customerModel->insert($data);
+    if (is_wp_error($insertResult)) {
+        wp_send_json_error(['message' => 'Error adding customer.']);
+    } else {
+        wp_send_json_success(['message' => 'Customer added successfully!']);
+    }
+    exit;
+}
+
+function edit_customer_action() {
+    $customerModel = new CustomerModel();
+
+    $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
+    $check_id = $customerModel->get_customer_by_id($customer_id);
+
+
+    if (!$customer_id || $check_id->customer_id != $customer_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent customer ID.']);
+        return;
+    }
+
+    $data = [
+        'fname' => sanitize_text_field($_POST['customer_fname']),
+        'lname' => sanitize_text_field($_POST['customer_lname']),
+        'email' => sanitize_text_field($_POST['customer_email']),
+        'mobile_phone' => sanitize_text_field($_POST['customer_mobile_phone']),
+        'address' => sanitize_text_field($_POST['customer_address'])
+    ];
+
+    if (!$customerModel->update($customer_id, $data)) {
+        wp_send_json_error(['message' => 'Failed to update customer.']);
+        return;
+    }
+
+    wp_send_json_success(['message' => 'Customer updated successfully.']);
+
+}
+
+function delete_customer_action() {
+    $customerModel = new CustomerModel();
+    $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
+
+    if (!$customer_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent category ID.']);
+        return;
+    }
+
+    // Check if the customer is referenced by reservation(s)
+    if ($customerModel->is_customer_referenced($customer_id)) {
+        wp_send_json_error(['message' => 'Cannot delete the customer because it is being linked with one or more reservations. Please review the Reservation(s).']);
+        return;
+    }
+
+    $deleteResult = $customerModel->delete($customer_id);
+    if (is_wp_error($deleteResult)) {
+        wp_send_json_error(['message' => 'Failed to delete customer.']);
+    } else {
+        wp_send_json_success(['message' => 'Customer deleted successfully.']);
+    }
+    exit;
 }
 
 // Additional functions for other entities as needed
