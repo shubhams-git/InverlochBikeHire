@@ -71,8 +71,20 @@ class ReservationModel {
         // Extract and return reservation IDs
         return array_map(function($result) { return $result->reservation_id; }, $results);
     }
-    
 
+    public function get_reservations_by_reservation_ids($reservation_ids) {
+        $reservation_ids = array_map("intval", $reservation_ids);
+        $placeholders = implode(', ', array_fill(0, count($reservation_ids), '%d'));
+        $placeholders = '(' . $placeholders . ')';
+
+        $query = $this->wpdb->prepare(
+            "SELECT * FROM {$this->table_name} WHERE reservation_id IN {$placeholders} ORDER BY from_date",
+            $reservation_ids
+        );
+
+        return $this->wpdb->get_results($query, OBJECT);
+    }
+    
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);
         $data = array_map('sanitize_text_field', $data);

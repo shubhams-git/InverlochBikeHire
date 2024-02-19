@@ -10,6 +10,7 @@ include_once plugin_dir_path(__FILE__) . 'models/ItemBookingModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/ItemModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/CategoryModel.php';
 include_once plugin_dir_path(__FILE__) . 'models/PricePointModel.php';
+include_once plugin_dir_path(__FILE__) . 'models/EmailModel.php';
 
 // Include other models as needed
 
@@ -38,6 +39,11 @@ function ibh_handle_form_submission() {
             break;
         case 'price_point': 
             handle_price_point_actions($action_type);
+        case 'email':
+            handle_email_actions($action_type);
+            break;
+        case 'customer':
+            handle_customer_actions($action_type);
             break;
         case 'reservation': 
             handle_reservation_actions($action_type);
@@ -92,6 +98,27 @@ function handle_price_point_actions($action_type) {
     switch ($action_type) {
         case 'update':
             update_price_points_action();
+    }
+}
+
+function handle_email_actions($action_type) {
+    switch ($action_type) {
+        case 'edit':
+            edit_email_action();
+            break;
+    }
+}
+
+function handle_customer_actions($action_type) {
+    switch ($action_type) {
+        case 'add':
+            add_customer_action();
+            break;
+        case 'edit':
+            edit_customer_action();
+            break;
+        case 'delete':
+            delete_customer_action();
             break;
     }
 }
@@ -208,7 +235,6 @@ function delete_item_action() {
     wp_send_json_success(['message' => 'Item deleted successfully.']);
 }
 
-
 function add_category_action() {
     $categoryModel = new CategoryModel();
     $category_name = isset($_POST['category_name']) ? sanitize_text_field($_POST['category_name']) : '';
@@ -318,6 +344,101 @@ function update_price_points_action() {
     wp_send_json_success(['message' => 'Price points updated successfully.']);
 }
 
+function edit_email_action() {
+    $emailModel = new EmailModel();
+    $email_id = isset($_POST['email_id']) ? intval($_POST['email_id']) : null;
+    $check_id = $emailModel->get_email_by_id($email_id);
+
+    if (!$email_id || $check_id->email_id != $email_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent email ID.']);
+        return;
+    }
+
+    $data = [
+        'email_type' => sanitize_text_field($_POST['email_type']),
+        'subject' => sanitize_text_field($_POST['email_subject']),
+        'content' => sanitize_text_field($_POST['email_content'])
+    ];
+
+    if (!$emailModel->update($email_id, $data)) {
+        wp_send_json_error(['message' => 'Failed to update email.']);
+        return;
+    }
+
+    wp_send_json_success(['message' => 'Email updated successfully.']);
+}
+
+function add_customer_action() {
+    $customerModel = new CustomerModel();
+    // Check if required fields are set and not empty
+    $data = [
+        'fname' => sanitize_text_field($_POST['customer_fname']),
+        'lname' => sanitize_text_field($_POST['customer_lname']),
+        'email' => sanitize_text_field($_POST['customer_email']),
+        'mobile_phone' => sanitize_text_field($_POST['customer_mobile_phone']),
+        'address' => sanitize_text_field($_POST['customer_address'])
+    ];
+
+    $insertResult = $customerModel->insert($data);
+    if (is_wp_error($insertResult)) {
+        wp_send_json_error(['message' => 'Error adding customer.']);
+    } else {
+        wp_send_json_success(['message' => 'Customer added successfully!']);
+    }
+    exit;
+}
+
+function edit_customer_action() {
+    $customerModel = new CustomerModel();
+
+    $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
+    $check_id = $customerModel->get_customer_by_id($customer_id);
+
+    if (!$customer_id || $check_id->customer_id != $customer_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent customer ID.']);
+        return;
+    }
+
+    $data = [
+        'fname' => sanitize_text_field($_POST['customer_fname']),
+        'lname' => sanitize_text_field($_POST['customer_lname']),
+        'email' => sanitize_text_field($_POST['customer_email']),
+        'mobile_phone' => sanitize_text_field($_POST['customer_mobile_phone']),
+        'address' => sanitize_text_field($_POST['customer_address'])
+    ];
+
+    if (!$customerModel->update($customer_id, $data)) {
+        wp_send_json_error(['message' => 'Failed to update customer.']);
+        return;
+    }
+
+    wp_send_json_success(['message' => 'Customer updated successfully.']);
+
+}
+
+function delete_customer_action() {
+    $customerModel = new CustomerModel();
+    $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
+
+    if (!$customer_id) {
+        wp_send_json_error(['message' => 'Invalid or non-existent category ID.']);
+        return;
+    }
+
+    // Check if the customer is referenced by reservation(s)
+    if ($customerModel->is_customer_referenced($customer_id)) {
+        wp_send_json_error(['message' => 'Cannot delete the customer because it is being linked with one or more reservations. Please review the Reservation(s).']);
+        return;
+    }
+
+    $deleteResult = $customerModel->delete($customer_id);
+    if (is_wp_error($deleteResult)) {
+        wp_send_json_error(['message' => 'Failed to delete customer.']);
+    } else {
+        wp_send_json_success(['message' => 'Customer deleted successfully.']);
+    }
+    exit;
+}
 
 function fetch_reservations_action() {
 
@@ -331,7 +452,6 @@ function fetch_reservations_action() {
         wp_send_json_error(['message' => 'Missing required fields for fetching reservations.']);
         return;
     }
-
 
     $reservation_model = new ReservationModel();
     $booked_reservation_ids = $reservation_model->get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time);
@@ -570,6 +690,5 @@ function delete_blocked_date_action() {
         wp_send_json_success(['message' => 'Blocked date deleted successfully.']);
     }
 }
-
 
 // Additional functions for other entities as needed

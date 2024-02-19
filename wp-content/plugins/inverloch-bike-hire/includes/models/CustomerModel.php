@@ -104,4 +104,15 @@ class CustomerModel {
         }
     }
 
+    // Method to check if the customer is being referenced by reservations
+    public function is_customer_referenced($customer_id) {
+        $customer_id = intval($customer_id);
+        $customer_count = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->wpdb->prefix}ibk_reservation WHERE customer_id = %d",
+            $customer_id
+        ));
+
+        return ($customer_count > 0) ? true : false;
+    }
+
 }

@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
 include_once plugin_dir_path(__DIR__) . '../includes/models/BlockedDateModel.php';
 
 $blocked_date_model = new BlockedDateModel();
+$blocked_date_model->remove_past_blocked_dates();
 
 // Retrieve all blocked dates
 $blocked_dates = $blocked_date_model->get_all_blocked_date();

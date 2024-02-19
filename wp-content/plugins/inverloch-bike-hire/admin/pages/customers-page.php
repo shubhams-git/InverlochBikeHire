@@ -8,106 +8,56 @@ if (!defined('ABSPATH')) {
 include_once plugin_dir_path(__DIR__) . '../includes/models/CustomerModel.php';
 
 $customer_model = new CustomerModel();
-
-// Check if the form is submitted and process the data
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'Add') {
-
-    check_admin_referer('add_new_customer', 'add_new_customer_nonce');
-
-    // Get the submitted data
-    $fname = sanitize_text_field($_POST['customer_fname']);
-    $lname = sanitize_text_field($_POST['customer_lname']);
-    $email = sanitize_email($_POST['customer_email']);
-    $pnumber = sanitize_text_field($_POST['customer_phone_number']);
-    $address = sanitize_text_field($_POST['customer_address']);
-
-    // Insert the data using the CustomerModel
-    $customer_id = $customer_model->insert(array(
-        'fname' => $fname,
-        'lname' => $lname,
-        'email' => $email,
-        'mobile_phone' => $pnumber,
-        'address' => $address 
-    ));
-
-    // If INSERT succeed
-    if (!is_wp_error($customer_id)) {
-        // Display a success message
-        ?>
-        <div class="updated notice">
-            <p>Customer added successfully!</p>
-        </div>
-        <?php
-    } else {
-        // Display an error message
-        ?>
-        <div class="error notice">
-            <p><?php echo esc_html($customer_id->get_error_message()); ?></p>
-        </div>
-        <?php
-    }
-}
-
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && !empty($_GET['customers'])) {
-    // Verify nonce for security
-    if (wp_verify_nonce($_GET['_wpnonce'], 'delete-customers-action')) 
-    {
-        $deletion = $customer_model->delete($_GET['customers']);
-        if (is_wp_error($deletion)) {
-            echo '<div class="error"><p>Error deleting customer: ' . $deletion->get_error_message() . '</p></div>';
-        } else {
-            echo '<div class="updated"><p>Customer deleted successfully!</p></div>';
-        }
-        ?>
-        <script>
-            // Modify url to the page only after deleting
-            window.history.replaceState({}, document.title, window.location.href.split('&')[0]);
-        </script>
-        <?php
-    }
-}
  
 // Retrieve customer data from your custom table
+$edit_customer_id = isset($_GET['edit']) ? intval($_GET['edit']) : null;
+$customer_to_edit = $edit_customer_id ? $customer_model->get_customer_by_id($edit_customer_id) : null;
 $customers_data = $customer_model->get_all_customers();
 
-// Display the form and table
 ?>
 <div class="wrap">
-    <h2>Add New Customer</h2>
-
-    <form method="post" action="">
-        <?php wp_nonce_field('add_new_customer', 'add_new_customer_nonce'); ?>
-        <input type="hidden" name="action" value="Add">
-        <input type="hidden" name="customer_id" id="customer_id" value="<?php echo esc_html($customer_info['id']); ?>">
-
+    <h1><?php echo $edit_customer_id ? 'Edit Customer' : 'Add New Customer' ?></h1>
+    <form method="post" id="customer">
+        <input type="hidden" id="entity" name="entity" value="customer">
+        <input type="hidden" id="action_type" name="action_type" value="<?php echo $edit_customer_id ? 'edit' : 'add'; ?>">
+        <?php if ($edit_customer_id): ?>
+            <input type="hidden" name="customer_id" value="<?php echo esc_attr($edit_customer_id); ?>">
+        <?php endif; ?>
+        <div id="messageContainer"></div>
         <table class="form-table">
             <tr>
                 <th scope="row"><label for="customer_fname">First Name*</label></th>
-                <td><input type="text" id="customer_fname" name="customer_fname" required class="regular-text"></td>
+                <td><input type="text" id="customer_fname" name="customer_fname" required class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->fname : ''); ?>"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="customer_lname">Last Name*</label></th>
-                <td><input type="text" id="customer_lname" name="customer_lname" required class="regular-text"></td>
+                <td><input type="text" id="customer_lname" name="customer_lname" required class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->lname : ''); ?>"></td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="customer_mobile_phone">Mobile Phone*</label></th>
+                <td><input type="text" id="customer_mobile_phone" name="customer_mobile_phone" required class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->mobile_phone : ''); ?>"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="customer_email">Email Address</label></th>
-                <td><input type="email" id="customer_email" name="customer_email" class="regular-text"></td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="customer_phone_number">Phone Number*</label></th>
-                <td><input type="text" id="customer_phone_number" name="customer_phone_number" required class="regular-text"></td>
+                <td><input type="email" id="customer_email" name="customer_email" class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->email : ''); ?>"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="customer_address">Address</label></th>
-                <td><input type="text" id="customer_address" name="customer_address" class="regular-text"></td>
+                <td><input type="text" id="customer_address" name="customer_address" class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->address : ''); ?>"></td>
             </tr>
             <tr>
-                <td><input type="submit" name="submit_customer" class="button button-primary" value="Add Customer"></td>
+                <td>
+                    <?php submit_button($edit_customer_id ? 'Update Customer' : 'Add Customer', 'primary', 'submit_customer', false); ?>
+                    <?php if ($edit_customer_id): ?>
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_customers')); ?>" class="button button-secondary">Back</a>
+                    <?php endif; ?>
+                </td>
             </tr>
         </table>
     </form>
 </div>
 
+<?php if (!$edit_customer_id): ?>
 <div class="wrap">
     <h2>Customer Data</h2>
     <table class="wp-list-table widefat fixed striped">
@@ -115,8 +65,8 @@ $customers_data = $customer_model->get_all_customers();
             <tr>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
+                <th>Email Address</th>
+                <th>Mobile Phone</th>
                 <th>Address</th>
                 <th>Action</th>
             </tr>
@@ -130,8 +80,8 @@ $customers_data = $customer_model->get_all_customers();
                     <td><?php echo esc_html($customer->mobile_phone); ?></td>
                     <td><?php echo esc_html($customer->address); ?></td>
                     <td>
-                        <a href="" class="edit-customers button button-primary">Edit</a>
-                        <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=ibh_customers&action=delete&customers=' . $customer->customer_id), 'delete-customers-action')); ?>" class="delete-customers button button-secondary">Delete</a>
+                        <a href="?page=ibh_customers&edit=<?php echo $customer->customer_id; ?>" class="button button-primary">Edit</a>
+                        <a href="?page=ibh_customers" class="button button-secondary delete-customer" data-customer-id="<?php echo $customer->customer_id; ?>">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -141,13 +91,4 @@ $customers_data = $customer_model->get_all_customers();
         </tbody>
     </table>
 </div>
-
-<script>
-    jQuery(document).ready(function($) {
-        $('.delete-customers').on('click', function(e) {
-            if (!confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
-                e.preventDefault();
-            }
-        });
-    });
-</script>
+<?php endif; ?>
