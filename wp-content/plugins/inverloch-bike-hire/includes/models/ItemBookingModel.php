@@ -34,9 +34,17 @@ class ItemBookingModel {
     // Return all item ids by reservations ids
     public function get_item_ids_by_reservation_ids($reservation_ids) {
         $reservation_ids = array_map('intval', $reservation_ids);
+        
+        // Check if the array is empty to avoid SQL syntax error
+        if (empty($reservation_ids)) {
+            // Return an empty array or handle this scenario as needed
+            return [];
+        }
     
+        // Now $reservation_ids is guaranteed to not be empty
         $query = $this->wpdb->prepare(
-            "SELECT item_id FROM {$this->table_name} WHERE reservation_id IN (" . implode(',', $reservation_ids) . ")"
+            "SELECT item_id FROM {$this->table_name} WHERE reservation_id IN (" . implode(',', array_fill(0, count($reservation_ids), '%d')) . ")",
+            $reservation_ids
         );
     
         $results = $this->wpdb->get_results($query);
@@ -48,6 +56,7 @@ class ItemBookingModel {
     
         return $item_ids;
     }
+    
 
     // Return the bike counts by the reservation id
     public function get_bike_counts_by_reservation_id($reservation_id) {
