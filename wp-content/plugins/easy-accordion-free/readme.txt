@@ -3,7 +3,7 @@ Contributors: shapedplugin, khalilu, rubel_miah, shamimmiashuhagh
 Tags: accordion, accordions, accordion faq, vertical accordion, faq, faqs, faq widget, accordion widget, accordion menu, wordpress faq plugin, easy accordion, premium accordion, bootstrap accordion, horizontal accordion, responsive accordion, accordion jquery, css3 accordion, accordion shortcode, collapsible content, toggle, toggle accordion, wordpress accordion plugin, wordpress accordion, bootstrap collapse, post accordion, post faq, custom post accordion, accordion grid, accordion bar, product faq, woocommerce product accordion, woocommerce accordion, wordpress post accordion, content hide, hidden content, expand content
 Requires at least: 4.7
 Tested up to: 6.4.2
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -262,6 +262,13 @@ Thank you!
 
 
 == Changelog ==
+
+= 2.3.4 - Feb 15, 2024 =
+* New: A hook 'sp_easy_accordion_ui_permission' was added to provide plugin panel access to the editor or other positions.
+* New: A hook 'sp_easy_accordion_title_allowed_tags' was added to modify allowed tags in the accordion item title.
+* New: A hook 'sp_easy_accordion_desc_allowed_tags' was added to modify allowed tags in the accordion item content.
+* Improved: The plugin security has been improved.
+* Fix: Some PHPCS-related warnings.
 
 = 2.3.3 - Jan 18, 2024 =
 * Fix: PHP version 5.6.40 compatibility issue.
