@@ -95,6 +95,16 @@ class ReservationModel {
         return $this->wpdb->get_results($query);
     }
 
+    public function get_reservation_detail_by_id($reservation_id) {
+        $query = $this->wpdb->prepare("
+            SELECT r.*, c.fname, c.lname, c.mobile_phone
+            FROM {$this->table_name} r
+            INNER JOIN {$this->wpdb->prefix}ibk_customer c ON r.customer_id = c.customer_id
+            WHERE r.reservation_id = %d", $reservation_id);
+    
+        return $this->wpdb->get_row($query);
+    }
+
     
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);

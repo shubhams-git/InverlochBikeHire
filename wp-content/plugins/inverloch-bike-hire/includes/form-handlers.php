@@ -132,7 +132,10 @@ function handle_reservation_actions($action_type){
         case 'add_new_reservation':
             handle_add_new_reservation();
             break;
-            
+    
+        case 'update_reservation':
+            handle_edit_reservation_update();
+            break;
     }
 }
 
@@ -442,6 +445,15 @@ function delete_customer_action() {
 
 function fetch_reservations_action() {
 
+    $is_edit = isset($_POST['is_edit']) ? (bool)$_POST['is_edit'] : false;
+    $reservation_id = isset($_POST['reservation_id']) ? intval($_POST['reservation_id']) : 0;
+
+    // If it's an edit request, fetch existing reservation details and booked items
+    if ($is_edit && $reservation_id > 0) {
+        handle_edit_reservation_fetch($reservation_id);
+        return; // Stop execution to avoid fetching available bikes as for a new reservation
+    }
+
     // Assuming $_POST data includes 'from_date', 'to_date', 'from_time', and 'to_time'
     $from_date = sanitize_text_field($_POST['reservation_fromdate'] ?? '');
     $to_date = sanitize_text_field($_POST['reservation_todate'] ?? '');
@@ -591,6 +603,156 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
     return $html_content;
 }
 
+function generate_edit_reservation_form_html($reservation_details, $bookedItems){
+    
+    $reservation_model = new ReservationModel();
+    $booked_reservation_ids = $reservation_model->get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time);
+
+    // Fetch available bikes excluding those booked in the given time range
+    $item_booking_model = new ItemBookingModel();
+    $booked_bike_ids = $item_booking_model->get_item_ids_by_reservation_ids($booked_reservation_ids);
+
+    $item_model = new ItemModel();
+    $available_bikes = $item_model->get_items_except_specified_ids($booked_bike_ids);
+    
+    if (empty($available_bikes)) {
+        wp_send_json_success(['message' => 'No available bikes found for the specified time range.', 'html' => '']);
+        return;
+    }
+    
+    // Fetch categories for available bikes
+    $categoryModel = new CategoryModel();
+    $categories = $categoryModel->get_all_categories();
+    
+    // Fetch customer data
+    $customerModel = new CustomerModel();
+    $customer_data = $customerModel->get_all_customers();
+
+    $selected_customer_id = $reservation_details->customer_id;
+    $bookedItemIds = array_map(function($item) { return $item['item_id']; }, $bookedItems);
+    
+    ob_start(); ?>
+        <form id="update-reservation" >
+        <h2>Edit Reservation</h2>
+        <input type="hidden" name="reservation_id" value="<?php echo esc_attr($reservation_details->reservation_id); ?>">
+
+        <!-- Reservation Dates and Times -->
+        <div class="inside">
+            <table class="form-table">
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="reservation_fromdate">From Date</label></th>
+                        <td><input type="text" id="reservation_fromdate" name="reservation_fromdate" class="regular-text" value="<?php echo esc_attr($reservation_details->from_date); ?>"></td>
+                        <th scope="row"><label for="reservation_fromtime">From Time</label></th>
+                        <td><input type="text" id="reservation_fromtime" name="reservation_fromtime" class="regular-text" value="<?php echo esc_attr($reservation_details->from_time); ?>"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="reservation_todate">To Date</label></th>
+                        <td><input type="text" id="reservation_todate" name="reservation_todate" class="regular-text" value="<?php echo esc_attr($reservation_details->to_date); ?>"></td>
+                        <th scope="row"><label for="reservation_totime">To Time</label></th>
+                        <td><input type="text" id="reservation_totime" name="reservation_totime" class="regular-text" value="<?php echo esc_attr($reservation_details->to_time); ?>"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="postbox">
+                <div class="inside">
+                    <h3 style="text-align: center;">Bike Bookings</h3>
+                    <table class="wp-list-table widefat fixed striped">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Image</th>
+                                <th>ID Number</th>
+                                <th>Name</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                    <!-- Categories and Bikes -->
+                    <?php foreach ($categories as $category): ?>
+                        <tbody class="labels">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="toggle-category-label" id="label-category-<?php echo esc_attr($category->category_id); ?>">
+                                        <?php echo esc_html($category->category_name); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="bikes hide" id="bikes-category-<?php echo esc_attr($category->category_id); ?>">
+                            <?php 
+                            foreach ($available_bikes as $bike): 
+                                if ($bike->category_id === $category->category_id): 
+                                    $hasBikes = true;
+                                    // Check if this bike is in the booked items
+                                    $isChecked = in_array($bike->item_id, $bookedItemIds) ? 'checked' : ''; ?>
+                                    <tr class="bike">
+                                        <td>
+                                            <input type="checkbox" id="bike-<?php echo esc_attr($bike->item_id); ?>" name="selected_bikes[]" value="<?php echo esc_attr($bike->item_id); ?>" <?php echo $isChecked; ?>>
+                                        </td>
+                                        <td>
+                                            <img width="60" height="60" src="<?php echo esc_url($bike->image_url); ?>" alt="Bike Image">
+                                        </td>
+                                        <td><?php echo esc_html($bike->id_number); ?></td>
+                                        <td><?php echo esc_html($bike->name); ?></td>
+                                        <td><?php echo esc_html($bike->size); ?></td>
+                                    </tr>
+
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </tbody>
+                    <?php endforeach; ?>
+                    </table>
+                </div>
+            </div>
+            <!-- Additional Information -->
+        <div class="postbox">
+            <div class="inside">
+                <h3 style="text-align: center;">Additional Information</h3>
+                <table class="form-table">
+                    <!-- Customer Selection -->
+                    <tr>
+                        <th scope="row"><label for="reservation_customer">Customer</label></th>
+                        <td colspan="3">
+                            <select name="reservation_customer" id="reservation_customer" required>
+                                <option value="" disabled>Please select a customer</option>
+                                <?php foreach ($customer_data as $customer): ?>
+                                    <option value="<?php echo esc_attr($customer->customer_id); ?>" <?php echo ($customer->customer_id == $selected_customer_id) ? 'selected' : ''; ?>>
+                                        <?php echo esc_html($customer->fname . " " . $customer->lname . " (" . $customer->mobile_phone .")"); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <!-- Notes -->
+                    <tr>
+                        <th scope="row"><label for="reservation_notes">Notes</label></th>
+                        <td colspan="3">
+                            <textarea id="reservation_notes" name="reservation_notes" rows="4" class="large-text"><?php echo esc_textarea($reservation_details->notes); ?></textarea>
+                        </td>
+                    </tr>
+                    <!-- Stage Selection -->
+                    <tr>
+                        <th scope="row"><label for="reservation_stage">Stage</label></th>
+                        <td colspan="3">
+                            <select name="reservation_stage" id="reservation_stage">
+                                <!-- Populate options dynamically based on your system's stages -->
+                                <option value="provisional" <?php echo ($reservation_details->stage == 'provisional') ? 'selected' : ''; ?>>Provisional</option>
+                                <option value="confirmed" <?php echo ($reservation_details->stage == 'confirmed') ? 'selected' : ''; ?>>Confirmed</option>
+                                <!-- Add more stages as needed -->
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <input type="submit" class="button button-primary"  value="Save Changes">
+    </form>
+    <?php
+    $html_content = ob_get_clean();
+    return $html_content;
+}
+
 function handle_add_new_reservation() {
 
     // Instantiate necessary models
@@ -650,6 +812,95 @@ function handle_add_new_reservation() {
         wp_send_json_error(['message' => $e->getMessage()]);
     }
 }
+function handle_edit_reservation_fetch($reservation_id) {
+
+
+    $reservationModel = new ReservationModel();
+    $itemBookingModel = new ItemBookingModel(); 
+    $itemModel = new ItemModel();
+
+    // Retrieve the reservation details
+    $reservation_details = $reservationModel->get_reservation_detail_by_id($reservation_id);
+
+    if (!$reservation_details) {
+        wp_send_json_error(['message' => 'Reservation not found.']);
+        return; // Make sure to return to stop the execution here
+    }
+
+
+    $blockeddate_model = new BlockedDateModel();
+    $blockeddate_data = $blockeddate_model->get_all_blocked_date();
+    // Fetch booked items
+    $bookedItems = get_dynamic_content_for_reservation($reservation_id);
+
+    // Generate HTML for edit form
+    $html = generate_edit_reservation_form_html($reservation_details, $bookedItems);
+
+    wp_send_json_success(['html' => $html, 'blockedDates' => $blockeddate_data]);
+}
+
+function get_dynamic_content_for_reservation($reservation_id) {
+    $itemBookingModel = new ItemBookingModel(); 
+    $itemModel = new ItemModel();
+
+    // Retrieve item IDs booked under this reservation
+    $booked_items_ids = $itemBookingModel->get_item_ids_by_reservation_ids([$reservation_id]);
+    $booked_items_details = [];
+
+    // Retrieve details for each booked item
+    foreach ($booked_items_ids as $item_id) {
+        $item = $itemModel->get_item_by_id($item_id);
+        if ($item) {
+            $booked_items_details[] = [
+                'item_id' => $item_id,
+                'id_number' => $item->id_number,
+                'name' => $item->name,
+                'image_url' => $item->image_url // Assuming you have an image URL for each item
+            ];
+        }
+    }
+    return $booked_items_details;
+}
+
+function handle_edit_reservation_update() {
+    $reservationModel = new ReservationModel();
+    $itemBookingModel = new ItemBookingModel(); 
+    $reservation_id = intval($_POST['reservation_id']);
+    $updatedDetails = [
+        // Populate with sanitized $_POST data
+        'from_date' => sanitize_text_field($_POST['from_date']),
+        // Add other fields as needed
+    ];
+    $newItemIds = array_map('intval', $_POST['selected_bikes']); // Assuming 'selected_bikes' is an array of item IDs
+
+    // Begin transaction
+    $reservationModel->start_transaction();
+
+    try {
+        // Update reservation details
+        $reservationModel->update($reservation_id, $updatedDetails);
+
+        // Clear existing item bookings
+        $itemBookingModel->clear_bookings_for_reservation($reservation_id);
+
+        // Add new item bookings
+        foreach ($newItemIds as $itemId) {
+            $itemBookingModel->insert(['reservation_id' => $reservation_id, 'item_id' => $itemId]);
+        }
+
+        // Commit transaction
+        $reservationModel->commit_transaction();
+
+        wp_send_json_success(['message' => 'Reservation updated successfully.']);
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $reservationModel->rollback_transaction();
+        wp_send_json_error(['message' => 'Failed to update reservation. Error: ' . $e->getMessage()]);
+    }
+}
+
+
+
 
 function add_blocked_date_action() {
     // Instantiate the BlockedDateModel
@@ -700,5 +951,6 @@ function delete_blocked_date_action() {
         wp_send_json_success(['message' => 'Blocked date deleted successfully.']);
     }
 }
+
 
 // Additional functions for other entities as needed

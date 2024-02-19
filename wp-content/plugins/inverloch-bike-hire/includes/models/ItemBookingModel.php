@@ -76,6 +76,10 @@ class ItemBookingModel {
     
         return $item_ids;
     }
+
+    public function clear_bookings_for_reservation($reservation_id) {
+        return $this->wpdb->delete($this->table_name, ['reservation_id' => $reservation_id], ['%d']);
+    }
     
 
     // Return the bike counts by the reservation id

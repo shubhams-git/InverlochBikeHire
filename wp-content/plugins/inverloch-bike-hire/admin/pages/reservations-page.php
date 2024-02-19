@@ -37,7 +37,6 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
         <div class="inside">
             <form id="fetch_reservations" class="form-table">
                 <h2>Add New Reservation</h2>
-                <!-- Use WordPress admin styles for form fields -->
                 <table class="form-table">
                     <tbody>
                         <tr>
@@ -62,6 +61,7 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
             </form>
         </div>
     </div>
+    <div id="messageContainer"></div>
     <!-- Placeholder for dynamically injected form -->
     <div id="dynamicFormContainer"></div>
     <button id="go-back-to-reservation-list" class="button" style="display: none; margin-top: 20px;">Go Back</button>
@@ -80,7 +80,7 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
             <tbody>
                 <?php foreach ($detailed_reservations as $reservation): 
                     $customer_display = "{$reservation->fname} {$reservation->lname} ({$reservation->mobile_phone})";
-                    $time_slots = "From: {$reservation->from_date} {$reservation->from_time}<br>To: {$reservation->to_date} {$reservation->to_time}";
+                    $time_slots = "From: {$reservation->from_time} {$reservation->from_date} <br>To: {$reservation->to_time} {$reservation->to_date}";
                     
                     // Fetch booked items for this reservation
                     $booked_items_ids = $item_booking_model->get_item_ids_by_reservation_ids([$reservation->reservation_id]);
@@ -91,16 +91,14 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
                     }
                     $items_display = implode('<br>', $items_booked);
                     ?>
-
-                    <!-- Assuming this is part of a table row -->
                     <tr>
                         <td><?= htmlspecialchars($customer_display); ?></td>
                         <td><?= $time_slots; // Directly echo because it contains HTML ?></td>
                         <td><?= $items_display; // Directly echo because it contains HTML ?></td>
                         <td><?= esc_html($reservation->reservation_stage); ?></td>
                         <td>
-                            <a href="#" class="button action">Edit</a>
-                            <a href="#" class="button action">Delete</a>
+                            <a href="" class="button action edit-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Edit</a>
+                            <a href="" class="button action">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -108,8 +106,6 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
         </table>
     </div>
 </div>
-
-
 
 <script>
     jQuery(document).ready(function($){
@@ -178,6 +174,5 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
             $('#reservation-list-view').show();
             $(this).hide();
         });
-        
     });
 </script>

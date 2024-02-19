@@ -356,7 +356,6 @@ jQuery(document).ready(function($) {
         formData.append('to_date', $('#reservation_todate').val());
         formData.append('from_time', $('#reservation_fromtime').val());
         formData.append('to_time', $('#reservation_totime').val());
-
         // Append selected bikes to formData
         $('input[name="selected_bikes[]"]:checked').each(function() {
             formData.append('selected_bikes[]', $(this).val());
@@ -371,7 +370,10 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
-                    // Reset form or redirect as needed
+                    setTimeout(function() {
+                        $('#messageContainer').html('');
+                        window.location.reload(); 
+                    }, 1000);
                 } else {
                     $('#messageContainer').html('<div class="notice notice-error"><p>' + response.data.message + '</p></div>');
                 }
@@ -382,6 +384,83 @@ jQuery(document).ready(function($) {
         });
     });
 
+    $('.edit-reservation-button').on('click', function(e) {
+        e.preventDefault(); 
+        var reservationId = $(this).data('reservation-id'); 
+        var formData = new FormData();
+        formData.append('action', 'ibh_handle_form');
+        formData.append('entity', 'reservation');
+        formData.append('action_type', 'fetch_reservations');
+        formData.append('_wpnonce', myAjax.nonce);
+        formData.append('reservation_id', reservationId);
+        formData.append('is_edit', true);
+    
+        $.ajax({
+            url: myAjax.ajaxurl, 
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    console.log(response.data);
+                    // Directly inject the received HTML into the dynamic form container
+                    $('#dynamicFormContainer').html(response.data.html);
+                    // Hide or adjust visibility of other elements as necessary
+                    $('#reservation-form-container').hide();
+                    $('#reservation-list-view').hide();
+                    $('#dynamicFormContainer').show(); // Ensure the container is visible
+                    // Re-initialize any dynamic elements within the form
+                    var testBlockedDates = [{date: '2024-02-21', is_blocked: '1'}]
+                    initializeDatepickersWithBlocked(response.data.blockedDates);
+                    DropDownForReservation();
+                } else {
+                    alert('Could not load reservation details.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    });
+    
+    $(document).on('submit', '#update-reservation', function(e) {
+        e.preventDefault(); 
+        var formData = new FormData(this); 
+        formData.append('action', 'ibh_handle_form');
+        formData.append('entity', 'reservation');
+        formData.append('action_type', 'update_reservation');
+        formData.append('_wpnonce', myAjax.nonce);
+        console.log(formData);
+            
+        $.ajax({
+            url: myAjax.ajaxurl, 
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    console.log(response.data);
+                    // Directly inject the received HTML into the dynamic form container
+                    $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                    $('#reservation-form-container').hide();
+                    $('#reservation-list-view').show();
+                    $('#dynamicFormContainer').hide(); 
+                    setTimeout(()=>{
+                        $('#messageContainer').hide();
+                        window.location.reload();
+                    }, 1000)
+                } else {
+                    alert('Could not load reservation details.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    });
+    
     $('form#blocked-date').submit(function(e) {
         e.preventDefault(); 
 
@@ -456,7 +535,7 @@ jQuery(document).ready(function($) {
 function updateAvailableBikesUI(data) {
     if (data && data.html) {
         jQuery('#dynamicFormContainer').html(data.html);
-        initEventListenersForDynamicContent();
+        DropDownForReservation();
     } else {
         var message = '<div class="notice notice-warning is-dismissible"><p><strong>No available bikes for the selected dates. Please adjust your selection or check your Inventory.</strong></p></div>';
         jQuery('#dynamicFormContainer').html(message);
@@ -464,7 +543,7 @@ function updateAvailableBikesUI(data) {
 }
 
 
-function initEventListenersForDynamicContent() {
+function DropDownForReservation() {
     // Delegate the click event from the #dynamicFormContainer static parent
     jQuery('#dynamicFormContainer').on('click', '.toggle-category-label', function() {
         // The associated bikes are within the next .bikes tbody relative to the clicked label
@@ -473,3 +552,113 @@ function initEventListenersForDynamicContent() {
 
     // Other event listeners as needed
 }
+
+function populateEditReservations(data) {
+    const { reservation_details } = data;
+
+    // Populate static fields
+    jQuery('#reservation_from_date').val(reservation_details.from_date);
+    jQuery('#reservation_from_time').val(reservation_details.from_time);
+    jQuery('#reservation_to_date').val(reservation_details.to_date);
+    jQuery('#reservation_to_time').val(reservation_details.to_time);
+    jQuery('#reservation_customer').val(reservation_details.fname);
+    jQuery('#reservation_notes').val(reservation_details.delivery_notes);
+    jQuery('#reservation_stage').val(reservation_details.reservation_stage);
+
+}
+
+function loadEditReservationContent(data) {
+    
+    const {bookedItems} = data;
+
+    // Clear previous dynamic content
+    jQuery('#dynamicFormContainer').empty();
+
+    // If there are booked items, dynamically generate HTML for each
+    if (bookedItems.length > 0) {
+        let itemsHtml = bookedItems.map(item => `
+            <div class="booked-item">
+                <label>
+                    <input type="checkbox" name="selected_bikes[]" value="${item.item_id}" checked>
+                    ${item.id_number} - ${item.name}
+                </label>
+            </div>
+        `).join('');
+
+        // Append the generated HTML to your dynamic form container
+        jQuery('#dynamicFormContainer').html(itemsHtml);
+    } else {
+        // If no items were booked, you might want to show a message or handle accordingly
+        jQuery('#dynamicFormContainer').html('<p>No bikes/items were booked for this reservation.</p>');
+    }
+}
+
+function initializeDatepickersWithBlockedDates(blockedDates) {
+
+    function disableBlockedDates(date) {
+        // Convert date to string in yyyy-mm-dd format
+        var dateString = $.datepicker.formatDate('yy-mm-dd', date);
+        
+        // Check if the date is in the blockedDates array
+        return [blockedDates.findIndex(function(reservation) {
+            return reservation.date === dateString && reservation.is_blocked === '1'; // Check both date and is_blocked status
+        }) === -1];
+    }
+    
+
+    // Initialize the fromdate_picker
+    jQuery("#reservation_fromdate").datepicker({
+       // beforeShowDay: disableBlockedDates,
+        minDate: 0,
+        dateFormat: "yy-mm-dd",
+        onSelect: function(selectedDate) {
+            // Update the minDate of the todate_picker to be after the selected date
+            $("#reservation_todate").datepicker("option", "minDate", selectedDate);
+        }
+    });
+
+    // Initialize the todate_picker
+    jQuery("#reservation_todate").datepicker({
+        beforeShowDay: disableBlockedDates,
+        minDate: 0,
+        dateFormat: "yy-mm-dd"
+    });
+
+    
+}
+
+function initializeDatepickersWithBlocked(blockedDates) {
+    jQuery("#reservation_fromdate, #reservation_todate").datepicker({
+        beforeShowDay: function(date) {
+            // Check for weekends
+            var noWeekend = jQuery.datepicker.noWeekends(date);
+            if (!noWeekend[0]) {
+                return noWeekend; // If it's weekend, disable it
+            }
+
+            // Format date to yyyy-mm-dd
+            var dateString = jQuery.datepicker.formatDate('yy-mm-dd', date);
+
+            // Check if the date is in the blockedDates array
+            var isBlocked = blockedDates.some(function(blockedDate) {
+                return dateString === blockedDate.date && blockedDate.is_blocked === "1";
+            });
+
+            // Disable date if it's in the blockedDates array
+            return [!isBlocked];
+        },
+        minDate: 0,
+        dateFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true
+    });
+
+    // Initialize the fromtime_picker and totime_picker
+    jQuery('#reservation_fromtime, #reservation_totime').timepicker({
+        'minTime': '08:00',
+        'maxTime': '19:00',
+        'timeFormat': 'HH:mm' // Specify 24-hour format
+    });
+}
+
+
