@@ -151,7 +151,7 @@ function get_item_schedule($item_id) {
             <?php endif; ?>
         </tbody>
     </table>
-    <?php elseif($edit_item_id || $check_schedule_item_id): ?>
+    <?php elseif($check_schedule_item_id): ?>
         <?php if ($edit_item_id): ?>
         <h2>Check Reservations</h2>
         <?php endif; ?>
@@ -179,8 +179,6 @@ function get_item_schedule($item_id) {
             </tbody>
         </table>
         <br>
-        <?php if ($check_schedule_item_id): ?>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_inventory')); ?>" class="button button-secondary">Back</a>
-        <?php endif; ?>   
+        <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_inventory')); ?>" class="button button-secondary">Back</a>
     <?php endif; ?>
 </div>
