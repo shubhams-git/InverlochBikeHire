@@ -104,7 +104,12 @@ function get_item_schedule($item_id) {
                     </td>
                 </tr>
                 <tr>
-                    <td><?php submit_button($edit_item_id ? 'Update Item' : 'Add Item', 'primary', 'submit_item', false); ?></td>
+                    <td>
+                        <?php submit_button($edit_item_id ? 'Update Item' : 'Add Item', 'primary', 'submit_item', false); ?>
+                        <?php if ($edit_item_id): ?>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_inventory')); ?>" class="button button-secondary">Back</a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             </table>
         </form>

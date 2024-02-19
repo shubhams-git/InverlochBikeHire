@@ -71,8 +71,11 @@ $email_to_edit = $edit_email_id ? $emailModel->get_email_by_id($edit_email_id) :
                     <textarea name="email_content" id="email_content" required cols="50" rows="13" class="large-text"><?php echo esc_textarea($email_to_edit->content); ?></textarea>
                 </td>
             </tr>
-            <tr>
-                <td><?php submit_button('Update Email Content'); ?></td>
+            <tr colspan="10">
+                <td>
+                    <?php submit_button('Update Email', "primary", "submit_email", false); ?>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_emails')); ?>" class="button button-secondary">Back</a>
+                </td>
             </tr>
         </table>
     </form>

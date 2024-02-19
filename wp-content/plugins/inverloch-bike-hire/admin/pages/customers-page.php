@@ -46,7 +46,12 @@ $customers_data = $customer_model->get_all_customers();
                 <td><input type="text" id="customer_address" name="customer_address" class="regular-text" value="<?php echo esc_attr($edit_customer_id ? $customer_to_edit->address : ''); ?>"></td>
             </tr>
             <tr>
-                <td><?php submit_button($edit_customer_id ? 'Update Customer' : 'Add Customer', 'primary', 'submit_customer', false); ?></td>
+                <td>
+                    <?php submit_button($edit_customer_id ? 'Update Customer' : 'Add Customer', 'primary', 'submit_customer', false); ?>
+                    <?php if ($edit_customer_id): ?>
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_customers')); ?>" class="button button-secondary">Back</a>
+                    <?php endif; ?>
+                </td>
             </tr>
         </table>
     </form>
