@@ -455,7 +455,7 @@ function fetch_reservations_action() {
 
     $reservation_model = new ReservationModel();
     $booked_reservation_ids = $reservation_model->get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time);
-    
+
     // Fetch available bikes excluding those booked in the given time range
     $item_booking_model = new ItemBookingModel();
     $booked_bike_ids = $item_booking_model->get_item_ids_by_reservation_ids($booked_reservation_ids);
@@ -499,7 +499,7 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
                             <th>Size</th>
                         </tr>
                     </thead>
-                    <!-- Categories and Bikes -->
+                   <!-- Categories and Bikes -->
                     <?php foreach ($categories as $category): ?>
                         <tbody class="labels">
                             <tr>
@@ -512,8 +512,11 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
                             </tr>
                         </tbody>
                         <tbody class="bikes hide" id="bikes-category-<?php echo esc_attr($category->category_id); ?>">
-                            <?php foreach ($available_bikes as $bike): 
-                                if ($bike->category_id === $category->category_id): ?>
+                            <?php 
+                            $hasBikes = false;
+                            foreach ($available_bikes as $bike): 
+                                if ($bike->category_id === $category->category_id): 
+                                    $hasBikes = true; ?>
                                     <tr class="bike">
                                         <td>
                                             <input type="checkbox" id="bike-<?php echo esc_attr($bike->item_id); ?>" name="selected_bikes[]" value="<?php echo esc_attr($bike->item_id); ?>">
@@ -527,6 +530,13 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
                                     </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
+                            <?php if (!$hasBikes): ?>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        Currently, no bikes are available in the "<?php echo esc_html($category->category_name); ?>" category for the selected timeframes.  
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     <?php endforeach; ?>
                 </table>

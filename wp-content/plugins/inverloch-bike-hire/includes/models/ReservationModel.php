@@ -59,18 +59,19 @@ class ReservationModel {
         // Prepare a SQL query to fetch reservation IDs within the specified date and time range
         $query = $this->wpdb->prepare(
             "SELECT reservation_id FROM {$this->table_name} WHERE 
-            (from_date < %s OR (from_date = %s AND from_time < %s)) AND
-            (to_date > %s OR (to_date = %s AND to_time > %s))",
-            $endDate, $endDate, $endTime, // Checks if the reservation starts before the end of the range
-            $startDate, $startDate, $startTime  // Checks if the reservation ends after the start of the range
+            (to_date > %s OR (to_date = %s AND to_time >= %s)) AND
+            (from_date < %s OR (from_date = %s AND from_time <= %s))",
+            $startDate, $startDate, $startTime, // Checks if the reservation ends after or at the start of the range
+            $endDate, $endDate, $endTime       // Checks if the reservation starts before or at the end of the range
         );
-    
+
         // Execute the query and fetch results
         $results = $this->wpdb->get_results($query);
     
         // Extract and return reservation IDs
         return array_map(function($result) { return $result->reservation_id; }, $results);
     }
+    
 
     public function get_reservations_by_reservation_ids($reservation_ids) {
         $reservation_ids = array_map("intval", $reservation_ids);
@@ -84,6 +85,16 @@ class ReservationModel {
 
         return $this->wpdb->get_results($query, OBJECT);
     }
+
+    // Get all the reservation data, along with the customer's details
+    public function get_detailed_reservations() {
+        $query = "SELECT r.*, c.fname, c.lname, c.mobile_phone
+                FROM {$this->table_name} r
+                INNER JOIN {$this->wpdb->prefix}ibk_customer c ON r.customer_id = c.customer_id
+                ORDER BY r.from_date DESC";
+        return $this->wpdb->get_results($query);
+    }
+
     
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);

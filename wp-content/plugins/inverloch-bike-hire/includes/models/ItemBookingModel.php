@@ -53,25 +53,28 @@ class ItemBookingModel {
         return $reservation_ids;
     }
 
-    // Return all item ids by reservations ids
     public function get_item_ids_by_reservation_ids($reservation_ids) {
-        $reservation_ids = array_map('intval', $reservation_ids);
+        $reservation_ids = array_map('intval', $reservation_ids); // Sanitize input
         
         // Check if the array is empty to avoid SQL syntax error
         if (empty($reservation_ids)) {
-            // Return an empty array or handle this scenario as needed
-            return [];
+            return []; // Return an empty array if no reservation IDs are provided
         }
     
-        // Now $reservation_ids is guaranteed to not be empty
-        $query = $this->wpdb->prepare(
-            "SELECT item_id FROM {$this->table_name} WHERE reservation_id IN (" . implode(',', array_fill(0, count($reservation_ids), '%d')) . ")",
-            $reservation_ids
-        );
+        // Create a placeholders string with the correct number of placeholders
+        $placeholders = implode(',', array_fill(0, count($reservation_ids), '%d'));
     
-        $results = $this->wpdb->get_results($query);
+        // Prepare the SQL query, injecting the placeholders and then using call_user_func_array to apply the reservation IDs
+        $query = "SELECT item_id FROM {$this->table_name} WHERE reservation_id IN ($placeholders)";
+        $prepared_query = $this->wpdb->prepare($query, $reservation_ids);
+        
+        // Execute the query and fetch results
+        $results = $this->wpdb->get_results($prepared_query);
     
-        return $results;
+        // Assuming you want to return an array of item_ids directly
+        $item_ids = array_map(function($result) { return $result->item_id; }, $results);
+    
+        return $item_ids;
     }
     
 
