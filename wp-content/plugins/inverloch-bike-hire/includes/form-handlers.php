@@ -745,6 +745,8 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
             </div>
         </div>
         <input type="submit" class="button button-primary"  value="Save Changes">
+        <button id= "go-back-button-edit-reservation" class="button button-secondary"> Go Back </button>
+
     </form>
     <?php
     $html_content = ob_get_clean();

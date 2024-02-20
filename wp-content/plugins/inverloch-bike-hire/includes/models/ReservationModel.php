@@ -17,25 +17,45 @@ class ReservationModel {
     public function insert($data) {
         $data = array_map("sanitize_text_field", $data);
         $customer_model = new CustomerModel();
-
+    
         // Check if the provided customer id is valid
         if (!$customer_model->is_valid_customer_id($data['customer_id'])) {
             return new WP_Error('invalid_customer_id', 'Invalid customer_id provided.');
         }
 
+        $data['created_date'] = date('Y-m-d H:i:s'); // Current date and time
+    
+        // Insert the reservation without reference_id initially
         $result = $this->wpdb->insert(
             $this->table_name,
             $data,
             ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
         );
-
+    
         if ($result) {
-            return $this->wpdb->insert_id;
+            $reservation_id = $this->wpdb->insert_id;
+            
+            // Generate Reference ID with strict date format
+            $year = date('Y'); // 4 digit year
+            $month = date('M'); // Short textual representation of a month, three letters
+            $day = date('d'); // Day of the month, 2 digits with leading zeros
+            $reference_id = "{$year}{$month}{$day}-{$reservation_id}";
+    
+            // Update the reservation with the generated Reference ID
+            $this->wpdb->update(
+                $this->table_name,
+                ['reference_id' => $reference_id],
+                ['reservation_id' => $reservation_id],
+                ['%s'], // Format of the reference_id column
+                ['%d']  // Format of the reservation_id column
+            );
+    
+            return $reservation_id;
         } else {
             return new WP_Error('db_insert_error', 'Failed to insert reservation into the database.');
         }
     }
-
+    
     public function get_all_reservations() {
         return $this->wpdb->get_results("SELECT * FROM {$this->table_name}");
     }

@@ -65,46 +65,61 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
     <!-- Placeholder for dynamically injected form -->
     <div id="dynamicFormContainer"></div>
     <button id="go-back-to-reservation-list" class="button" style="display: none; margin-top: 20px;">Go Back</button>
-    <div id="reservation-list-view" style="margin-top: 20px;" class="widefat fixed striped">
-        <h2>Existing Reservations</h2>
-        <table class="wp-list-table widefat fixed striped">
-            <thead>
-                <tr>
-                    <th>Customer</th>
-                    <th>Reservation Time Slots</th>
-                    <th>Items Booked</th>
-                    <th>Booking Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($detailed_reservations as $reservation): 
-                    $customer_display = "{$reservation->fname} {$reservation->lname} ({$reservation->mobile_phone})";
-                    $time_slots = "From: {$reservation->from_time} {$reservation->from_date} <br>To: {$reservation->to_time} {$reservation->to_date}";
-                    
-                    // Fetch booked items for this reservation
-                    $booked_items_ids = $item_booking_model->get_item_ids_by_reservation_ids([$reservation->reservation_id]);
-                    $items_booked = [];
-                    foreach ($booked_items_ids as $item_id) {
-                        $item = $item_model->get_item_by_id($item_id);
-                        $items_booked[] = "{$item->id_number} - {$item->name}";
-                    }
-                    $items_display = implode('<br>', $items_booked);
-                    ?>
+        <div id="reservation-list-view" style="margin-top: 20px;" class="widefat fixed striped">
+            <h2>Existing Reservations</h2>
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
                     <tr>
-                        <td><?= htmlspecialchars($customer_display); ?></td>
-                        <td><?= $time_slots; // Directly echo because it contains HTML ?></td>
-                        <td><?= $items_display; // Directly echo because it contains HTML ?></td>
-                        <td><?= esc_html($reservation->reservation_stage); ?></td>
-                        <td>
-                            <a href="" class="button button-primary action edit-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Edit</a>
-                            <a href="" class="button button-secondary action delete-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Delete</a>
-                        </td>
+                        <th>Reference ID</th>
+                        <th>Customer</th>
+                        <th>Reservation Time Slots</th>
+                        <th>Items Booked</th>
+                        <th>Booking Status</th>
+                        <th>Actions</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php if (empty($detailed_reservations)): ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No reservations found.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($detailed_reservations as $reservation): 
+                            $customer_display = "{$reservation->fname} {$reservation->lname} ({$reservation->mobile_phone})";
+                            // Convert and reformat the time and date
+                            $formatted_from_time = date("g A", strtotime($reservation->from_time)); // Convert to 12-hour AM/PM format
+                            $formatted_to_time = date("g A", strtotime($reservation->to_time)); // Convert to 12-hour AM/PM format
+                            $formatted_from_date = date("d/m/Y", strtotime($reservation->from_date)); // Convert to DD/MM/YYYY format
+                            $formatted_to_date = date("d/m/Y", strtotime($reservation->to_date)); // Convert to DD/MM/YYYY format
+
+                            // Concatenate the formatted time and date strings
+                            $time_slots = "From: {$formatted_from_time} ({$formatted_from_date}) <br>To: {$formatted_to_time} ({$formatted_to_date})";                            
+                            // Fetch booked items for this reservation
+                            $booked_items_ids = $item_booking_model->get_item_ids_by_reservation_ids([$reservation->reservation_id]);
+                            $items_booked = [];
+                            foreach ($booked_items_ids as $item_id) {
+                                $item = $item_model->get_item_by_id($item_id);
+                                $items_booked[] = "{$item->id_number} - {$item->name}";
+                            }
+                            $items_display = implode('<br>', $items_booked);
+                            ?>
+                            <tr>
+                                <td><?= esc_html($reservation->reference_id); ?></td>
+                                <td><?= htmlspecialchars($customer_display); ?></td>
+                                <td><?= $time_slots; // Directly echo because it contains HTML ?></td>
+                                <td><?= $items_display; // Directly echo because it contains HTML ?></td>
+                                <td><?= esc_html($reservation->reservation_stage); ?></td>
+                                <td>
+                                    <a href="#" class="button button-primary action edit-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Edit</a>
+                                    <a href="#" class="button button-secondary action delete-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Delete</a>
+                                    <a href="#" class="button button-secondary action generate-invoice-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Generate Invoice</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 </div>
 
 <script>
