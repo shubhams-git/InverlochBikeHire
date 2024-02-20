@@ -179,7 +179,7 @@ jQuery(document).ready(function($) {
                     // Display success message
                     $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
                     setTimeout(function() {
-                        window.location.reload(); // Refresh the page to reflect the deletion
+                        window.location.href = myAjax.adminUrl + '?page=ibh_price_points'; 
                     }, 200);
                 } else {
                     // Display error message
@@ -343,7 +343,8 @@ jQuery(document).ready(function($) {
 
     $(document).on('submit', '#reservation-form', function(e) {
         e.preventDefault(); // Prevent the form from submitting traditionally
-        console.log("Testing submit_reservation")
+        console.log("Testing submit_reservation");
+
         var formData = new FormData();
         formData.append('action', 'ibh_handle_form');
         formData.append('entity', 'reservation');
@@ -431,7 +432,6 @@ jQuery(document).ready(function($) {
         formData.append('entity', 'reservation');
         formData.append('action_type', 'update_reservation');
         formData.append('_wpnonce', myAjax.nonce);
-        console.log(formData);
             
         $.ajax({
             url: myAjax.ajaxurl, 
@@ -451,7 +451,6 @@ jQuery(document).ready(function($) {
                         window.location.reload();
                         $('#messageContainer').hide();
                     }, 1000)
-
                 } else {
                     alert('Could not load reservation details.');
                 }

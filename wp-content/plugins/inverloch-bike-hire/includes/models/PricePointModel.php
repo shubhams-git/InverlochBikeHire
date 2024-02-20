@@ -16,7 +16,8 @@ class PricePointModel {
 
     // Retrieve all price points
     public function get_all_price_points() {
-        return $this->wpdb->get_results("SELECT * FROM {$this->table_name} ORDER BY timeframe ASC", OBJECT);
+        // Retrieve all price points from the database
+        return $this->wpdb->get_results("SELECT * FROM {$this->table_name}", OBJECT);
     }
 
     // Insert a new price point
@@ -40,9 +41,7 @@ class PricePointModel {
             return new WP_Error('db_insert_error', 'Failed to insert price point into the database. Error: ' . $this->wpdb->last_error);
         }
         return $this->wpdb->insert_id;
-    }
-    
-    
+    }  
 
     // Update an existing price point
     public function update($price_point_id, $category_id, $timeframe, $amount) {
@@ -69,34 +68,61 @@ class PricePointModel {
     }
     
     // Delete a price point
-    public function delete($price_point_id) {
-        $where = ['price_point_id' => intval($price_point_id)];
-        $where_format = ['%d'];
+    public function delete_all() {
+        $result = $this->wpdb->query("DELETE FROM {$this->table_name}");
 
-        $result = $this->wpdb->delete($this->table_name, $where, $where_format);
-        if ($result) {
+        if ($result !== false) {
             return true;
         } else {
-            return new WP_Error('db_delete_error', 'Failed to delete price point from the database.');
+            return new WP_Error('db_delete_error', 'Failed to delete all price points from the database.');
         }
     }
 
-    // Retrieve price points for a specific category
-    public function get_price_points_by_category($category_id) {
-        $category_id = intval($category_id);
-        return $this->wpdb->get_results($this->wpdb->prepare(
-            "SELECT * FROM {$this->table_name} WHERE category_id = %d ORDER BY timeframe ASC", 
-            $category_id
-        ), OBJECT);
+    private function convert_to_minutes($timeframe) {
+        // Extract the numeric value and unit from the timeframe
+        preg_match('/(\d+)\s*(\w+)/', $timeframe, $matches);
+        $value = isset($matches[1]) ? (int)$matches[1] : 0;
+        $unit = isset($matches[2]) ? strtolower($matches[2]) : '';
+
+        // Convert the value to minutes based on the unit
+        switch ($unit) {
+            case 'hours':
+                return $value * 60; // Convert hours to minutes
+            case 'days':
+                return $value * 24 * 60; // Convert days to minutes
+            default:
+                return 0; // Unknown unit
+        }
     }
 
-    public function get_price_point_by_category_and_timeframe($category_id, $timeframe) {
+    private function sort_timeframes($timeframes) {
+        usort($timeframes, function($a, $b) {
+            // Convert timeframes to minutes for comparison
+            $a_minutes = $this->convert_to_minutes($a);
+            $b_minutes = $this->convert_to_minutes($b);
+    
+            // Compare the converted values
+            return $a_minutes - $b_minutes;
+        });
+
+        return $timeframes;
+    }
+
+    public function get_sorted_timeframes() {
+        // Retrieve all price points from the database
+        $timeframes = $this->wpdb->get_col("SELECT DISTINCT timeframe FROM {$this->table_name}");
+
+        return $this->sort_timeframes($timeframes);
+    }
+
+    public function get_amount_by_timeframe_and_category($timeframe, $category) {
         $query = $this->wpdb->prepare(
-            "SELECT * FROM {$this->table_name} WHERE category_id = %d AND timeframe = %s LIMIT 1",
-            intval($category_id),
-            $timeframe
+            "SELECT amount FROM {$this->table_name} WHERE 
+            (timeframe = %s) AND (category_id = %d) LIMIT 1",
+            $timeframe, $category
         );
+
         return $this->wpdb->get_row($query);
     }
-    
+
 }

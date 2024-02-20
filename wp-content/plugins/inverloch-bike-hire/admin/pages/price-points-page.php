@@ -11,63 +11,67 @@ $pricePointModel = new PricePointModel();
 $categoryModel = new CategoryModel();
 
 $categories = $categoryModel->get_all_categories();
-$pricePoints = $pricePointModel->get_all_price_points();
+$sorted_categories = $categoryModel->get_all_categories();
+$sorted_timeframes = $pricePointModel->get_sorted_timeframes();
+$edit = isset($_GET['edit']) ? $_GET['edit'] : false;
 
-function map_price_points_by_category($pricePoints) {
-    $mapped = [];
-    foreach ($pricePoints as $point) {
-        $mapped[$point->category_id][] = $point;
-    }
-    return $mapped;
-}
-
-$pricePointsByCategory = map_price_points_by_category($pricePoints);
 ?>
 
 <div class="wrap">
     <h1>Manage Price Points</h1>
     <div id="messageContainer"></div>
-    <form id="price-points-form" method="post" action="">
-        <table class="wp-list-table widefat fixed striped">
+    <form id="price-points-form" method="post">
+        <table class="wp-list-table widefat fixed">
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <?php
-                    // Collect unique timeframes
-                    $uniqueTimeframes = [];
-                    foreach ($pricePoints as $point) {
-                        $uniqueTimeframes[$point->timeframe] = true; // Use keys to enforce uniqueness
-                    }
-
-                    // Sort timeframes naturally
-                    uksort($uniqueTimeframes, 'strnatcmp');
-
-                    // Generate table headings
-                    foreach (array_keys($uniqueTimeframes) as $timeframe) {
-                        echo '<th>' . esc_html($timeframe) . '</th>';
-                    }
+                    <th><b>Price Group</b></th>
+                    <?php 
+                        foreach($sorted_timeframes as $timeframe) {
+                            if ($edit) {
+                                echo "<th><b>" . $timeframe . "</b><a data-timeframe-id=' . esc_attr($timeframe) . '><i class='delete-timeframe dashicons dashicons-no'></i></a></th>";
+                            } else {
+                                echo "<th><b>" . $timeframe . "</b></th>";
+                            }
+                        }
                     ?>
+                    <?php if(!$sorted_timeframes && !$edit): ?>
+                        <th>No timeframes found.</th>
+                    <?php endif; ?>
+                    <?php if ($edit): ?>
                     <th><button type="button" id="add-timeframe" class="button button-primary">+ Add Timeframe</button></th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($categories as $category): ?>
-                    <tr data-category-id="<?php echo esc_attr($category->category_id); ?>">
-                        <td><?php echo esc_html($category->category_name); ?></td>
-                        <?php
-                        if (isset($pricePointsByCategory[$category->category_id])) {
-                            foreach ($pricePointsByCategory[$category->category_id] as $point) {
-                                echo '<td><input type="number" name="price[' . esc_attr($category->category_id) . '][' . esc_attr($point->timeframe) . ']" value="' . esc_attr($point->amount) . '"></td>';
+            <tr>
+                <?php 
+                    foreach($sorted_categories as $category) 
+                    {
+                        echo "<tr data-category-id=" . esc_attr($category->category_id) . ">";
+                        echo "<td><b>" . $categoryModel->get_category_by_id($category->category_id)->category_name . "</b></td>";
+                        foreach($sorted_timeframes as $timeframe) 
+                        {
+                            $result = $pricePointModel->get_amount_by_timeframe_and_category($timeframe, $category->category_id);
+                            // Check if the result is not null
+                            if ($edit) {
+                                $input_value = $result !== null ? ' value="' . esc_attr($result->amount) . '"' : '';
+                                echo '<td><input type="number" name="price[' . esc_attr($category->category_id) . '][' . esc_attr($timeframe) . ']" class="price-point-number"' . $input_value . '></td>';
+                            } else {
+                                echo "<td>" . ($result !== null ? $result->amount : "") . "</td>";
                             }
                         }
-                        ?>
-                        <td></td> <!-- Placeholder for dynamic timeframe input -->
-                    </tr>
-                <?php endforeach; ?>
+                        echo "</tr>";
+                    }
+                ?>
             </tbody>
         </table>
+    <br>
+    <?php if($edit): ?>
         <input type="submit" value="Save Changes" class="button button-primary">
-    </form>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_price_points')); ?>" class="button button-secondary">Back</a>
+    <?php else: ?>
+        <a href="?page=ibh_price_points&edit=true" class="button button-primary">Edit table</a>
+    <?php endif; ?>
 </div>
 
 <!-- Modal for adding new timeframe -->
@@ -85,6 +89,21 @@ $pricePointsByCategory = map_price_points_by_category($pricePoints);
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+
+    $('.delete-timeframe').on('click', function() {
+
+        // Get the index of the column to delete
+        var columnIndex = $(this).closest('th').index();
+
+        // Remove the corresponding th element from the table header
+        $('table thead tr').find('th').eq(columnIndex).remove();
+
+        // Remove the corresponding td element from each row in the table body
+        $('table tbody tr').each(function() {
+            $(this).find('td').eq(columnIndex).remove();
+        });
+    });
+
     $('#add-timeframe').on('click', function() {
         $('#add-timeframe-modal').dialog({
             title: 'Add New Timeframe',
@@ -127,10 +146,10 @@ jQuery(document).ready(function($) {
             if (index === 0) return true; // Skip category column
             var current = convertTimeframeToValue($(this).text());
             if (newTimeframeValue < current && !added) {
-                $('<th>' + newTimeframe + '</th>').insertBefore($(this));
+                $('<th><b>' + newTimeframe + '</b><a><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore($(this));
                 $('table tbody tr').each(function() {
                     var categoryId = $(this).data('category-id');
-                    $('<td><input type="number" step="0.01" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertBefore($(this).find('td').eq(index));
+                    $('<td><input type="number" step="0.01" class="price-point-number" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertBefore($(this).find('td').eq(index));
                 });
                 added = true;
                 return false;
@@ -138,10 +157,10 @@ jQuery(document).ready(function($) {
         });
 
         if (!added) { // If the timeframe is the latest, add it to the end
-            $('<th>' + newTimeframe + '</th>').insertBefore('table thead tr th:last');
+            $('<th><b>' + newTimeframe + '</b><a><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore('table thead tr th:last');
             $('table tbody tr').each(function() {
                 var categoryId = $(this).data('category-id');
-                $('<td><input type="number" step="0.01" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertBefore($(this).find('td:last'));
+                $('<td><input type="number" step="0.01" class="price-point-number" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertAfter($(this).find('td:last'));
             });
         }
     }
