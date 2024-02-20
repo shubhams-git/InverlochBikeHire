@@ -448,9 +448,10 @@ jQuery(document).ready(function($) {
                     $('#reservation-list-view').show();
                     $('#dynamicFormContainer').hide(); 
                     setTimeout(()=>{
-                        $('#messageContainer').hide();
                         window.location.reload();
+                        $('#messageContainer').hide();
                     }, 1000)
+
                 } else {
                     alert('Could not load reservation details.');
                 }
@@ -459,6 +460,56 @@ jQuery(document).ready(function($) {
                 console.error('AJAX Error:', status, error);
             }
         });
+    });
+
+    $('.delete-reservation-button').on('click', function(e) {
+        e.preventDefault(); 
+
+        var deleteConfirmation = prompt("Type 'delete' to confirm deletion of this item.");
+
+        if (deleteConfirmation === 'delete') {
+            var reservationId = $(this).data('reservation-id'); 
+            var formData = new FormData();
+            formData.append('action', 'ibh_handle_form');
+            formData.append('entity', 'reservation');
+            formData.append('action_type', 'delete_reservation');
+            formData.append('_wpnonce', myAjax.nonce);
+            formData.append('reservation_id', reservationId);
+
+            // Print each field of the FormData object individually
+            console.log("FormData Details:");
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }    
+            $.ajax({
+                url: myAjax.ajaxurl, 
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if(response.success) {
+                        console.log(response.data);
+                        // Directly inject the received HTML into the dynamic form container
+                        $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                        $('#reservation-form-container').hide();
+                        $('#reservation-list-view').show();
+                        $('#dynamicFormContainer').hide(); 
+                        setTimeout(()=>{
+                            window.location.reload();
+                            $('#messageContainer').hide();
+                        }, 1000)
+                    } else {
+                        alert('Could not load reservation details.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+        }else{
+            alert('Deletion cancelled. No action taken.');
+        }
     });
     
     $('form#blocked-date').submit(function(e) {

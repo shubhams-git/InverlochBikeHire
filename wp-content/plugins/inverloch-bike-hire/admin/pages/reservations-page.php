@@ -97,8 +97,8 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
                         <td><?= $items_display; // Directly echo because it contains HTML ?></td>
                         <td><?= esc_html($reservation->reservation_stage); ?></td>
                         <td>
-                            <a href="" class="button action edit-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Edit</a>
-                            <a href="" class="button action">Delete</a>
+                            <a href="" class="button button-primary action edit-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Edit</a>
+                            <a href="" class="button button-secondary action delete-reservation-button" data-reservation-id="<?= esc_attr($reservation->reservation_id); ?>">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -136,6 +136,10 @@ function handle_reservation_actions($action_type){
         case 'update_reservation':
             handle_edit_reservation_update();
             break;
+
+        case 'delete_reservation':
+            handle_delete_reservation();
+            break;
     }
 }
 
@@ -899,7 +903,28 @@ function handle_edit_reservation_update() {
     }
 }
 
+function handle_delete_reservation() {
+    $reservationModel = new ReservationModel();
+    // Assuming you're passing the reservation ID via POST request
+    $reservation_id = isset($_POST['reservation_id']) ? intval($_POST['reservation_id']) : null;
 
+    if (!$reservation_id) {
+        wp_send_json_error(['message' => 'Invalid reservation ID.']);
+        return;
+    }
+
+    // Attempt to delete the reservation
+    $delete_result = $reservationModel->delete($reservation_id);
+
+    if (is_wp_error($delete_result)) {
+        // If there was an error during deletion, return the error message
+        wp_send_json_error(['message' => $delete_result->get_error_message()]);
+    } else {
+        // On successful deletion, return a success message
+        wp_send_json_success(['message' => 'Reservation deleted successfully.']);
+    }
+}
+    
 
 
 function add_blocked_date_action() {

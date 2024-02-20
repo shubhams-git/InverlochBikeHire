@@ -126,20 +126,51 @@ class ReservationModel {
     }
 
     public function delete($reservation_id) {
-        $reservation_id = sanitize_text_field($reservation_id);
-
-        $result = $this->wpdb->delete(
-            $this->table_name,
-            ['reservation_id' => $reservation_id],
-            ['%s']
-        );
-
-        if ($result !== false) {
+        // Ensure $reservation_id is an integer
+        $reservation_id = intval($reservation_id);
+    
+        // Validate the reservation ID
+        if (!$this->is_valid_reservation_id($reservation_id)) {
+            return new WP_Error('invalid_reservation_id', 'The reservation ID provided does not exist.');
+        }
+    
+        // Instantiate the ItemBookingModel to access its methods
+        $item_booking_model = new ItemBookingModel();
+    
+        try {
+            // Start a transaction to ensure data integrity
+            $this->start_transaction();
+    
+            // Delete all item bookings linked to the reservation
+            $delete_item_bookings_result = $item_booking_model->clear_bookings_for_reservation($reservation_id);
+            if ($delete_item_bookings_result === false) {
+                // If deletion of item bookings failed, throw an exception to rollback
+                throw new Exception('Failed to delete linked item bookings in the database.');
+            }
+    
+            // Perform the deletion of the reservation
+            $delete_reservation_result = $this->wpdb->delete(
+                $this->table_name,
+                ['reservation_id' => $reservation_id],
+                ['%d'] 
+            );
+    
+            if ($delete_reservation_result === false) {
+                // If deletion of the reservation failed, throw an exception to rollback
+                throw new Exception('Failed to delete reservation in the database.');
+            }
+    
+            // If we reach this point, both deletions were successful. Commit the transaction.
+            $this->commit_transaction();
+    
             return true;
-        } else {
-            return new WP_Error('db_delete_error', 'Failed to delete reservation in the database.');
+        } catch (Exception $e) {
+            // Rollback the transaction in case of any error
+            $this->rollback_transaction();
+            return new WP_Error('db_delete_error', $e->getMessage());
         }
     }
+    
 
     // Start a transaction
     public function start_transaction() {
