@@ -314,11 +314,17 @@ function update_price_points_action() {
         return;
     }
 
+    $pricePointModel->delete_all();
+
     foreach ($_POST['price'] as $category_id_str => $timeframes) {
         $category_id = intval($category_id_str);
         
         foreach ($timeframes as $timeframe => $amount_str) {
-            $amount = floatval($amount_str);
+            if($amount_str == null) {
+                $amount = null;
+            } else {
+                $amount = floatval($amount_str);
+            }
             $timeframe_sanitized = sanitize_text_field($timeframe);
 
             // Validate data
@@ -327,24 +333,7 @@ function update_price_points_action() {
                 continue;
             }
 
-            // Check if a price point already exists for the given category_id and timeframe
-            $existing = $pricePointModel->get_price_point_by_category_and_timeframe($category_id, $timeframe_sanitized);
 
-            if ($existing) {
-                // Update existing price point
-                $update_result = $pricePointModel->update($existing->price_point_id, $category_id, $timeframe_sanitized, $amount);
-                if (is_wp_error($update_result)) {
-                    wp_send_json_error(['message' => 'Failed to update price point.', 'error' => $update_result->get_error_message()]);
-                    return;
-                }
-            } else {
-                // Insert new price point
-                $insert_result = $pricePointModel->insert($category_id, $timeframe_sanitized, $amount);
-                if (is_wp_error($insert_result)) {
-                    wp_send_json_error(['message' => 'Failed to insert new price point.', 'error' => $insert_result->get_error_message()]);
-                    return;
-                }
-            }
         }
     }
 
@@ -732,7 +721,7 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
                     <tr>
                         <th scope="row"><label for="reservation_notes">Notes</label></th>
                         <td colspan="3">
-                            <textarea id="reservation_notes" name="reservation_notes" rows="4" class="large-text"><?php echo esc_textarea($reservation_details->notes); ?></textarea>
+                            <textarea id="reservation_notes" name="reservation_notes" rows="4" class="large-text"><?php echo esc_textarea($reservation_details->delivery_notes); ?></textarea>
                         </td>
                     </tr>
                     <!-- Stage Selection -->
@@ -741,8 +730,8 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
                         <td colspan="3">
                             <select name="reservation_stage" id="reservation_stage">
                                 <!-- Populate options dynamically based on your system's stages -->
-                                <option value="provisional" <?php echo ($reservation_details->stage == 'provisional') ? 'selected' : ''; ?>>Provisional</option>
-                                <option value="confirmed" <?php echo ($reservation_details->stage == 'confirmed') ? 'selected' : ''; ?>>Confirmed</option>
+                                <option value="provisional" <?php echo ($reservation_details->reservation_stage == 'provisional') ? 'selected' : ''; ?>>Provisional</option>
+                                <option value="confirmed" <?php echo ($reservation_details->reservation_stage == 'confirmed') ? 'selected' : ''; ?>>Confirmed</option>
                                 <!-- Add more stages as needed -->
                             </select>
                         </td>
@@ -872,7 +861,15 @@ function handle_edit_reservation_update() {
     $reservation_id = intval($_POST['reservation_id']);
     $updatedDetails = [
         // Populate with sanitized $_POST data
-        'from_date' => sanitize_text_field($_POST['from_date']),
+        //'reference_id' => sanitize_text_field($_POST['reference_id']),
+        'customer_id' => sanitize_text_field($_POST['reservation_customer']),
+        'from_date' => sanitize_text_field($_POST['reservation_fromdate']),
+        'to_date' => sanitize_text_field($_POST['reservation_todate']),
+        'from_time' => sanitize_text_field($_POST['reservation_fromtime']),
+        'to_time' => sanitize_text_field($_POST['reservation_totime']),
+        'reservation_stage' => sanitize_text_field($_POST['reservation_stage']),
+        'created_date' => sanitize_text_field($_POST['created_date']),
+        'delivery_notes' => sanitize_text_field($_POST['reservation_notes'])
         // Add other fields as needed
     ];
     $newItemIds = array_map('intval', $_POST['selected_bikes']); // Assuming 'selected_bikes' is an array of item IDs

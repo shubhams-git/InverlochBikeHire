@@ -49,13 +49,13 @@ function ibh_create_db_tables() {
         price_point_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
         category_id MEDIUMINT(9) NOT NULL,
         timeframe VARCHAR(255) NOT NULL,
-        amount FLOAT NOT NULL,
+        amount FLOAT,
         PRIMARY KEY  (price_point_id),
         FOREIGN KEY (category_id) REFERENCES {$wpdb->prefix}ibk_category(category_id) ON DELETE CASCADE
     ) $charset_collate;";
 
     // Reservation Table
-    // reference_number VARCHAR(50) NOT NULL,
+    // reference_id VARCHAR(255) NOT NULL,
     $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
         reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
         customer_id MEDIUMINT(9) NOT NULL,
