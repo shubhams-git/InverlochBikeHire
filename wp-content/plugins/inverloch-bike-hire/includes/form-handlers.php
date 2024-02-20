@@ -333,7 +333,12 @@ function update_price_points_action() {
                 continue;
             }
 
-
+            // Insert new price point
+            $insert_result = $pricePointModel->insert($category_id, $timeframe_sanitized, $amount);
+            if (is_wp_error($insert_result)) {
+                wp_send_json_error(['message' => 'Failed to insert new price point.', 'error' => $insert_result->get_error_message()]);
+                return;
+            }
         }
     }
 
