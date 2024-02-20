@@ -72,6 +72,9 @@ class Easy_Accordion_Free_Post_Type {
 			return;
 		}
 
+		$capability      = apply_filters( 'sp_easy_accordion_ui_permission', 'manage_options' );
+		$is_user_capable = current_user_can( $capability ) ? true : false;
+
 		// Set the easy accordion post type labels.
 		$labels = apply_filters(
 			'sp_easy_accordion_post_type_labels',
@@ -104,7 +107,7 @@ class Easy_Accordion_Free_Post_Type {
 				'public'              => false,
 				'hierarchical'        => false,
 				'exclude_from_search' => true,
-				'show_ui'             => true,
+				'show_ui'             => $is_user_capable,
 				'show_in_admin_bar'   => false,
 				'menu_position'       => apply_filters( 'sp_easy_accordion_menu_position', 116 ),
 				'menu_icon'           => $menu_icon,

@@ -5,7 +5,7 @@
  * Description: The best Responsive and Touch-friendly drag & drop <strong>Accordion FAQ</strong> builder plugin for WordPress.
  * Author:      ShapedPlugin LLC
  * Author URI:  https://shapedplugin.com/
- * Version:     2.3.3
+ * Version:     2.3.4
  * Text Domain: easy-accordion-free
  * Domain Path: /languages/
  *
@@ -51,7 +51,7 @@ class SP_EASY_ACCORDION_FREE {
 	 *
 	 * @var string
 	 */
-	public $version = '2.3.3';
+	public $version = '2.3.4';
 
 	/**
 	 * The name of the plugin.

@@ -46,7 +46,6 @@ class ItemModel {
         return $this->wpdb->get_results($sql, OBJECT);
     }
     
-
     // Retrieve a single item by ID
     public function get_item_by_id($item_id) {
         $item_id = intval($item_id);

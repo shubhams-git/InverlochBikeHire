@@ -135,6 +135,9 @@
     height: 100% !important;
   }
 
-.sp-easy-accordion .ea-body .wp-audio-shortcode {
+.sp-easy-accordion .ea-body .wp-audio-shortcode, .sp-easy-accordion video {
     max-width: 100%;
+}
+.sp-easy-accordion audio {
+    width: 100%;
 }

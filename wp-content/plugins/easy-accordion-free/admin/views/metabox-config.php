@@ -129,6 +129,7 @@ SP_EAP::createSection(
 				'accordion_title_prefix' => __( 'Item :', 'easy-accordion-free' ),
 				'accordion_title_number' => true,
 				'accordion_title_auto'   => true,
+				'sanitize'               => 'eapro_sanitize_accordion_title_content',
 				'fields'                 => array(
 					array(
 						'id'         => 'accordion_content_title',
@@ -811,6 +812,7 @@ SP_EAP::createSection(
 				'default'    => __( 'Load More', 'easy-accordion-free' ),
 				'subtitle'   => __( 'Change load more label text.', 'easy-accordion-free' ),
 				'class'      => 'only-for-pro',
+				'only_pro'   => true,
 				'dependency' => array( 'show_pagination|pagination_type', '==|==', 'true|ajax_load_more' ),
 			),
 			array(

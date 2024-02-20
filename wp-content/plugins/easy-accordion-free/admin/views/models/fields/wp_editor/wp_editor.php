@@ -68,21 +68,9 @@ if ( ! class_exists( 'SP_EAP_Field_wp_editor' ) ) {
 				'media_buttons' => $args['media_buttons'],
 			);
 
-			$allowed_tags           = wp_kses_allowed_html( 'post' );
-			$allowed_tags['iframe'] = array(
-				'src'             => array(),
-				'height'          => array(),
-				'width'           => array(),
-				'frameborder'     => array(),
-				'allowfullscreen' => array(),
-				'title'           => array(),
-				'alt'             => array(),
-				'class'           => array(),
-			);
-			$allowed_tags['style']  = array();
-
-			$this->value = wp_kses( $this->value, apply_filters( 'sp_ea_description_allow_tags', $allowed_tags ) );
-			$this->value = format_for_editor( $this->value );
+			$allowed_tags = eapro_allowed_description_tags();
+			$this->value  = wp_kses( $this->value, $allowed_tags );
+			$this->value  = format_for_editor( $this->value );
      		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $this->field_before();
 			echo ( eapro_wp_editor_api() ) ? '<div class="eapro-wp-editor" data-editor-settings="' . esc_attr( wp_json_encode( $editor_settings ) ) . '">' : '';
