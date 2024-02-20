@@ -408,6 +408,7 @@ jQuery(document).ready(function($) {
                     // Directly inject the received HTML into the dynamic form container
                     $('#dynamicFormContainer').html(response.data.html);
                     // Hide or adjust visibility of other elements as necessary
+                    $('#show-add-reservation-form').hide();
                     $('#reservation-form-container').hide();
                     $('#reservation-list-view').hide();
                     $('#dynamicFormContainer').show(); // Ensure the container is visible
@@ -424,6 +425,19 @@ jQuery(document).ready(function($) {
             }
         });
     });
+
+    $(document).on('click', '#go-back-button-edit-reservation', function(e) { 
+        e.preventDefault(); 
+
+        if (confirm("Are you sure you want to discard the changes?")) {
+            $('#messageContainer').html('<div class="notice notice-success is-dismissible"><p>Reservation edit aborted.<br>Redirection you to the next screen</p></div>');
+            setTimeout(function() {
+                window.location.reload();
+                $('#messageContainer').html('');
+            }, 1000);
+        }
+    });    
+    
     
     $(document).on('submit', '#update-reservation', function(e) {
         e.preventDefault(); 

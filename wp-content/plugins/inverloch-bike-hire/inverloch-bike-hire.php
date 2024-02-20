@@ -56,6 +56,8 @@ require INVERLOCH_BIKE_HIRE_DIR . 'public/public-init.php';
 function run_inverloch_bike_hire() {
     // Place code here to run your plugin, such as adding hooks and filters,
     // initializing classes, or other setup tasks.
+    // Set the timezone to Melbourne
+    date_default_timezone_set('Australia/Melbourne');
 }
 
 run_inverloch_bike_hire();

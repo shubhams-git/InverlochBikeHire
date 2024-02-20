@@ -55,9 +55,9 @@ function ibh_create_db_tables() {
     ) $charset_collate;";
 
     // Reservation Table
-    // reference_id VARCHAR(255) NOT NULL,
     $sql_reservation = "CREATE TABLE {$wpdb->prefix}ibk_reservation (
         reservation_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        reference_id VARCHAR(255) NOT NULL,
         customer_id MEDIUMINT(9) NOT NULL,
         from_date DATE NOT NULL,
         to_date DATE NOT NULL,
@@ -67,6 +67,7 @@ function ibh_create_db_tables() {
         created_date DATETIME NOT NULL,
         delivery_notes TEXT,
         PRIMARY KEY  (reservation_id),
+        UNIQUE (reference_id),
         FOREIGN KEY (customer_id) REFERENCES {$wpdb->prefix}ibk_customer(customer_id) ON DELETE CASCADE
     ) $charset_collate;";
 
@@ -86,7 +87,7 @@ function ibh_create_db_tables() {
         is_blocked BOOLEAN NOT NULL,
         PRIMARY KEY  (date)
     ) $charset_collate;";
-
+    
     // Item Booking Table
     $sql_item_booking = "CREATE TABLE {$wpdb->prefix}ibk_item_booking (
         reservation_id MEDIUMINT(9) NOT NULL,
