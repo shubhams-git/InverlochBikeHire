@@ -348,6 +348,7 @@ function update_price_points_action() {
 function edit_email_action() {
     $emailModel = new EmailModel();
     $email_id = isset($_POST['email_id']) ? intval($_POST['email_id']) : null;
+    $emailContent = isset($_POST['emailContent']) ? ($_POST['emailContent']) : null;
     $check_id = $emailModel->get_email_by_id($email_id);
 
     if (!$email_id || $check_id->email_id != $email_id) {
@@ -358,7 +359,7 @@ function edit_email_action() {
     $data = [
         'email_type' => sanitize_text_field($_POST['email_type']),
         'subject' => sanitize_text_field($_POST['email_subject']),
-        'content' => sanitize_text_field($_POST['email_content'])
+        'content' => $emailContent
     ];
 
     if (!$emailModel->update($email_id, $data)) {

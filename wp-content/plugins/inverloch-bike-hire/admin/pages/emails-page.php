@@ -9,6 +9,9 @@ include_once plugin_dir_path(__DIR__) . '../includes/models/EmailModel.php';
 
 $emailModel = new EmailModel();
 
+if (!$emailModel->get_email_by_id(1) && !$emailModel->get_email_by_id(2)) {
+    $emailModel->insert_initial_email();
+}
 // Fetching emails for display
 $provisional_emails = $emailModel->get_all_emails();
 
@@ -68,7 +71,7 @@ $email_to_edit = $edit_email_id ? $emailModel->get_email_by_id($edit_email_id) :
             <tr>
                 <th scope="row"><label for="email_content">Email Content</label></th>
                 <td>
-                    <textarea name="email_content" id="email_content" required cols="50" rows="13" class="large-text"><?php echo esc_textarea($email_to_edit->content); ?></textarea>
+                    <div name="email_content" id="email_content" contenteditable="true" class="text-box"><?php echo $email_to_edit->content; ?></div>
                 </td>
             </tr>
             <tr colspan="10">
