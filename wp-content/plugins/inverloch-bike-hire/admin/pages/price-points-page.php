@@ -62,6 +62,9 @@ $edit = isset($_GET['edit']) ? $_GET['edit'] : false;
                         }
                         echo "</tr>";
                     }
+                    if(!$sorted_categories) {
+                        echo '<th>No categories found.</th>';
+                    }
                 ?>
             </tbody>
         </table>
@@ -69,7 +72,7 @@ $edit = isset($_GET['edit']) ? $_GET['edit'] : false;
     <?php if($edit): ?>
         <input type="submit" value="Save Changes" class="button button-primary">
         <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_price_points')); ?>" class="button button-secondary">Back</a>
-    <?php else: ?>
+    <?php elseif ($sorted_categories): ?>
         <a href="?page=ibh_price_points&edit=true" class="button button-primary">Edit table</a>
     <?php endif; ?>
 </div>
