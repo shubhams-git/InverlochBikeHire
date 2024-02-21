@@ -59,9 +59,9 @@ function get_item_schedule($item_id) {
             <?php if ($edit_item_id): ?>
                 <input type="hidden" name="item_id" value="<?php echo esc_attr($edit_item_id); ?>">
             <?php endif; ?>
-            <?php if (count($reservations) > 0): ?>
+            <?php if (!empty($reservations)): if (count($reservations) > 0): ?>
                 <input type="hidden" id="check_reservations" name="check_reservations" value="<?php echo count($reservations); ?>">
-            <?php endif; ?>
+            <?php endif; endif; ?>
             <div id="messageContainer"></div>
             <table class="form-table">
                 <tr>
@@ -170,15 +170,15 @@ function get_item_schedule($item_id) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($reservations as $reservation): ?>
+                <?php if (!empty($reservations)): foreach ($reservations as $reservation): ?>
                 <tr>
                     <td><?php echo esc_html($reservation->from_date); ?></td>
                     <td><?php echo esc_html($reservation->to_date); ?></td>
                     <td><?php echo esc_html($reservation->from_time); ?></td>
                     <td><?php echo esc_html($reservation->to_time); ?></td> 
                 </tr>
-                <?php endforeach; ?>
-                <?php if (empty($reservation)): ?>
+                <?php endforeach; endif; ?>
+                <?php if (empty($reservations)): ?>
                     <tr><td colspan="4">No reservations found.</td></tr>
                 <?php endif; ?>
             </tbody>

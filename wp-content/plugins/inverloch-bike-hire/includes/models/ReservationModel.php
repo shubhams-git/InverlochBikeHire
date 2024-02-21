@@ -13,6 +13,7 @@ class ReservationModel {
         $this->wpdb = $wpdb;
         $this->table_name = $wpdb->prefix . 'ibk_reservation';
     }
+    
 
     public function insert($data) {
         $data = array_map("sanitize_text_field", $data);
@@ -29,7 +30,7 @@ class ReservationModel {
         $result = $this->wpdb->insert(
             $this->table_name,
             $data,
-            ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
+            ['%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
         );
     
         if ($result) {
@@ -125,6 +126,13 @@ class ReservationModel {
         return $this->wpdb->get_row($query);
     }
 
+    public function get_reservation_by_id($reservation_id) {
+        $reservation_id = sanitize_text_field($reservation_id);
+
+        $query = $this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE reservation_id = %d", $reservation_id);
+
+        return $this->wpdb->get_row($query);
+    }
     
     public function update($reservation_id, $data) {
         $reservation_id = sanitize_text_field($reservation_id);
@@ -134,8 +142,8 @@ class ReservationModel {
             $this->table_name,
             $data,  // data to update
             ['reservation_id' => $reservation_id],  // where clause
-            ['%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'], // data format
-            ['%s']  // where format
+            ['%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'], // data format
+            ['%d']  // where format
         );
 
         if ($result !== false) {

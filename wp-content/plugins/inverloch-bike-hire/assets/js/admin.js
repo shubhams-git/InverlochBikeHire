@@ -199,9 +199,14 @@ jQuery(document).ready(function($) {
         console.log("Form submission prevented");
 
         var formData = new FormData(this);
+        
+        // get email content
+        var emailContentDiv = document.getElementById('email_content');
+        var emailContent = emailContentDiv.innerHTML;
 
         formData.append('action', 'ibh_handle_form');
         formData.append('_wpnonce', myAjax.nonce);
+        formData.append('emailContent', emailContent);
     
         $.ajax({
             type: 'POST',

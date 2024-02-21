@@ -62,6 +62,9 @@ $edit = isset($_GET['edit']) ? $_GET['edit'] : false;
                         }
                         echo "</tr>";
                     }
+                    if(!$sorted_categories) {
+                        echo '<th>No categories found.</th>';
+                    }
                 ?>
             </tbody>
         </table>
@@ -69,7 +72,7 @@ $edit = isset($_GET['edit']) ? $_GET['edit'] : false;
     <?php if($edit): ?>
         <input type="submit" value="Save Changes" class="button button-primary">
         <a href="<?php echo esc_url(admin_url('admin.php?page=ibh_price_points')); ?>" class="button button-secondary">Back</a>
-    <?php else: ?>
+    <?php elseif ($sorted_categories): ?>
         <a href="?page=ibh_price_points&edit=true" class="button button-primary">Edit table</a>
     <?php endif; ?>
 </div>
@@ -90,7 +93,8 @@ $edit = isset($_GET['edit']) ? $_GET['edit'] : false;
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 
-    $('.delete-timeframe').on('click', function() {
+    $('table').on('click', '.delete-timeframe', function() {
+        console.log("hello");
 
         // Get the index of the column to delete
         var columnIndex = $(this).closest('th').index();
@@ -146,7 +150,7 @@ jQuery(document).ready(function($) {
             if (index === 0) return true; // Skip category column
             var current = convertTimeframeToValue($(this).text());
             if (newTimeframeValue < current && !added) {
-                $('<th><b>' + newTimeframe + '</b><a><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore($(this));
+                $('<th><b>' + newTimeframe + '</b><a data-timeframe-id=' + newTimeframe + '><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore($(this));
                 $('table tbody tr').each(function() {
                     var categoryId = $(this).data('category-id');
                     $('<td><input type="number" step="0.01" class="price-point-number" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertBefore($(this).find('td').eq(index));
@@ -154,10 +158,10 @@ jQuery(document).ready(function($) {
                 added = true;
                 return false;
             }
-        });
+        });                                
 
         if (!added) { // If the timeframe is the latest, add it to the end
-            $('<th><b>' + newTimeframe + '</b><a><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore('table thead tr th:last');
+            $('<th><b>' + newTimeframe + '</b><a data-timeframe-id=' + newTimeframe + '><i class="delete-timeframe dashicons dashicons-no"></i></a></th>').insertBefore('table thead tr th:last');
             $('table tbody tr').each(function() {
                 var categoryId = $(this).data('category-id');
                 $('<td><input type="number" step="0.01" class="price-point-number" name="price[' + categoryId + '][' + newTimeframe + ']" value=""></td>').insertAfter($(this).find('td:last'));

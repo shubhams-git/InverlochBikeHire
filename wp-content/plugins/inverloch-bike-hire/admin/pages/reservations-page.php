@@ -41,15 +41,15 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
                     <tbody>
                         <tr>
                             <th scope="row"><label for="reservation_fromdate">From Date</label></th>
-                            <td><input type="text" id="reservation_fromdate" name="reservation_fromdate" class="regular-text" placeholder="YYYY-MM-DD"></td>
+                            <td><input type="text" id="reservation_fromdate" name="reservation_fromdate" class="regular-text" placeholder="YYYY-MM-DD" autocomplete="off" required></td>
                             <th scope="row"><label for="reservation_fromtime">From Time</label></th>
-                            <td><input type="text" id="reservation_fromtime" name="reservation_fromtime" class="regular-text" placeholder="HH:MM"></td>
+                            <td><input type="text" id="reservation_fromtime" name="reservation_fromtime" class="regular-text" placeholder="HH:MM" autocomplete="off" required></td>
                         </tr>
                         <tr>
                             <th scope="row"><label for="reservation_todate">To Date</label></th>
-                            <td><input type="text" id="reservation_todate" name="reservation_todate" class="regular-text" placeholder="YYYY-MM-DD"></td>
+                            <td><input type="text" id="reservation_todate" name="reservation_todate" class="regular-text" placeholder="YYYY-MM-DD" autocomplete="off" required></td>
                             <th scope="row"><label for="reservation_totime">To Time</label></th>
-                            <td><input type="text" id="reservation_totime" name="reservation_totime" class="regular-text" placeholder="HH:MM"></td>
+                            <td><input type="text" id="reservation_totime" name="reservation_totime" class="regular-text" placeholder="HH:MM" autocomplete="off" required></td>
                         </tr>
                         <tr>
                             <td colspan="2">

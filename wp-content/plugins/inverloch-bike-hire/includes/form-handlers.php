@@ -348,6 +348,7 @@ function update_price_points_action() {
 function edit_email_action() {
     $emailModel = new EmailModel();
     $email_id = isset($_POST['email_id']) ? intval($_POST['email_id']) : null;
+    $emailContent = isset($_POST['emailContent']) ? ($_POST['emailContent']) : null;
     $check_id = $emailModel->get_email_by_id($email_id);
 
     if (!$email_id || $check_id->email_id != $email_id) {
@@ -358,7 +359,7 @@ function edit_email_action() {
     $data = [
         'email_type' => sanitize_text_field($_POST['email_type']),
         'subject' => sanitize_text_field($_POST['email_subject']),
-        'content' => sanitize_text_field($_POST['email_content'])
+        'content' => $emailContent
     ];
 
     if (!$emailModel->update($email_id, $data)) {
@@ -764,6 +765,7 @@ function handle_add_new_reservation() {
     $customer_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
     $selected_bikes = isset($_POST['selected_bikes']) ? array_map('intval', $_POST['selected_bikes']) : [];
     $reservation_data = [
+        'reservation_id' => '',
         'customer_id' => $customer_id,
         'from_date' => sanitize_text_field($_POST['from_date']),
         'to_date' => sanitize_text_field($_POST['to_date']),
