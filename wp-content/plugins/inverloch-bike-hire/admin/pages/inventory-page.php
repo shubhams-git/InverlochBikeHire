@@ -163,21 +163,31 @@ function get_item_schedule($item_id) {
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th><b>From Date</b></th>
-                    <th><b>To Date</b></th>
-                    <th><b>From Time</b></th>
-                    <th><b>To Time</b></th>
+                    <th><b>Reservation Reference ID</b></th>
+                    <th><b>From</b></th>
+                    <th><b>To</b></th>
+                    <th><b>Stage</b></th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($reservations)): foreach ($reservations as $reservation): ?>
+                <?php
+                    if (!empty($reservations)): 
+                        foreach ($reservations as $reservation): 
+                            $formatted_from_time = date("g A", strtotime($reservation->from_time)); // Convert to 12-hour AM/PM format
+                            $formatted_to_time = date("g A", strtotime($reservation->to_time)); // Convert to 12-hour AM/PM format
+                            $formatted_from_date = date("d/m/Y", strtotime($reservation->from_date)); // Convert to DD/MM/YYYY format
+                            $formatted_to_date = date("d/m/Y", strtotime($reservation->to_date)); // Convert to DD/MM/YYYY format
+                ?>
                 <tr>
-                    <td><?php echo esc_html($reservation->from_date); ?></td>
-                    <td><?php echo esc_html($reservation->to_date); ?></td>
-                    <td><?php echo esc_html($reservation->from_time); ?></td>
-                    <td><?php echo esc_html($reservation->to_time); ?></td> 
+                    <td><?php echo esc_html($reservation->reference_id); ?></td>
+                    <td><?php echo $formatted_from_date ?> (<?php echo $formatted_from_time;?>)</td>
+                    <td><?php echo $formatted_to_date ?> (<?php echo $formatted_to_time;?>)</td>
+                    <td><?php echo $reservation->reservation_stage; ?></td>
                 </tr>
-                <?php endforeach; endif; ?>
+                <?php 
+                        endforeach; 
+                    endif; 
+                ?>
                 <?php if (empty($reservations)): ?>
                     <tr><td colspan="4">No reservations found.</td></tr>
                 <?php endif; ?>
