@@ -602,7 +602,7 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
     return $html_content;
 }
 
-function generate_edit_reservation_form_html($reservation_details, $bookedItems){
+function generate_edit_reservation_form_html($reservation_details, $bookedItems, $to_date, $to_time, $from_date, $from_time){
     
     $reservation_model = new ReservationModel();
     $booked_reservation_ids = $reservation_model->get_reservation_ids_by_date_time_range($from_date, $to_date, $from_time, $to_time);
@@ -613,7 +613,10 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
 
     $item_model = new ItemModel();
     $available_bikes = $item_model->get_items_except_specified_ids($booked_bike_ids);
-    
+    $currently_booked_bike_ids = $item_booking_model->get_item_ids_by_reservation_ids([$reservation_details->reservation_id]);
+    $currently_booked_items = $item_model->get_items_by_ids($currently_booked_bike_ids);
+    $available_bikes = array_merge($available_bikes, $currently_booked_items);
+
     if (empty($available_bikes)) {
         wp_send_json_success(['message' => 'No available bikes found for the specified time range.', 'html' => '']);
         return;
@@ -680,6 +683,7 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
                         </tbody>
                         <tbody class="bikes hide" id="bikes-category-<?php echo esc_attr($category->category_id); ?>">
                             <?php 
+                            $hasBikes = false;
                             foreach ($available_bikes as $bike): 
                                 if ($bike->category_id === $category->category_id): 
                                     $hasBikes = true;
@@ -699,6 +703,13 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
 
                                 <?php endif; ?>
                             <?php endforeach; ?>
+                            <?php if (!$hasBikes): ?>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        Currently, no bikes are available in the "<?php echo esc_html($category->category_name); ?>" category for the selected timeframes.  
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     <?php endforeach; ?>
                     </table>
@@ -735,10 +746,10 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems)
                         <th scope="row"><label for="reservation_stage">Stage</label></th>
                         <td colspan="3">
                             <select name="reservation_stage" id="reservation_stage">
-                                <!-- Populate options dynamically based on your system's stages -->
                                 <option value="provisional" <?php echo ($reservation_details->reservation_stage == 'provisional') ? 'selected' : ''; ?>>Provisional</option>
                                 <option value="confirmed" <?php echo ($reservation_details->reservation_stage == 'confirmed') ? 'selected' : ''; ?>>Confirmed</option>
-                                <!-- Add more stages as needed -->
+                                <option value="checked-in">Checked-in</option>
+                                <option value="checked-out">Checked-out</option>
                             </select>
                         </td>
                     </tr>
@@ -821,6 +832,18 @@ function handle_edit_reservation_fetch($reservation_id) {
     $itemBookingModel = new ItemBookingModel(); 
     $itemModel = new ItemModel();
 
+    $current_reservation_details = $reservationModel->get_reservation_by_id($reservation_id);
+    if (!$current_reservation_details) {
+        wp_send_json_error(['message' => 'Current Reservation Details not found.']);
+        return; // Make sure to return to stop the execution here
+    }
+
+    $to_date = $current_reservation_details->to_date;
+    $to_time = $current_reservation_details->to_time;
+    $from_date = $current_reservation_details->from_date;
+    $from_time = $current_reservation_details->from_time;   
+
+
     // Retrieve the reservation details
     $reservation_details = $reservationModel->get_reservation_detail_by_id($reservation_id);
 
@@ -836,7 +859,7 @@ function handle_edit_reservation_fetch($reservation_id) {
     $bookedItems = get_dynamic_content_for_reservation($reservation_id);
 
     // Generate HTML for edit form
-    $html = generate_edit_reservation_form_html($reservation_details, $bookedItems);
+    $html = generate_edit_reservation_form_html($reservation_details, $bookedItems, $to_date, $to_time, $from_date, $from_time);
 
     wp_send_json_success(['html' => $html, 'blockedDates' => $blockeddate_data]);
 }
@@ -857,7 +880,7 @@ function get_dynamic_content_for_reservation($reservation_id) {
                 'item_id' => $item_id,
                 'id_number' => $item->id_number,
                 'name' => $item->name,
-                'image_url' => $item->image_url // Assuming you have an image URL for each item
+                'image_url' => $item->image_url 
             ];
         }
     }

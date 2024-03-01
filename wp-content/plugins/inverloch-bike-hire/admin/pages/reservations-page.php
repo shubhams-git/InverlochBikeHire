@@ -127,47 +127,32 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
 
         var blockedDates = <?php echo json_encode($blockeddate_date); ?>;
 
-        function disableBlockedDates(date) {
-            // Convert date to string in yyyy-mm-dd format
-            var dateString = $.datepicker.formatDate('yy-mm-dd', date);
-            
-            // Check if the date is in the blockedDates array
-            return [blockedDates.findIndex(function(reservation) {
-                return reservation.date === dateString && reservation.is_blocked === '1'; // Check both date and is_blocked status
-            }) === -1];
-        }
-        
-        // Initialize the fromdate_picker
-        $("#reservation_fromdate").datepicker({
-            beforeShowDay: disableBlockedDates,
+        jQuery("#reservation_fromdate, #reservation_todate").datepicker({
+            beforeShowDay: function(date) {
+                // Format date to yyyy-mm-dd
+                var dateString = jQuery.datepicker.formatDate('yy-mm-dd', date);
+
+                // Check if the date is in the blockedDates array
+                var isBlocked = blockedDates.some(function(blockedDate) {
+                    return dateString === blockedDate.date && blockedDate.is_blocked === "1";
+                });
+
+                // Disable date if it's in the blockedDates array
+                return [!isBlocked];
+            },
             minDate: 0,
             dateFormat: "yy-mm-dd",
-            onSelect: function(selectedDate) {
-                // Update the minDate of the todate_picker to be after the selected date
-                $("#reservation_todate").datepicker("option", "minDate", selectedDate);
-            }
-        });
-
-        // Initialize the todate_picker
-        $("#reservation_todate").datepicker({
-            beforeShowDay: disableBlockedDates,
-            minDate: 0,
-            dateFormat: "yy-mm-dd"
+            changeMonth: true,
+            changeYear: true
         });
 
         // Initialize the fromtime_picker and totime_picker
-        $('#reservation_fromtime, #reservation_totime').timepicker({
+        jQuery('#reservation_fromtime, #reservation_totime').timepicker({
             'minTime': '08:00',
             'maxTime': '19:00',
             'timeFormat': 'HH:mm' // Specify 24-hour format
         });
-
-        // Hide/show the bikes when the category is clicked
-        $('[data-toggle="toggle"]').change(function() {
-            var $labelsRow = $(this).closest('tbody').nextUntil('tbody.labels');
-            $labelsRow.filter('.hide').toggle();
-        });
-
+        
         // Ensure one of the checkbox is clicked
         $('#submit_reservation').click(function() {
             checked = $("input[type=checkbox][name='selected_bikes[]']:checked").length;
@@ -180,13 +165,15 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
 
         $('#show-add-reservation-form').click(function() {
             $('#reservation-form-container').show();
+            $('#dynamicFormContainer').show();
             $('#reservation-list-view').hide();
             $('#go-back-to-reservation-list').show();
         });
 
         $('#go-back-to-reservation-list').click(function() {
             $('#reservation-form-container').hide();
-            $('#reservation-list-view').show();
+            $('#dynamicFormContainer').empty();
+            $('#reservation-list-view').show();            
             $(this).hide();
         });
     });

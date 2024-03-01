@@ -52,6 +52,36 @@ class ItemModel {
         return $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE item_id = %d", $item_id), OBJECT);
     }
 
+    // Retrieve a list of items by IDs
+    public function get_items_by_ids($item_ids) {
+        if (!is_array($item_ids)) {
+            $item_ids = [$item_ids];
+        }
+        
+        // Filter out any non-integer values to maintain query integrity
+        $item_ids = array_filter($item_ids, function($id) {
+            return is_int($id) || ctype_digit($id);
+        });
+
+        // If after filtering there are no valid IDs, return an empty array to avoid SQL errors
+        if (empty($item_ids)) {
+            return [];
+        }
+
+        // Convert item IDs to integers
+        $item_ids = array_map('intval', $item_ids);
+
+        // Construct placeholders string for the query
+        $placeholders = implode(',', array_fill(0, count($item_ids), '%d'));
+
+        // Prepare and execute the SQL query
+        $query = $this->wpdb->prepare("SELECT * FROM {$this->table_name} WHERE item_id IN ($placeholders)", $item_ids);
+        
+        // Fetch and return the results
+        return $this->wpdb->get_results($query, OBJECT);
+    }
+    
+
     // Update an existing item
     public function update($item_id, $data) {
         $item_id = intval($item_id);

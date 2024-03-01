@@ -135,23 +135,36 @@ class ReservationModel {
     }
     
     public function update($reservation_id, $data) {
-        $reservation_id = sanitize_text_field($reservation_id);
-        $data = array_map('sanitize_text_field', $data);
-
-        $result = $this->wpdb->update(
-            $this->table_name,
-            $data,  // data to update
-            ['reservation_id' => $reservation_id],  // where clause
-            ['%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s'], // data format
-            ['%d']  // where format
-        );
-
+        global $wpdb;
+        $reservation_id = intval($reservation_id); // Ensure it's an integer
+    
+        // Sanitize and prepare data according to the column type
+        $updateData = [
+            'customer_id' => intval($data['customer_id']),
+            'from_date' => date('Y-m-d', strtotime($data['from_date'])), // Convert to SQL date format
+            'to_date' => date('Y-m-d', strtotime($data['to_date'])), // Convert to SQL date format
+            'from_time' => sanitize_text_field($data['from_time']),
+            'to_time' => sanitize_text_field($data['to_time']),
+            'reservation_stage' => sanitize_text_field($data['reservation_stage']),
+            'delivery_notes' => sanitize_textarea_field($data['delivery_notes']),
+            // Assuming 'reference_id' and 'created_date' do not change on update
+        ];
+    
+        // Define the format for each updated field based on your schema
+        $format = ['%d', '%s', '%s', '%s', '%s', '%s', '%s'];
+    
+        $where = ['reservation_id' => $reservation_id];
+        $where_format = ['%d']; // reservation_id is an integer
+    
+        $result = $wpdb->update($this->table_name, $updateData, $where, $format, $where_format);
+    
         if ($result !== false) {
-            return true;
+            return true; // On successful update
         } else {
             return new WP_Error('db_update_error', 'Failed to update reservation in the database.');
         }
     }
+    
 
     public function delete($reservation_id) {
         // Ensure $reservation_id is an integer

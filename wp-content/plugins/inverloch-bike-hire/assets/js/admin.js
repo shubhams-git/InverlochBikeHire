@@ -418,7 +418,6 @@ jQuery(document).ready(function($) {
                     $('#reservation-list-view').hide();
                     $('#dynamicFormContainer').show(); // Ensure the container is visible
                     // Re-initialize any dynamic elements within the form
-                    var testBlockedDates = [{date: '2024-02-21', is_blocked: '1'}]
                     initializeDatepickersWithBlocked(response.data.blockedDates);
                     DropDownForReservation();
                 } else {
@@ -699,12 +698,6 @@ function initializeDatepickersWithBlockedDates(blockedDates) {
 function initializeDatepickersWithBlocked(blockedDates) {
     jQuery("#reservation_fromdate, #reservation_todate").datepicker({
         beforeShowDay: function(date) {
-            // Check for weekends
-            var noWeekend = jQuery.datepicker.noWeekends(date);
-            if (!noWeekend[0]) {
-                return noWeekend; // If it's weekend, disable it
-            }
-
             // Format date to yyyy-mm-dd
             var dateString = jQuery.datepicker.formatDate('yy-mm-dd', date);
 
