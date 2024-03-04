@@ -383,7 +383,7 @@ function add_customer_action() {
 
     $insertResult = $customerModel->insert($data);
     if (is_wp_error($insertResult)) {
-        wp_send_json_error(['message' => 'Error adding customer.']);
+        wp_send_json_error(['message' => 'Error adding duplicate customer.']);
     } else {
         wp_send_json_success(['message' => 'Customer added successfully!']);
     }
@@ -557,6 +557,7 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
         <div class="postbox">
             <div class="inside">
                 <h3 style="text-align: center;">Additional information</h3>
+                <div id="customerMessageContainer"></div>
                 <table class="form-table">
                     <!-- Customer Selection -->
                     <tr>
@@ -572,6 +573,7 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
                                     <option value="" disabled>No customers found.</option>
                                 <?php endif; ?>
                             </select>
+                            <button id="create-new-customer" class="button button-primary">Create a new customer</button>
                         </td>
                     </tr>
                     <!-- Notes -->
@@ -594,7 +596,7 @@ function generate_available_bikes_form_html($available_bikes, $categories, $cust
                 </table>
             </div>
         </div>
-        <input type="submit" id="submit_reservation" class="button button-primary" value="Add Reservation">
+        <input type="submit" id="submit_reservation" class="button" value="Add Reservation">
     </form>
 
     <?php
@@ -719,6 +721,7 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems,
         <div class="postbox">
             <div class="inside">
                 <h3 style="text-align: center;">Additional Information</h3>
+                <div id="customerMessageContainer"></div>
                 <table class="form-table">
                     <!-- Customer Selection -->
                     <tr>
@@ -732,6 +735,7 @@ function generate_edit_reservation_form_html($reservation_details, $bookedItems,
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <button id="create-new-customer" class="button button-primary">Create a new customer</button>
                         </td>
                     </tr>
                     <!-- Notes -->

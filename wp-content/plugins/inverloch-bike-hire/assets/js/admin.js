@@ -430,6 +430,81 @@ jQuery(document).ready(function($) {
         });
     });
 
+    $(document).on('click', '#create-new-customer', function(e) { 
+        e.preventDefault();
+        $('#add-new-customer-dialog').dialog({
+            title: 'Add New Customer',
+            modal: true,
+            buttons: {
+                "Add": function() {
+                    var firstName = $('#add-new-customer-dialog-first-name').val();
+                    var lastName = $('#add-new-customer-dialog-last-name').val();
+                    var mobilePhone = $('#add-new-customer-dialog-mobile-phone').val();
+                    var emailAddress = $('#add-new-customer-dialog-email-address').val();
+                    var address = $('#add-new-customer-dialog-address').val();
+
+                    if (firstName && lastName && mobilePhone) {
+                        insertNewCustomer(firstName, lastName, mobilePhone, emailAddress, address);
+                        
+                        // Clear the input fields
+                        $('#add-new-customer-dialog-first-name').val('');
+                        $('#add-new-customer-dialog-last-name').val('');
+                        $('#add-new-customer-dialog-mobile-phone').val('');
+                        $('#add-new-customer-dialog-email-address').val('');
+                        $('#add-new-customer-dialog-address').val('');
+                        
+                        $(this).dialog("close");
+                    } else {
+                        alert("Please enter all the required fields");
+                    }
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+
+    function insertNewCustomer(firstName, lastName, mobilePhone, emailAddress, address) {
+        var formData = new FormData($('#reservation-add-new-customer')[0]); 
+        formData.append('action', 'ibh_handle_form');
+        formData.append('entity', 'customer');
+        formData.append('action_type', 'add');
+        formData.append('_wpnonce', myAjax.nonce);
+        formData.append('customer_fname', firstName);
+        formData.append('customer_lname', lastName);
+        formData.append('customer_email', emailAddress);
+        formData.append('customer_mobile_phone', mobilePhone);
+        formData.append('customer_address', address);
+            
+        $.ajax({
+            url: myAjax.ajaxurl, 
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    $('#customerMessageContainer').html('<div class="notice notice-success is-dismissible"><p>' + response.data.message + '</p></div>');
+                    setTimeout(function() {
+                        $('#customerMessageContainer').fadeOut('slow', function() {
+                            $(this).remove(); 
+                        });
+                    }, 1500);
+
+                    // Append the newly added customer to the select dropdown
+                    var newCustomerOption = '<option value="' + response.data.customerId + '" selected>' + firstName + ' ' + lastName + ' (' + mobilePhone + ') </option>';
+                    $('#reservation_customer').append(newCustomerOption);
+                } else {
+                    $('#customerMessageContainer').html('<div class="notice notice-error"><p>' + response.data.message + '</p></div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#customerMessageContainer').html('<div class="notice notice-error"><p>AJAX error: ' + error + '</p></div>');
+            }
+        });
+    }
+
     $(document).on('click', '#go-back-button-edit-reservation', function(e) { 
         e.preventDefault(); 
 

@@ -122,6 +122,26 @@ $blockeddate_date = $blockeddate_model->get_all_blocked_date();
         </div>
 </div>
 
+<div id="add-new-customer-dialog" style="display:none;">
+    <p>Add a new customer:</p>
+    <form id="reservation-add-new-customer">
+        <label for="First Name"><b>*First Name: </b></label><br>
+        <input type="text" id="add-new-customer-dialog-first-name" name="add-new-customer-dialog-first-name">
+        <br><br>
+        <label for="Last Name"><b>*Last Name: </b></label><br>
+        <input type="text" id="add-new-customer-dialog-last-name" name="add-new-customer-dialog-last-name">
+        <br><br>
+        <label for="Mobile Phone"><b>*Phone: </b></label><br>
+        <input type="text" id="add-new-customer-dialog-mobile-phone" name="add-new-customer-dialog-mobile-phone">
+        <br><br>
+        <label for="Email Address"><b>Email: </b></label><br>
+        <input type="text" id="add-new-customer-dialog-email-address" name="add-new-customer-dialog-email-address">
+        <br><br>
+        <label for="Address"><b>Address:</b></label><br>
+        <textarea id="add-new-customer-dialog-address" name="add-new-customer-dialog-address" class="widefat"></textarea>
+    </form>
+</div>
+
 <script>
     jQuery(document).ready(function($){
 
